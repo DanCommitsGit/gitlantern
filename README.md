@@ -1,34 +1,40 @@
 # gitlantern
 
-An Electron application with React and TypeScript
+A desktop git client that shows the command behind every action, so you can learn git while you use it.
 
-## Recommended IDE Setup
+gitlantern is in early development and has no usable features yet.
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+## Requirements
 
-## Project Setup
+- Node.js 24 (see `.nvmrc`)
+- git
 
-### Install
-
-```bash
-$ npm install
-```
-
-### Development
+## Development
 
 ```bash
-$ npm run dev
+npm install
+npm run dev
 ```
 
-### Build
+Run these before pushing. CI runs the same checks.
 
 ```bash
-# For windows
-$ npm run build:win
-
-# For macOS
-$ npm run build:mac
-
-# For Linux
-$ npm run build:linux
+npx prettier --check .
+npm run lint
+npm run typecheck
+npm test
 ```
+
+To build a local installer, run `npm run build:win`, `npm run build:mac` or `npm run build:linux`.
+
+## Releasing
+
+Releases are automated with [release-please](https://github.com/googleapis/release-please-action) and depend on [Conventional Commits](https://www.conventionalcommits.org/).
+
+1. Each `feat` or `fix` commit on `main` updates an open Release PR with the next version and changelog.
+2. Merging the Release PR tags the release and starts the Windows, macOS and Linux builds.
+3. The release is published once all three builds succeed. If a build fails, the release stays a draft until the failed job is re-run.
+
+CI doesn't run on the Release PR, because pull requests opened by `GITHUB_TOKEN` don't trigger it automatically.
+
+The installers are not code-signed yet, so Windows and macOS warn on first launch.

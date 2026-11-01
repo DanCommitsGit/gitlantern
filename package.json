@@ -1,10 +1,10 @@
 {
   "name": "gitlantern",
-  "version": "1.0.0",
-  "description": "An Electron application with React and TypeScript",
+  "version": "0.1.0",
+  "description": "A git GUI that shows the command behind every action",
   "main": "./out/main/index.js",
-  "author": "example.com",
-  "homepage": "https://electron-vite.org",
+  "author": "DanCommitsGit",
+  "homepage": "https://github.com/DanCommitsGit/gitlantern",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",
@@ -18,7 +18,8 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
     "@electron-toolkit/utils": "^4.0.0"
@@ -42,6 +43,13 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "typescript": "^5.9.3",
-    "vite": "^8.3.4"
-  }
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanCommitsGit/gitlantern.git"
+  },
+  "license": "UNLICENSED",
+  "private": true
 }

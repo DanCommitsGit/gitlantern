@@ -1,4 +1,4 @@
-appId: com.electron.app
+appId: io.github.dancommitsgit.gitlantern
 productName: gitlantern
 directories:
   buildResources: build
@@ -21,8 +21,6 @@ nsis:
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
-    - NSCameraUsageDescription: Application requests access to the device's camera.
-    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
     - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
@@ -31,13 +29,14 @@ dmg:
 linux:
   target:
     - AppImage
-    - snap
     - deb
-  maintainer: electronjs.org
-  category: Utility
+  maintainer: DanCommitsGit <61391827+DanCommitsGit@users.noreply.github.com>
+  category: Development
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
 publish:
-  provider: generic
-  url: https://example.com/auto-updates
+  provider: github
+  owner: DanCommitsGit
+  repo: gitlantern
+  releaseType: draft
