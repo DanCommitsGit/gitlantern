@@ -4,6 +4,7 @@ import type { Identity, OpenedRepository } from '../../../shared/gitlantern-api'
 import { SetCommandPreviewContext, type CommandPreview } from '../command-preview'
 import { useRepositoryState } from '../use-repository-state'
 import { CommandStrip } from './CommandStrip'
+import { CommitForm } from './CommitForm'
 import { DiffView } from './DiffView'
 import { FileLists } from './FileLists'
 import { IdentityForm } from './IdentityForm'
@@ -65,10 +66,17 @@ export function RepositoryWindow({
                 onSelect={state.select}
                 runCommand={(command) => void state.runCommand(command)}
               />
-              {(identity.name === null || identity.email === null) && (
+              {identity.name === null || identity.email === null ? (
                 <IdentityForm
                   identity={identity}
                   onSave={(name, email) => void saveIdentity(name, email)}
+                />
+              ) : (
+                <CommitForm
+                  branchName={status.branchName}
+                  stagedCount={status.staged.length}
+                  identity={identity}
+                  runCommand={state.runCommand}
                 />
               )}
             </section>
