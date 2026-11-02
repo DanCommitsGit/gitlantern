@@ -21,6 +21,11 @@ function App(): React.JSX.Element {
     setRepository(result.kind === 'opened' ? result.repository : null)
   }
 
+  async function createInFolder(folder: string): Promise<void> {
+    const { result } = await window.api.createRepository(folder)
+    applyOpenResult(result)
+  }
+
   function closeRepository(): void {
     void window.api.closeRepository()
     setRepository(null)
@@ -42,6 +47,7 @@ function App(): React.JSX.Element {
           gitPath={gitCheck.path}
           problem={openProblem}
           onOpenFolder={(folder) => void window.api.openRepository(folder).then(applyOpenResult)}
+          onCreateInFolder={(folder) => void createInFolder(folder)}
         />
       )}
       {gitCheck !== null && gitCheck.state !== 'ok' && (

@@ -6,13 +6,15 @@ interface WelcomeScreenProps {
   gitPath: string
   problem: Extract<OpenResult, { kind: 'not-a-repository' | 'failed' }> | null
   onOpenFolder(folder: string): void
+  onCreateInFolder(folder: string): void
 }
 
 export function WelcomeScreen({
   gitVersion,
   gitPath,
   problem,
-  onOpenFolder
+  onOpenFolder,
+  onCreateInFolder
 }: WelcomeScreenProps): React.JSX.Element {
   const [recentRepositories, setRecentRepositories] = useState<RecentRepository[]>([])
 
@@ -40,6 +42,13 @@ export function WelcomeScreen({
             <div className="output">{problem.message}</div>
             <div className="row-layout">
               <button
+                className="button button-primary"
+                type="button"
+                onClick={() => onCreateInFolder(problem.folder)}
+              >
+                Create one here
+              </button>
+              <button
                 className="button"
                 type="button"
                 onClick={() => void chooseFolderThen(onOpenFolder)}
@@ -47,6 +56,7 @@ export function WelcomeScreen({
                 Choose another folder
               </button>
             </div>
+            <span className="command">git init</span>
           </section>
         )}
         {problem?.kind === 'failed' && (
@@ -61,6 +71,15 @@ export function WelcomeScreen({
           >
             <span className="text-head">Open</span>
             <span className="text-small">A repository on this computer</span>
+          </button>
+          <button
+            className="panel start-action"
+            type="button"
+            onClick={() => void chooseFolderThen(onCreateInFolder)}
+          >
+            <span className="text-head">Create</span>
+            <span className="text-small">Start a new one in a folder</span>
+            <span className="command">git init</span>
           </button>
         </div>
 
