@@ -3,6 +3,9 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import serve from 'electron-serve'
 import icon from '../../resources/icon.png?asset'
+import { createAppDataStore } from './app-data-store'
+import { registerIpcHandlers } from './ipc-handlers'
+import { RepositorySession } from './repository-session'
 import { denyAllPermissions, restrictWebContents } from './window-security'
 
 // electron-serve's default scheme and hostname.
@@ -40,6 +43,7 @@ app.whenReady().then(() => {
   electronApp.setAppUserModelId('io.github.dancommitsgit.gitlantern')
 
   denyAllPermissions()
+  registerIpcHandlers(new RepositorySession(createAppDataStore()), rendererUrl)
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)

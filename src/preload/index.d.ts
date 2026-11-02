@@ -1,14 +1,7 @@
-export interface PreloadApi {
-  versions: {
-    electron: string
-    chrome: string
-    node: string
-  }
-  ping: () => void
-}
+import type { GitlanternApi } from '../shared/gitlantern-api'
 
 declare global {
   interface Window {
-    api: PreloadApi
+    api: GitlanternApi
   }
 }
