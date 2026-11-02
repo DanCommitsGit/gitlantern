@@ -12,12 +12,14 @@ export interface RepositoryState {
   diff: FileDiff | null
   errorMessage: string | null
   select(selection: FileSelection): void
+  showLargeDiff(): void
 }
 
 export function useRepositoryState(): RepositoryState {
   const [status, setStatus] = useState<RepositoryStatus | null>(null)
   const [selection, setSelection] = useState<FileSelection | null>(null)
   const [diff, setDiff] = useState<FileDiff | null>(null)
+  const [largeDiffPath, setLargeDiffPath] = useState<string | null>(null)
   const [readError, setReadError] = useState<string | null>(null)
 
   const refresh = useCallback(
@@ -45,7 +47,8 @@ export function useRepositoryState(): RepositoryState {
     if (selected === null) return
 
     let isCurrent = true
-    window.api.readDiff(selected.change, selected.staged, false).then(
+    const showLarge = largeDiffPath === selected.change.path
+    window.api.readDiff(selected.change, selected.staged, showLarge).then(
       (nextDiff) => {
         if (isCurrent) setDiff(nextDiff)
       },
@@ -56,13 +59,14 @@ export function useRepositoryState(): RepositoryState {
     return () => {
       isCurrent = false
     }
-  }, [selected])
+  }, [selected, largeDiffPath])
 
   return {
     status,
     selected,
     diff: selected === null ? null : diff,
     errorMessage: readError,
-    select: setSelection
+    select: setSelection,
+    showLargeDiff: () => setLargeDiffPath(selected?.change.path ?? null)
   }
 }
