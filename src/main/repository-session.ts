@@ -2,6 +2,8 @@ import { createHash } from 'node:crypto'
 import { basename, normalize } from 'node:path'
 import {
   commitAction,
+  initAction,
+  saveIdentityActions,
   stageAllAction,
   stageFilesAction,
   unstageAllAction,
@@ -116,6 +118,19 @@ export class RepositorySession {
     return this.finishOpening(path)
   }
 
+  async create(folder: string): Promise<{ result: OpenResult; record: CommandRecord | null }> {
+    const result = await this.open(folder)
+    if (result.kind !== 'not-a-repository') return { result, record: null }
+
+    const record = await runAction(
+      { gitPath: this.requireGitPath(), repositoryPath: folder },
+      initAction()
+    )
+    return record.exitCode === 0
+      ? { result: await this.open(folder), record }
+      : { result: { kind: 'failed', message: record.output }, record }
+  }
+
   close(): void {
     this.repositoryPath = null
     this.pendingTrust = null
@@ -149,6 +164,18 @@ export class RepositorySession {
 
   async commit(summary: string, description: string): Promise<CommandRecord> {
     return runAction(this.requireRepository(), commitAction(summary, description))
+  }
+
+  async saveIdentity(
+    name: string,
+    email: string
+  ): Promise<{ identity: Identity; records: CommandRecord[] }> {
+    const repository = this.requireRepository()
+    const records: CommandRecord[] = []
+    for (const action of saveIdentityActions(name, email)) {
+      records.push(await runAction(repository, action))
+    }
+    return { identity: await this.readIdentity(repository), records }
   }
 
   private async finishOpening(repositoryPath: string): Promise<OpenResult> {

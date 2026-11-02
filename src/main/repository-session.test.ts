@@ -144,12 +144,51 @@ describe('RepositorySession', () => {
     expect(recents.filter((path) => path === normalize(repository.path))).toHaveLength(1)
   })
 
+  it('creates a repository in an empty folder', async () => {
+    const folder = realpathSync(mkdtempSync(join(tmpdir(), 'gitlantern-create-')))
+    await session.checkGit()
+    try {
+      const { result, record } = await session.create(folder)
+
+      expect(result.kind).toBe('opened')
+      expect(record).toMatchObject({ typedCommand: 'git init', exitCode: 0 })
+    } finally {
+      session.close()
+      rmSync(folder, { recursive: true, force: true, maxRetries: 5 })
+    }
+  })
+
+  it('opens an existing repository instead of running git init again', async () => {
+    await session.checkGit()
+
+    const { result, record } = await session.create(repository.path)
+
+    expect(result.kind).toBe('opened')
+    expect(record).toBeNull()
+  })
+
   it('reports a missing name and email', async () => {
     await session.checkGit()
 
     const result = await session.open(repository.path)
 
     expect(result).toMatchObject({ repository: { identity: { name: null, email: null } } })
+  })
+
+  it('saves a name and email globally, including a name that looks like a flag', async () => {
+    const globalConfig = join(repository.path, '.git', 'test-global-config')
+    const previousGlobalConfig = process.env['GIT_CONFIG_GLOBAL']
+    process.env['GIT_CONFIG_GLOBAL'] = globalConfig
+    await session.checkGit()
+    await session.open(repository.path)
+    try {
+      const { identity, records } = await session.saveIdentity('--odd name', 'me@example.com')
+
+      expect(identity).toEqual({ name: '--odd name', email: 'me@example.com' })
+      expect(records[0].typedCommand).toBe('git config --global user.name "--odd name"')
+    } finally {
+      process.env['GIT_CONFIG_GLOBAL'] = previousGlobalConfig
+    }
   })
 
   it('stages, unstages and commits through the session', async () => {

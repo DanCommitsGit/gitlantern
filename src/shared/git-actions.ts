@@ -61,6 +61,23 @@ export function commitAction(summary: string, description: string): GitAction {
   }
 }
 
+export function initAction(): GitAction {
+  return { typedArguments: ['init'], gitArguments: ['init'] }
+}
+
+export function saveIdentityActions(name: string, email: string): GitAction[] {
+  return [
+    {
+      typedArguments: ['config', '--global', 'user.name', name],
+      gitArguments: ['config', '--global', '--', 'user.name', name]
+    },
+    {
+      typedArguments: ['config', '--global', 'user.email', email],
+      gitArguments: ['config', '--global', '--', 'user.email', email]
+    }
+  ]
+}
+
 function quoteForDisplay(argument: string): string {
   return /^[\w@%+=:,./-]+$/.test(argument)
     ? argument
