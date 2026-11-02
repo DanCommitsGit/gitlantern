@@ -1,4 +1,6 @@
 import type { FileChange, FileStatus } from '../../../shared/repository-types'
+import type { CommandPreview } from '../command-preview'
+import { CommandButton } from './CommandButton'
 
 const STATUS_CLASSES: Record<FileStatus, string> = {
   M: 'status-changed',
@@ -17,6 +19,7 @@ interface FileRowProps {
   isPartlyStaged: boolean
   actionLabel: string
   actionIconPath: string
+  actionPreview: CommandPreview
   onSelect(): void
   onAction(): void
 }
@@ -27,6 +30,7 @@ export function FileRow({
   isPartlyStaged,
   actionLabel,
   actionIconPath,
+  actionPreview,
   onSelect,
   onAction
 }: FileRowProps): React.JSX.Element {
@@ -43,16 +47,16 @@ export function FileRow({
         <span className="truncate grow">{change.path}</span>
         {isPartlyStaged && <span className="pill pill-plain">Part</span>}
       </button>
-      <button
+      <CommandButton
         className="button button-quiet button-icon file-row-action"
-        type="button"
         aria-label={`${actionLabel} ${change.path}`}
+        preview={actionPreview}
         onClick={onAction}
       >
         <svg className="icon" viewBox="0 0 16 16" aria-hidden="true">
           <path d={actionIconPath} />
         </svg>
-      </button>
+      </CommandButton>
     </li>
   )
 }

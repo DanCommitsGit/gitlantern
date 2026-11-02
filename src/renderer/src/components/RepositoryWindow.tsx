@@ -1,5 +1,8 @@
+import { useState } from 'react'
 import type { OpenedRepository } from '../../../shared/gitlantern-api'
+import { SetCommandPreviewContext, type CommandPreview } from '../command-preview'
 import { useRepositoryState } from '../use-repository-state'
+import { CommandStrip } from './CommandStrip'
 import { DiffView } from './DiffView'
 import { FileLists } from './FileLists'
 import { Rail } from './Rail'
@@ -14,48 +17,52 @@ export function RepositoryWindow({
   repository,
   onClose
 }: RepositoryWindowProps): React.JSX.Element {
+  const [preview, setPreview] = useState<CommandPreview | null>(null)
   const state = useRepositoryState()
   const { status } = state
 
   return (
-    <div className="window">
-      <TitleBar>
-        <button className="button button-quiet" type="button" onClick={onClose}>
-          {repository.name}
-          <svg className="icon" viewBox="0 0 16 16" aria-hidden="true">
-            <path d="m4 6 4 4 4-4" />
-          </svg>
-        </button>
-        <nav className="tabs" aria-label="Views">
-          <button className="tab" type="button" aria-current="page">
-            Changes
+    <SetCommandPreviewContext.Provider value={setPreview}>
+      <div className="window">
+        <TitleBar>
+          <button className="button button-quiet" type="button" onClick={onClose}>
+            {repository.name}
+            <svg className="icon" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="m4 6 4 4 4-4" />
+            </svg>
           </button>
-        </nav>
-      </TitleBar>
-      {state.errorMessage !== null && (
-        <div className="banner banner-danger" style={{ borderRadius: 0 }}>
-          {state.errorMessage}
-        </div>
-      )}
-      {status && (
-        <div className="window-body">
-          <Rail branchName={status.branchName} />
-          <section className="pane file-pane">
-            <FileLists
-              status={status}
+          <nav className="tabs" aria-label="Views">
+            <button className="tab" type="button" aria-current="page">
+              Changes
+            </button>
+          </nav>
+        </TitleBar>
+        {state.errorMessage !== null && (
+          <div className="banner banner-danger" style={{ borderRadius: 0 }}>
+            {state.errorMessage}
+          </div>
+        )}
+        {status && (
+          <div className="window-body">
+            <Rail branchName={status.branchName} />
+            <section className="pane file-pane">
+              <FileLists
+                status={status}
+                selected={state.selected}
+                onSelect={state.select}
+                runCommand={(command) => void state.runCommand(command)}
+              />
+            </section>
+            <DiffView
+              hasCommits={status.hasCommits}
               selected={state.selected}
-              onSelect={state.select}
-              runCommand={(command) => void state.runCommand(command)}
+              diff={state.diff}
+              onShowLarge={state.showLargeDiff}
             />
-          </section>
-          <DiffView
-            hasCommits={status.hasCommits}
-            selected={state.selected}
-            diff={state.diff}
-            onShowLarge={state.showLargeDiff}
-          />
-        </div>
-      )}
-    </div>
+          </div>
+        )}
+        <CommandStrip preview={preview} />
+      </div>
+    </SetCommandPreviewContext.Provider>
   )
 }

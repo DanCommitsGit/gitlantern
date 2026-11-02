@@ -1,6 +1,14 @@
 import type { CommandRecord } from '../../../shared/command-record'
+import {
+  stageAllAction,
+  stageFilesAction,
+  unstageAllAction,
+  unstageFilesAction
+} from '../../../shared/git-actions'
 import type { FileChange, RepositoryStatus } from '../../../shared/repository-types'
+import { previewAction } from '../command-preview'
 import type { FileSelection, SelectedChange } from '../selected-change'
+import { CommandButton } from './CommandButton'
 import { FileRow } from './FileRow'
 
 const PLUS_ICON_PATH = 'M8 3v10M3 8h10'
@@ -34,13 +42,13 @@ export function FileLists({
         <span className="grow">Unstaged</span>
         <span className="text-hint">{status.unstaged.length}</span>
         {status.unstaged.length > 0 && (
-          <button
+          <CommandButton
             className="button button-quiet"
-            type="button"
+            preview={previewAction(stageAllAction(), 'Stages every change')}
             onClick={() => runCommand(() => window.api.stageAll())}
           >
             Stage all
-          </button>
+          </CommandButton>
         )}
       </div>
       <ul>
@@ -52,6 +60,10 @@ export function FileLists({
             isPartlyStaged={stagedPaths.has(change.path)}
             actionLabel="Stage"
             actionIconPath={PLUS_ICON_PATH}
+            actionPreview={previewAction(
+              stageFilesAction([change.path]),
+              'Puts this file in the next commit'
+            )}
             onSelect={() => onSelect({ path: change.path, staged: false })}
             onAction={() => runCommand(() => window.api.stageFiles([change.path]))}
           />
@@ -62,13 +74,16 @@ export function FileLists({
         <span className="grow">Staged</span>
         <span className="text-hint">{status.staged.length}</span>
         {status.staged.length > 0 && (
-          <button
+          <CommandButton
             className="button button-quiet"
-            type="button"
+            preview={previewAction(
+              unstageAllAction(status.hasCommits),
+              'Takes everything out of the next commit and keeps your files as they are'
+            )}
             onClick={() => runCommand(() => window.api.unstageAll())}
           >
             Unstage all
-          </button>
+          </CommandButton>
         )}
       </div>
       <ul>
@@ -80,6 +95,10 @@ export function FileLists({
             isPartlyStaged={unstagedPaths.has(change.path)}
             actionLabel="Unstage"
             actionIconPath={MINUS_ICON_PATH}
+            actionPreview={previewAction(
+              unstageFilesAction(pathsOf(change), status.hasCommits),
+              'Takes this file out of the next commit and keeps it as it is'
+            )}
             onSelect={() => onSelect({ path: change.path, staged: true })}
             onAction={() => runCommand(() => window.api.unstageFiles(pathsOf(change)))}
           />
