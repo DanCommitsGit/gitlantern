@@ -19,4 +19,4 @@ Use Conventional Commits. Only `feat` and `fix` commits produce a release, so la
 - After changing the Electron version, run `npm install` again, because the root `postinstall` is what downloads the binary.
 - The renderer is still the template's demo screen, so don't copy its patterns.
 - `child_process.fork` works in dev but throws in packaged builds, because the `runAsNode` fuse is off. Use `spawn` or a utility process.
-- Tests of how git is found on Windows must delete `NoDefaultCurrentDirectoryInExePath` from the environment. Claude Code's shell sets it, which hides a `git.exe` in the repo folder being run instead of real git.
+- Tests of how git is found on Windows must delete `NoDefaultCurrentDirectoryInExePath` from `process.env` itself, because the search reads the parent's value and ignores a child's `env`. Claude Code's shell sets it, which hides a `git.exe` in the repo folder being run instead of real git.
