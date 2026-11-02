@@ -36,6 +36,8 @@ export function useRepositoryState(): RepositoryState {
 
   useEffect(() => {
     void refresh()
+    window.addEventListener('focus', refresh)
+    return () => window.removeEventListener('focus', refresh)
   }, [refresh])
 
   const selected = useMemo(
