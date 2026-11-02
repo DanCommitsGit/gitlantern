@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { GitCheck, OpenedRepository, OpenResult } from '../../shared/gitlantern-api'
+import { GitProblemScreen } from './components/GitProblemScreen'
 import { RepositoryWindow } from './components/RepositoryWindow'
 import { TitleBar } from './components/TitleBar'
 import { WelcomeScreen } from './components/WelcomeScreen'
@@ -41,6 +42,13 @@ function App(): React.JSX.Element {
           gitPath={gitCheck.path}
           problem={openProblem}
           onOpenFolder={(folder) => void window.api.openRepository(folder).then(applyOpenResult)}
+        />
+      )}
+      {gitCheck !== null && gitCheck.state !== 'ok' && (
+        <GitProblemScreen
+          check={gitCheck}
+          onCheckAgain={() => void window.api.checkGit().then(setGitCheck)}
+          onChooseLocation={() => void window.api.chooseGitLocation().then(setGitCheck)}
         />
       )}
     </div>
