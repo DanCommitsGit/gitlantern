@@ -5,6 +5,7 @@ import '@fontsource/ibm-plex-mono/600.css'
 import './styles/tokens.css'
 import './styles/base.css'
 import './styles/window.css'
+import './styles/changes.css'
 import './styles/start.css'
 
 import { StrictMode } from 'react'
