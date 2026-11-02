@@ -28,6 +28,6 @@ Releases are automated with [release-please](https://github.com/googleapis/relea
 
 1. Each `feat` or `fix` commit on `main` updates an open Release PR with the next version and changelog.
 2. Merging the Release PR tags the release and starts the Windows, macOS and Linux builds.
-3. The release is published once all three builds succeed. If a build fails, the release stays a draft until you use **Re-run failed jobs**. **Re-run all jobs** finds nothing new to release, so it skips the builds and leaves the draft unpublished.
+3. The release is published as a prerelease once all three builds succeed. If a build fails, the release stays a draft until you use **Re-run failed jobs**. **Re-run all jobs** finds nothing new to release, so it skips the builds and publishing, and the run shows green with the draft still unpublished.
 
 CI doesn't run on the Release PR, because pull requests opened by `GITHUB_TOKEN` don't trigger it automatically.
