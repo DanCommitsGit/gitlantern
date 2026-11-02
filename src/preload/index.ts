@@ -2,12 +2,6 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { IPC_CHANNELS, type GitlanternApi } from '../shared/gitlantern-api'
 
 const api: GitlanternApi = {
-  versions: {
-    electron: process.versions.electron,
-    chrome: process.versions.chrome,
-    node: process.versions.node
-  },
-  ping: (): void => ipcRenderer.send('ping'),
   platform: process.platform,
   checkGit: () => ipcRenderer.invoke(IPC_CHANNELS.checkGit),
   chooseGitLocation: () => ipcRenderer.invoke(IPC_CHANNELS.chooseGitLocation),

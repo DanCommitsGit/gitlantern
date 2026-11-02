@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import { join } from 'path'
 import serve from 'electron-serve'
 import icon from '../../resources/icon.png?asset'
@@ -45,8 +45,6 @@ app.whenReady().then(() => {
   denyAllPermissions()
   setApplicationMenu()
   registerIpcHandlers(new RepositorySession(createAppDataStore()), rendererUrl)
-
-  ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
 

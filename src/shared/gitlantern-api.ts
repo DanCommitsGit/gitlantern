@@ -32,8 +32,6 @@ export interface RecentRepository {
 }
 
 export interface GitlanternApi {
-  versions: { electron: string; chrome: string; node: string }
-  ping(): void
   platform: string
   checkGit(): Promise<GitCheck>
   chooseGitLocation(): Promise<GitCheck>
