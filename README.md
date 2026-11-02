@@ -4,37 +4,21 @@ A desktop git client that shows the command behind every action, so you can lear
 
 gitlantern is in early development and has no usable features yet.
 
-## Requirements
+## Build from source
 
-- Node.js 24 (see `.nvmrc`)
-- git
-
-## Development
+There are no releases yet, so building from source is the only way to get gitlantern. You need Node.js 24 and git.
 
 ```bash
+git clone https://github.com/DanCommitsGit/gitlantern.git
+cd gitlantern
 npm install
-npm run dev
+npm run build:win
 ```
 
-Run these before pushing. CI runs the same checks.
-
-```bash
-npx prettier --check .
-npm run lint
-npm run typecheck
-npm test
-```
-
-To build a local installer, run `npm run build:win`, `npm run build:mac` or `npm run build:linux`.
-
-## Releasing
-
-Releases are automated with [release-please](https://github.com/googleapis/release-please-action) and depend on [Conventional Commits](https://www.conventionalcommits.org/).
-
-1. Each `feat` or `fix` commit on `main` updates an open Release PR with the next version and changelog.
-2. Merging the Release PR tags the release and starts the Windows, macOS and Linux builds.
-3. The release is published once all three builds succeed. If a build fails, the release stays a draft until the failed job is re-run.
-
-CI doesn't run on the Release PR, because pull requests opened by `GITHUB_TOKEN` don't trigger it automatically.
+On macOS or Linux, use `npm run build:mac` or `npm run build:linux` instead. The installer is written to `dist/`.
 
 The installers are not code-signed yet, so Windows and macOS warn on first launch.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
