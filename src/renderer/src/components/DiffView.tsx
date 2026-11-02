@@ -138,13 +138,39 @@ function DiffContent({
 }
 
 interface DiffViewProps {
+  hasCommits: boolean
   selected: SelectedChange | null
   diff: FileDiff | null
   onShowLarge(): void
 }
 
-export function DiffView({ selected, diff, onShowLarge }: DiffViewProps): React.JSX.Element {
-  if (selected === null) return <section className="pane grow" />
+export function DiffView({
+  hasCommits,
+  selected,
+  diff,
+  onShowLarge
+}: DiffViewProps): React.JSX.Element {
+  if (selected === null) {
+    return (
+      <section className="pane grow">
+        {hasCommits ? (
+          <DiffMessage
+            title="Nothing to commit"
+            message="Your files match the last commit. Edit something and it will show up here."
+          >
+            <div>
+              <span className="pill pill-ok">Working tree clean</span>
+            </div>
+          </DiffMessage>
+        ) : (
+          <DiffMessage
+            title="No commits yet"
+            message="This repository is empty. Add a file, stage it and make your first commit."
+          />
+        )}
+      </section>
+    )
+  }
 
   return (
     <section className="pane grow">

@@ -43,7 +43,12 @@ export function RepositoryWindow({
           <section className="pane file-pane">
             <FileLists status={status} selected={state.selected} onSelect={state.select} />
           </section>
-          <DiffView selected={state.selected} diff={state.diff} onShowLarge={state.showLargeDiff} />
+          <DiffView
+            hasCommits={status.hasCommits}
+            selected={state.selected}
+            diff={state.diff}
+            onShowLarge={state.showLargeDiff}
+          />
         </div>
       )}
     </div>
