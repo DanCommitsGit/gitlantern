@@ -1,8 +1,8 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import serve from 'electron-serve'
 import icon from '../../resources/icon.png?asset'
+import { setApplicationMenu } from './app-menu'
 import { createAppDataStore } from './app-data-store'
 import { registerIpcHandlers } from './ipc-handlers'
 import { RepositorySession } from './repository-session'
@@ -12,7 +12,7 @@ import { denyAllPermissions, restrictWebContents } from './window-security'
 const SERVED_RENDERER_URL = 'app://-'
 
 const rendererUrl =
-  is.dev && process.env['ELECTRON_RENDERER_URL']
+  !app.isPackaged && process.env['ELECTRON_RENDERER_URL']
     ? process.env['ELECTRON_RENDERER_URL']
     : SERVED_RENDERER_URL
 
@@ -40,14 +40,11 @@ serve({ directory: 'out/renderer' })
 restrictWebContents(rendererUrl)
 
 app.whenReady().then(() => {
-  electronApp.setAppUserModelId('io.github.dancommitsgit.gitlantern')
+  app.setAppUserModelId('io.github.dancommitsgit.gitlantern')
 
   denyAllPermissions()
+  setApplicationMenu()
   registerIpcHandlers(new RepositorySession(createAppDataStore()), rendererUrl)
-
-  app.on('browser-window-created', (_, window) => {
-    optimizer.watchWindowShortcuts(window)
-  })
 
   ipcMain.on('ping', () => console.log('pong'))
 
