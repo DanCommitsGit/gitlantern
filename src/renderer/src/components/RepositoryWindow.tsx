@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import type { CommandRecord } from '../../../shared/command-record'
-import type { OpenedRepository } from '../../../shared/gitlantern-api'
+import type { Identity, OpenedRepository } from '../../../shared/gitlantern-api'
 import { SetCommandPreviewContext, type CommandPreview } from '../command-preview'
 import { useRepositoryState } from '../use-repository-state'
 import { CommandStrip } from './CommandStrip'
 import { DiffView } from './DiffView'
 import { FileLists } from './FileLists'
+import { IdentityForm } from './IdentityForm'
 import { Rail } from './Rail'
 import { TitleBar } from './TitleBar'
 
@@ -23,8 +24,15 @@ export function RepositoryWindow({
   onClose
 }: RepositoryWindowProps): React.JSX.Element {
   const [preview, setPreview] = useState<CommandPreview | null>(null)
+  const [identity, setIdentity] = useState<Identity>(repository.identity)
   const state = useRepositoryState(onRecord)
   const { status } = state
+
+  async function saveIdentity(name: string, email: string): Promise<void> {
+    const saved = await window.api.saveIdentity(name, email)
+    saved.records.forEach(onRecord)
+    setIdentity(saved.identity)
+  }
 
   return (
     <SetCommandPreviewContext.Provider value={setPreview}>
@@ -57,6 +65,12 @@ export function RepositoryWindow({
                 onSelect={state.select}
                 runCommand={(command) => void state.runCommand(command)}
               />
+              {(identity.name === null || identity.email === null) && (
+                <IdentityForm
+                  identity={identity}
+                  onSave={(name, email) => void saveIdentity(name, email)}
+                />
+              )}
             </section>
             <DiffView
               hasCommits={status.hasCommits}
