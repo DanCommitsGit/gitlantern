@@ -13,3 +13,22 @@ export interface RepositoryStatus {
   unstaged: FileChange[]
   staged: FileChange[]
 }
+
+export interface DiffLine {
+  kind: 'context' | 'added' | 'removed' | 'no-newline'
+  oldLineNumber: number | null
+  newLineNumber: number | null
+  text: string
+}
+
+export interface DiffHunk {
+  header: string
+  lines: DiffLine[]
+}
+
+export type FileDiff =
+  | { kind: 'text'; hunks: DiffHunk[] }
+  | { kind: 'binary'; details: string }
+  | { kind: 'no-content-change'; details: string }
+  | { kind: 'too-large'; lineCount: number }
+  | { kind: 'conflict' }
