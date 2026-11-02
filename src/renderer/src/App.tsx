@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import type { CommandRecord } from '../../shared/command-record'
 import type { GitCheck, OpenedRepository, OpenResult } from '../../shared/gitlantern-api'
 import { GitProblemScreen } from './components/GitProblemScreen'
 import { RepositoryWindow } from './components/RepositoryWindow'
@@ -14,6 +15,11 @@ function App(): React.JSX.Element {
   const [repository, setRepository] = useState<OpenedRepository | null>(null)
   const [trustRequest, setTrustRequest] = useState<NeedsTrust | null>(null)
   const [openProblem, setOpenProblem] = useState<OpenProblem | null>(null)
+  const [records, setRecords] = useState<CommandRecord[]>([])
+
+  const addRecord = useCallback((record: CommandRecord) => {
+    setRecords((previous) => [record, ...previous])
+  }, [])
 
   useEffect(() => {
     void window.api.checkGit().then(setGitCheck)
@@ -26,7 +32,8 @@ function App(): React.JSX.Element {
   }
 
   async function createInFolder(folder: string): Promise<void> {
-    const { result } = await window.api.createRepository(folder)
+    const { result, record } = await window.api.createRepository(folder)
+    if (record !== null) addRecord(record)
     applyOpenResult(result)
   }
 
@@ -34,11 +41,18 @@ function App(): React.JSX.Element {
     void window.api.closeRepository()
     setRepository(null)
     setOpenProblem(null)
+    setRecords([])
   }
 
   if (repository !== null) {
     return (
-      <RepositoryWindow key={repository.path} repository={repository} onClose={closeRepository} />
+      <RepositoryWindow
+        key={repository.path}
+        repository={repository}
+        records={records}
+        onRecord={addRecord}
+        onClose={closeRepository}
+      />
     )
   }
 

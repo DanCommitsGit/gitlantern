@@ -17,7 +17,7 @@ export interface RepositoryState {
   runCommand(command: () => Promise<CommandRecord>): Promise<CommandRecord | null>
 }
 
-export function useRepositoryState(): RepositoryState {
+export function useRepositoryState(onRecord: (record: CommandRecord) => void): RepositoryState {
   const [status, setStatus] = useState<RepositoryStatus | null>(null)
   const [selection, setSelection] = useState<FileSelection | null>(null)
   const [diff, setDiff] = useState<FileDiff | null>(null)
@@ -69,6 +69,7 @@ export function useRepositoryState(): RepositoryState {
     async (command: () => Promise<CommandRecord>) => {
       try {
         const record = await command()
+        onRecord(record)
         await refresh()
         return record
       } catch (error) {
@@ -76,7 +77,7 @@ export function useRepositoryState(): RepositoryState {
         return null
       }
     },
-    [refresh]
+    [onRecord, refresh]
   )
 
   return {

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { CommandRecord } from '../../../shared/command-record'
 import type { OpenedRepository } from '../../../shared/gitlantern-api'
 import { SetCommandPreviewContext, type CommandPreview } from '../command-preview'
 import { useRepositoryState } from '../use-repository-state'
@@ -10,15 +11,19 @@ import { TitleBar } from './TitleBar'
 
 interface RepositoryWindowProps {
   repository: OpenedRepository
+  records: CommandRecord[]
+  onRecord(record: CommandRecord): void
   onClose(): void
 }
 
 export function RepositoryWindow({
   repository,
+  records,
+  onRecord,
   onClose
 }: RepositoryWindowProps): React.JSX.Element {
   const [preview, setPreview] = useState<CommandPreview | null>(null)
-  const state = useRepositoryState()
+  const state = useRepositoryState(onRecord)
   const { status } = state
 
   return (
@@ -61,7 +66,7 @@ export function RepositoryWindow({
             />
           </div>
         )}
-        <CommandStrip preview={preview} />
+        <CommandStrip preview={preview} records={records} />
       </div>
     </SetCommandPreviewContext.Provider>
   )
