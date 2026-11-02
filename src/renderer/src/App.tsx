@@ -1,3 +1,4 @@
+import { Tooltip } from '@base-ui/react/tooltip'
 import { useCallback, useEffect, useState } from 'react'
 import type { CommandRecord } from '../../shared/command-record'
 import type { GitCheck, OpenedRepository, OpenResult } from '../../shared/gitlantern-api'
@@ -46,13 +47,15 @@ function App(): React.JSX.Element {
 
   if (repository !== null) {
     return (
-      <RepositoryWindow
-        key={repository.path}
-        repository={repository}
-        records={records}
-        onRecord={addRecord}
-        onClose={closeRepository}
-      />
+      <Tooltip.Provider>
+        <RepositoryWindow
+          key={repository.path}
+          repository={repository}
+          records={records}
+          onRecord={addRecord}
+          onClose={closeRepository}
+        />
+      </Tooltip.Provider>
     )
   }
 

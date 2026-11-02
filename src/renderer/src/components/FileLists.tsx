@@ -7,9 +7,11 @@ import {
 } from '../../../shared/git-actions'
 import type { FileChange, RepositoryStatus } from '../../../shared/repository-types'
 import { previewAction } from '../command-preview'
+import { GLOSSARY } from '../glossary'
 import type { FileSelection, SelectedChange } from '../selected-change'
 import { CommandButton } from './CommandButton'
 import { FileRow } from './FileRow'
+import { Hint } from './Hint'
 
 const PLUS_ICON_PATH = 'M8 3v10M3 8h10'
 const MINUS_ICON_PATH = 'M3 8h10'
@@ -39,7 +41,9 @@ export function FileLists({
   return (
     <div className="file-lists">
       <div className="pane-head">
-        <span className="grow">Unstaged</span>
+        <span className="grow">
+          <Hint entry={GLOSSARY.unstaged}>Unstaged</Hint>
+        </span>
         <span className="text-hint">{status.unstaged.length}</span>
         {status.unstaged.length > 0 && (
           <CommandButton
@@ -71,7 +75,9 @@ export function FileLists({
       </ul>
 
       <div className="pane-head file-list-staged-head">
-        <span className="grow">Staged</span>
+        <span className="grow">
+          <Hint entry={GLOSSARY.staged}>Staged</Hint>
+        </span>
         <span className="text-hint">{status.staged.length}</span>
         {status.staged.length > 0 && (
           <CommandButton

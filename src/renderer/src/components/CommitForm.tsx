@@ -3,7 +3,9 @@ import type { CommandRecord } from '../../../shared/command-record'
 import { commitAction } from '../../../shared/git-actions'
 import type { Identity } from '../../../shared/gitlantern-api'
 import { previewAction } from '../command-preview'
+import { GLOSSARY } from '../glossary'
 import { CommandButton } from './CommandButton'
+import { Hint } from './Hint'
 
 interface CommitFormProps {
   branchName: string | null
@@ -51,7 +53,7 @@ export function CommitForm({
     <div className="commit-form" onKeyDown={commitOnShortcut}>
       <div className="row-layout" style={{ justifyContent: 'space-between' }}>
         <label className="text-label" htmlFor="commit-summary">
-          Summary
+          <Hint entry={GLOSSARY.summary}>Summary</Hint>
         </label>
         <span className="text-hint">{summary.length > 0 ? summary.length : ''}</span>
       </div>
@@ -62,7 +64,7 @@ export function CommitForm({
         onChange={(event) => setSummary(event.target.value)}
       />
       <label className="text-label" htmlFor="commit-description">
-        Description
+        <Hint entry={GLOSSARY.description}>Description</Hint>
       </label>
       <textarea
         className="input textarea"
