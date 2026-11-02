@@ -1,5 +1,11 @@
+import { TitleBar } from './components/TitleBar'
+
 function App(): React.JSX.Element {
-  return <h1 className="text-title">gitlantern</h1>
+  return (
+    <div className="window">
+      <TitleBar />
+    </div>
+  )
 }
 
 export default App
