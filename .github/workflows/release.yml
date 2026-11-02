@@ -71,7 +71,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - run: gh release edit "$TAG_NAME" --draft=false --repo "$GITHUB_REPOSITORY"
+      - run: gh release edit "$TAG_NAME" --draft=false --repo "$GITHUB_REPOSITORY" --prerelease
         env:
           GH_TOKEN: ${{ github.token }}
           TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
