@@ -3,13 +3,16 @@ import type { GitCheck, OpenedRepository, OpenResult } from '../../shared/gitlan
 import { GitProblemScreen } from './components/GitProblemScreen'
 import { RepositoryWindow } from './components/RepositoryWindow'
 import { TitleBar } from './components/TitleBar'
+import { TrustDialog } from './components/TrustDialog'
 import { WelcomeScreen } from './components/WelcomeScreen'
 
+type NeedsTrust = Extract<OpenResult, { kind: 'needs-trust' }>
 type OpenProblem = Extract<OpenResult, { kind: 'not-a-repository' | 'failed' }>
 
 function App(): React.JSX.Element {
   const [gitCheck, setGitCheck] = useState<GitCheck | null>(null)
   const [repository, setRepository] = useState<OpenedRepository | null>(null)
+  const [trustRequest, setTrustRequest] = useState<NeedsTrust | null>(null)
   const [openProblem, setOpenProblem] = useState<OpenProblem | null>(null)
 
   useEffect(() => {
@@ -17,6 +20,7 @@ function App(): React.JSX.Element {
   }, [])
 
   function applyOpenResult(result: OpenResult): void {
+    setTrustRequest(result.kind === 'needs-trust' ? result : null)
     setOpenProblem(result.kind === 'not-a-repository' || result.kind === 'failed' ? result : null)
     setRepository(result.kind === 'opened' ? result.repository : null)
   }
@@ -55,6 +59,14 @@ function App(): React.JSX.Element {
           check={gitCheck}
           onCheckAgain={() => void window.api.checkGit().then(setGitCheck)}
           onChooseLocation={() => void window.api.chooseGitLocation().then(setGitCheck)}
+        />
+      )}
+      {trustRequest !== null && (
+        <TrustDialog
+          path={trustRequest.path}
+          programs={trustRequest.programs}
+          onTrust={() => void window.api.trustPendingRepository().then(applyOpenResult)}
+          onCancel={() => setTrustRequest(null)}
         />
       )}
     </div>
