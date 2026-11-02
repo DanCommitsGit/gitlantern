@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import type { RepositoryStatus } from '../../shared/repository-types'
+import type { FileDiff, RepositoryStatus } from '../../shared/repository-types'
 import { resolveSelectedChange, type FileSelection, type SelectedChange } from './selected-change'
 
 function errorMessage(error: unknown): string {
@@ -9,6 +9,7 @@ function errorMessage(error: unknown): string {
 export interface RepositoryState {
   status: RepositoryStatus | null
   selected: SelectedChange | null
+  diff: FileDiff | null
   errorMessage: string | null
   select(selection: FileSelection): void
 }
@@ -16,6 +17,7 @@ export interface RepositoryState {
 export function useRepositoryState(): RepositoryState {
   const [status, setStatus] = useState<RepositoryStatus | null>(null)
   const [selection, setSelection] = useState<FileSelection | null>(null)
+  const [diff, setDiff] = useState<FileDiff | null>(null)
   const [readError, setReadError] = useState<string | null>(null)
 
   const refresh = useCallback(
@@ -39,9 +41,27 @@ export function useRepositoryState(): RepositoryState {
     [status, selection]
   )
 
+  useEffect(() => {
+    if (selected === null) return
+
+    let isCurrent = true
+    window.api.readDiff(selected.change, selected.staged, false).then(
+      (nextDiff) => {
+        if (isCurrent) setDiff(nextDiff)
+      },
+      (error) => {
+        if (isCurrent) setReadError(errorMessage(error))
+      }
+    )
+    return () => {
+      isCurrent = false
+    }
+  }, [selected])
+
   return {
     status,
     selected,
+    diff: selected === null ? null : diff,
     errorMessage: readError,
     select: setSelection
   }

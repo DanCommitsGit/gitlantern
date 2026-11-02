@@ -1,5 +1,6 @@
 import type { OpenedRepository } from '../../../shared/gitlantern-api'
 import { useRepositoryState } from '../use-repository-state'
+import { DiffView } from './DiffView'
 import { FileLists } from './FileLists'
 import { Rail } from './Rail'
 import { TitleBar } from './TitleBar'
@@ -42,7 +43,7 @@ export function RepositoryWindow({
           <section className="pane file-pane">
             <FileLists status={status} selected={state.selected} onSelect={state.select} />
           </section>
-          <section className="pane grow" />
+          <DiffView selected={state.selected} diff={state.diff} />
         </div>
       )}
     </div>

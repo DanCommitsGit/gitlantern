@@ -6,6 +6,7 @@ import './styles/tokens.css'
 import './styles/base.css'
 import './styles/window.css'
 import './styles/changes.css'
+import './styles/diff.css'
 import './styles/start.css'
 
 import { StrictMode } from 'react'
