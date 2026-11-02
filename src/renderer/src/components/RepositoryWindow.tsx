@@ -41,7 +41,12 @@ export function RepositoryWindow({
         <div className="window-body">
           <Rail branchName={status.branchName} />
           <section className="pane file-pane">
-            <FileLists status={status} selected={state.selected} onSelect={state.select} />
+            <FileLists
+              status={status}
+              selected={state.selected}
+              onSelect={state.select}
+              runCommand={(command) => void state.runCommand(command)}
+            />
           </section>
           <DiffView
             hasCommits={status.hasCommits}

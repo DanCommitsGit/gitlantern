@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import type { CommandRecord } from '../../shared/command-record'
 import type { FileDiff, RepositoryStatus } from '../../shared/repository-types'
 import { resolveSelectedChange, type FileSelection, type SelectedChange } from './selected-change'
 
@@ -13,6 +14,7 @@ export interface RepositoryState {
   errorMessage: string | null
   select(selection: FileSelection): void
   showLargeDiff(): void
+  runCommand(command: () => Promise<CommandRecord>): Promise<CommandRecord | null>
 }
 
 export function useRepositoryState(): RepositoryState {
@@ -63,12 +65,27 @@ export function useRepositoryState(): RepositoryState {
     }
   }, [selected, largeDiffPath])
 
+  const runCommand = useCallback(
+    async (command: () => Promise<CommandRecord>) => {
+      try {
+        const record = await command()
+        await refresh()
+        return record
+      } catch (error) {
+        setReadError(errorMessage(error))
+        return null
+      }
+    },
+    [refresh]
+  )
+
   return {
     status,
     selected,
     diff: selected === null ? null : diff,
     errorMessage: readError,
     select: setSelection,
-    showLargeDiff: () => setLargeDiffPath(selected?.change.path ?? null)
+    showLargeDiff: () => setLargeDiffPath(selected?.change.path ?? null),
+    runCommand
   }
 }
