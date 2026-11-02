@@ -61,6 +61,8 @@ jobs:
       - run: npm run ${{ matrix.build_script }} -- --publish always
         env:
           GH_TOKEN: ${{ github.token }}
+      - run: codesign --verify --deep --strict --verbose=2 dist/mac-arm64/gitlantern.app
+        if: runner.os == 'macOS'
 
   publish:
     needs: [release-please, build]

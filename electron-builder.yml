@@ -37,6 +37,7 @@ electronFuses:
   enableNodeCliInspectArguments: false
   onlyLoadAppFromAsar: true
   grantFileProtocolExtraPrivileges: false
+  resetAdHocDarwinSignature: true
 publish:
   provider: github
   owner: DanCommitsGit
