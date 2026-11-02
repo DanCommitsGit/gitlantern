@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
+import { chmodSync, mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { findGitPath } from './find-git'
@@ -27,6 +27,7 @@ export interface TestRepository {
   path: string
   git(...gitArguments: string[]): string
   writeFile(relativePath: string, contents: string): void
+  writeExecutable(relativePath: string, contents: string): void
   remove(): void
 }
 
@@ -45,6 +46,10 @@ export function createTestRepository(): TestRepository {
       const filePath = join(path, relativePath)
       mkdirSync(dirname(filePath), { recursive: true })
       writeFileSync(filePath, contents)
+    },
+    writeExecutable: (relativePath, contents) => {
+      repository.writeFile(relativePath, contents)
+      chmodSync(join(path, relativePath), 0o755)
     },
     remove: () => rmSync(path, { recursive: true, force: true, maxRetries: 5 })
   }

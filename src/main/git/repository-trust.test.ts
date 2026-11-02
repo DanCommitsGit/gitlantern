@@ -121,8 +121,8 @@ describe('findRepositoryPrograms', () => {
   it('runs none of the programs it finds, which git status would run', async () => {
     const markerPath = join(repository.path, 'program-ran.txt').replaceAll('\\', '/')
     const script = `#!/bin/sh\necho ran > "${markerPath}"\n`
-    repository.writeFile('.git/watch.sh', script)
-    repository.writeFile('.git/hooks/post-index-change', script)
+    repository.writeExecutable('.git/watch.sh', script)
+    repository.writeExecutable('.git/hooks/post-index-change', script)
     repository.git(
       'config',
       'core.fsmonitor',

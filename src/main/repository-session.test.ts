@@ -11,7 +11,7 @@ import {
 import { RepositorySession, type AppData, type AppDataStore } from './repository-session'
 
 function memoryStore(): AppDataStore {
-  const data: AppData = { recentRepositories: [], gitLocation: null }
+  const data: AppData = { recentRepositories: [], trustedPrograms: {}, gitLocation: null }
   return {
     get: (key) => data[key],
     set: (key, value) => {
@@ -87,6 +87,45 @@ describe('RepositorySession', () => {
     } finally {
       rmSync(folder, { recursive: true, force: true, maxRetries: 5 })
     }
+  })
+
+  it('blocks reads until a repository that can run programs is trusted', async () => {
+    repository.git('config', 'core.sshCommand', 'ssh -i key')
+    await session.checkGit()
+
+    const result = await session.open(repository.path)
+
+    expect(result).toEqual({
+      kind: 'needs-trust',
+      path: normalize(repository.path),
+      programs: [{ kind: 'setting', name: 'core.sshcommand', value: 'ssh -i key' }]
+    })
+    await expect(session.readStatus()).rejects.toThrow()
+
+    const trusted = await session.trustPending()
+
+    expect(trusted.kind).toBe('opened')
+    await expect(session.readStatus()).resolves.toMatchObject({ branchName: 'main' })
+  })
+
+  it('remembers trust until the programs change', async () => {
+    repository.git('config', 'core.sshCommand', 'ssh -i key')
+    await session.checkGit()
+    await session.open(repository.path)
+    await session.trustPending()
+    session.close()
+
+    expect((await session.open(repository.path)).kind).toBe('opened')
+    session.close()
+
+    repository.git('config', 'core.sshCommand', 'ssh -i other-key')
+    expect((await session.open(repository.path)).kind).toBe('needs-trust')
+  })
+
+  it('has nothing to trust unless a repository is waiting', async () => {
+    await session.checkGit()
+
+    await expect(session.trustPending()).rejects.toThrow()
   })
 
   it('keeps ten recent repositories, newest first, without duplicates', async () => {

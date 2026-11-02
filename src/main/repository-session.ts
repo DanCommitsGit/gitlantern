@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { basename, normalize } from 'node:path'
 import {
   commitAction,
@@ -12,6 +13,7 @@ import type { FileChange, FileDiff, RepositoryStatus } from '../shared/repositor
 import { readFileDiff } from './git/file-diff'
 import { findGitPath } from './git/find-git'
 import { isSupportedGitVersion } from './git/git-version'
+import { findRepositoryPrograms, type RepositoryProgram } from './git/repository-trust'
 import { readRepositoryStatus } from './git/repository-status'
 import { runAction } from './git/run-action'
 import { runGit } from './git/run-git'
@@ -20,6 +22,8 @@ const MAX_RECENT_REPOSITORIES = 10
 
 export interface AppData {
   recentRepositories: string[]
+  // Repository path to a fingerprint of the programs the user trusted.
+  trustedPrograms: Record<string, string>
   gitLocation: string | null
 }
 
@@ -28,9 +32,14 @@ export interface AppDataStore {
   set<Key extends keyof AppData>(key: Key, value: AppData[Key]): void
 }
 
+function fingerprint(programs: RepositoryProgram[]): string {
+  return createHash('sha256').update(JSON.stringify(programs)).digest('hex')
+}
+
 export class RepositorySession {
   private gitPath: string | null = null
   private repositoryPath: string | null = null
+  private pendingTrust: { path: string; programs: RepositoryProgram[] } | null = null
 
   constructor(private readonly store: AppDataStore) {}
 
@@ -83,11 +92,33 @@ export class RepositorySession {
     }
 
     const repositoryPath = normalize(topLevelResult.stdout.toString().trim())
+    const programs = await findRepositoryPrograms({ gitPath, repositoryPath })
+    const isTrusted =
+      programs.length === 0 ||
+      this.store.get('trustedPrograms')[repositoryPath] === fingerprint(programs)
+    if (!isTrusted) {
+      this.pendingTrust = { path: repositoryPath, programs }
+      return { kind: 'needs-trust', path: repositoryPath, programs }
+    }
+
     return this.finishOpening(repositoryPath)
+  }
+
+  async trustPending(): Promise<OpenResult> {
+    if (this.pendingTrust === null) throw new Error('No repository is waiting to be trusted')
+
+    const { path, programs } = this.pendingTrust
+    this.pendingTrust = null
+    this.store.set('trustedPrograms', {
+      ...this.store.get('trustedPrograms'),
+      [path]: fingerprint(programs)
+    })
+    return this.finishOpening(path)
   }
 
   close(): void {
     this.repositoryPath = null
+    this.pendingTrust = null
   }
 
   async readStatus(): Promise<RepositoryStatus> {
