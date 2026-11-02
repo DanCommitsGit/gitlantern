@@ -46,6 +46,21 @@ export function unstageAllAction(hasCommits: boolean): GitAction {
       }
 }
 
+export function commitAction(summary: string, description: string): GitAction {
+  const trimmedDescription = description.trim()
+  return {
+    typedArguments: [
+      'commit',
+      '-m',
+      summary,
+      ...(trimmedDescription === '' ? [] : ['-m', trimmedDescription])
+    ],
+    gitArguments: ['commit', '-F', '-'],
+    stdin: trimmedDescription === '' ? `${summary}\n` : `${summary}\n\n${trimmedDescription}\n`,
+    differsFromTyped: true
+  }
+}
+
 function quoteForDisplay(argument: string): string {
   return /^[\w@%+=:,./-]+$/.test(argument)
     ? argument

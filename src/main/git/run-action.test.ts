@@ -2,6 +2,7 @@ import { rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import {
+  commitAction,
   formatCommand,
   stageAllAction,
   stageFilesAction,
@@ -138,6 +139,50 @@ describe('git actions', () => {
     repository.git('add', 'a.txt')
     await run(unstageAllAction(true))
     expect((await status()).staged).toEqual([])
+  })
+
+  it('commits a summary alone', async () => {
+    repository.writeFile('a.txt', 'a\n')
+    repository.git('add', 'a.txt')
+
+    const record = await run(commitAction('Add "a" file', '   '))
+
+    expect(record.exitCode).toBe(0)
+    expect(repository.git('log', '-1', '--format=%B').trim()).toBe('Add "a" file')
+  })
+
+  it('commits a summary and description', async () => {
+    repository.writeFile('a.txt', 'a\n')
+    repository.git('add', 'a.txt')
+
+    await run(commitAction('Summary', 'First line.\n\nSecond paragraph.'))
+
+    expect(repository.git('log', '-1', '--format=%B').trim()).toBe(
+      'Summary\n\nFirst line.\n\nSecond paragraph.'
+    )
+  })
+
+  it('records what you would type and what ran', async () => {
+    repository.writeFile('a.txt', 'a\n')
+    repository.git('add', 'a.txt')
+
+    const record = await run(commitAction('Say "hi"', ''))
+
+    expect(record).toMatchObject({
+      typedCommand: 'git commit -m "Say \\"hi\\""',
+      ranCommand: 'git commit -F -',
+      differsFromTyped: true,
+      exitCode: 0
+    })
+    expect(record.exactCommand).toContain('safe.bareRepository=explicit')
+    expect(record.output).toContain('Say "hi"')
+  })
+
+  it('records a failure and its message', async () => {
+    const record = await run(commitAction('Nothing staged', ''))
+
+    expect(record.exitCode).not.toBe(0)
+    expect(record.output).not.toBe('')
   })
 
   it('formats commands for display', () => {
