@@ -13,6 +13,7 @@ export interface GitCommand {
   stdin?: string
   timeoutMilliseconds?: number
   signal?: AbortSignal
+  environment?: NodeJS.ProcessEnv
 }
 
 export interface GitResult {
@@ -40,7 +41,8 @@ export async function runGit(command: GitCommand): Promise<GitResult> {
     windowsHide: true,
     timeout: command.timeoutMilliseconds ?? DEFAULT_TIMEOUT_MILLISECONDS,
     maxBuffer: MAX_OUTPUT_BYTES,
-    signal: command.signal
+    signal: command.signal,
+    env: command.environment
   })
   pendingResult.child.stdin?.end(command.stdin)
 
