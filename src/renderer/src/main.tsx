@@ -9,6 +9,7 @@ import './styles/changes.css'
 import './styles/diff.css'
 import './styles/command-strip.css'
 import './styles/start.css'
+import './styles/settings.css'
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
