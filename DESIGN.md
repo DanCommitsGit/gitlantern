@@ -34,6 +34,11 @@
 
 - A welcome screen offers Open, Create and recent repos, with no setup wizard. Clone joins them when sync exists.
 
+## Settings
+
+- Settings open in a dialog from the icon at the right end of the title bar.
+- A sidebar lists the sections, and the panel shows the selected one.
+
 ## Look
 
 - The app follows the system's light or dark theme.
