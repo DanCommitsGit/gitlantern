@@ -1,0 +1,61 @@
+import { BrowserWindow, clipboard, dialog, ipcMain, type IpcMainInvokeEvent } from 'electron'
+import { basename } from 'node:path'
+import { IPC_CHANNELS } from '../shared/gitlantern-api'
+import {
+  requireBoolean,
+  requireFileChange,
+  requireNonEmptyStrings,
+  requireString
+} from './ipc-validation'
+import type { RepositorySession } from './repository-session'
+import { isSameOrigin } from './url-policy'
+
+export function registerIpcHandlers(session: RepositorySession, rendererUrl: string): void {
+  function handle(channel: string, handler: (...values: unknown[]) => unknown): void {
+    ipcMain.handle(channel, (event: IpcMainInvokeEvent, ...values: unknown[]) => {
+      const origin = event.senderFrame?.origin
+      if (origin === undefined || !isSameOrigin(origin, rendererUrl)) {
+        throw new Error('Rejected a message from another origin')
+      }
+      return handler(...values)
+    })
+  }
+
+  async function chooseFolder(): Promise<string | null> {
+    const window = BrowserWindow.getFocusedWindow()
+    const options = { properties: ['openDirectory' as const, 'createDirectory' as const] }
+    const { canceled, filePaths } = window
+      ? await dialog.showOpenDialog(window, options)
+      : await dialog.showOpenDialog(options)
+    return canceled ? null : filePaths[0]
+  }
+
+  handle(IPC_CHANNELS.checkGit, () => session.checkGit())
+  handle(IPC_CHANNELS.chooseGitLocation, async () => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openFile'] })
+    return canceled ? session.checkGit() : session.useGitLocation(filePaths[0])
+  })
+  handle(IPC_CHANNELS.recentRepositories, () =>
+    session.recentRepositories().map((path) => ({ path, name: basename(path) }))
+  )
+  handle(IPC_CHANNELS.chooseFolder, chooseFolder)
+  handle(IPC_CHANNELS.openRepository, (folder) => session.open(requireString(folder)))
+  handle(IPC_CHANNELS.trustPendingRepository, () => session.trustPending())
+  handle(IPC_CHANNELS.createRepository, (folder) => session.create(requireString(folder)))
+  handle(IPC_CHANNELS.closeRepository, () => session.close())
+  handle(IPC_CHANNELS.readStatus, () => session.readStatus())
+  handle(IPC_CHANNELS.readDiff, (change, staged, showLarge) =>
+    session.readDiff(requireFileChange(change), requireBoolean(staged), requireBoolean(showLarge))
+  )
+  handle(IPC_CHANNELS.stageFiles, (paths) => session.stageFiles(requireNonEmptyStrings(paths)))
+  handle(IPC_CHANNELS.stageAll, () => session.stageAll())
+  handle(IPC_CHANNELS.unstageFiles, (paths) => session.unstageFiles(requireNonEmptyStrings(paths)))
+  handle(IPC_CHANNELS.unstageAll, () => session.unstageAll())
+  handle(IPC_CHANNELS.commit, (summary, description) =>
+    session.commit(requireString(summary), requireString(description))
+  )
+  handle(IPC_CHANNELS.saveIdentity, (name, email) =>
+    session.saveIdentity(requireString(name), requireString(email))
+  )
+  handle(IPC_CHANNELS.copyText, (text) => clipboard.writeText(requireString(text)))
+}

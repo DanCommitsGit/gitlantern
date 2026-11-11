@@ -1,0 +1,73 @@
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --sunken: #f5f5f2;
+  --raised: #ffffff;
+  --hover: #efefeb;
+  --selected: #e8e7e1;
+  --line: #e2e1dc;
+  --line-strong: #c9c8c1;
+  --ink: #1c1c19;
+  --ink-2: #4f4e49;
+  --ink-3: #68675f;
+  --lamp: #7a5100;
+  --lamp-fill: #f2b53a;
+  --lamp-on: #1c1c19;
+  --lamp-tint: #fdf3da;
+  --lamp-line: #e3bc66;
+  --primary: #1c1c19;
+  --on-primary: #ffffff;
+  --ok: #17693f;
+  --ok-tint: #e4f4ea;
+  --info: #1d5fbf;
+  --info-tint: #e6effb;
+  --attn: #a8430a;
+  --attn-tint: #fcebdd;
+  --danger: #b3261e;
+  --danger-tint: #fbe7e5;
+  --add-bg: #e3f5e8;
+  --add-ink: #115230;
+  --del-bg: #fce9e7;
+  --del-ink: #8a1d16;
+  --shadow: 0 8px 28px rgba(28, 28, 25, 0.16);
+  --scrim: rgba(28, 28, 25, 0.32);
+  --font-sans: 'IBM Plex Sans Variable', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', Consolas, ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #1a1a18;
+    --sunken: #141412;
+    --raised: #24241f;
+    --hover: #2a2a26;
+    --selected: #34332d;
+    --line: #2f2f2a;
+    --line-strong: #4a4942;
+    --ink: #edede8;
+    --ink-2: #bdbcb3;
+    --ink-3: #9a9990;
+    --lamp: #f5c04e;
+    --lamp-fill: #f5c04e;
+    --lamp-on: #1c1c19;
+    --lamp-tint: #33290f;
+    --lamp-line: #6b5420;
+    --primary: #edede8;
+    --on-primary: #1a1a18;
+    --ok: #5fcb8f;
+    --ok-tint: #16301f;
+    --info: #7db0ff;
+    --info-tint: #172a48;
+    --attn: #ff9e5e;
+    --attn-tint: #3a2414;
+    --danger: #ff8078;
+    --danger-tint: #3d1b19;
+    --add-bg: #16291d;
+    --add-ink: #8fe3b2;
+    --del-bg: #321b19;
+    --del-ink: #ffada6;
+    --shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+    --scrim: rgba(0, 0, 0, 0.5);
+  }
+}

@@ -1,0 +1,98 @@
+.file-lists {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.file-list-staged-head {
+  border-top: 1px solid var(--line);
+}
+
+.file-row {
+  display: flex;
+  align-items: center;
+  min-height: 28px;
+  padding-right: 8px;
+}
+
+.file-row:hover {
+  background: var(--hover);
+}
+
+.file-row[data-selected='true'] {
+  background: var(--selected);
+}
+
+.file-row-select {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 28px;
+  padding: 2px 4px 2px 12px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.file-row-select:focus-visible {
+  outline-offset: -2px;
+}
+
+.file-row-action {
+  visibility: hidden;
+}
+
+.file-row:hover .file-row-action,
+.file-row:focus-within .file-row-action,
+.file-row[data-selected='true'] .file-row-action {
+  visibility: visible;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border-radius: 3px;
+  font: 600 11px/1 var(--font-mono);
+}
+
+.status-changed {
+  color: var(--info);
+  background: var(--info-tint);
+}
+
+.status-added {
+  color: var(--ok);
+  background: var(--ok-tint);
+}
+
+.status-deleted {
+  color: var(--danger);
+  background: var(--danger-tint);
+}
+
+.status-untracked {
+  color: var(--ink-2);
+  background: var(--hover);
+}
+
+.status-conflict {
+  color: var(--attn);
+  background: var(--attn-tint);
+}
+
+.commit-form {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--line);
+}
