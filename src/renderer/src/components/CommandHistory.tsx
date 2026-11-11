@@ -1,16 +1,13 @@
+import { Check, TriangleAlert } from 'lucide-react'
 import { useState } from 'react'
 import type { CommandRecord } from '../../../shared/command-record'
 
 function StatusMark({ exitCode }: { exitCode: number }): React.JSX.Element {
   return exitCode === 0 ? (
-    <svg className="icon text-ok" viewBox="0 0 16 16" role="img" aria-label="Succeeded">
-      <path d="M3 8.5 6.5 12 13 4.5" />
-    </svg>
+    <Check className="icon text-ok" role="img" aria-label="Succeeded" />
   ) : (
     <>
-      <svg className="icon text-attention" viewBox="0 0 16 16" aria-hidden="true">
-        <path d="M8 2 1.5 13.5h13zM8 6.5v3.5M8 12v.01" />
-      </svg>
+      <TriangleAlert className="icon text-attention" />
       <span className="text-small text-attention">Failed</span>
     </>
   )

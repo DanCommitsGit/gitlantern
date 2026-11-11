@@ -1,4 +1,5 @@
 import { Dialog } from '@base-ui/react/dialog'
+import { Settings2, X } from 'lucide-react'
 import { useState } from 'react'
 import { SETTINGS_SECTIONS, type SettingsSection } from '../settings-sections'
 
@@ -8,11 +9,7 @@ export function SettingsDialog(): React.JSX.Element {
   return (
     <Dialog.Root>
       <Dialog.Trigger className="button button-quiet button-icon" aria-label="Settings">
-        <svg className="icon" viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M2 5h7M12 5h2M2 11h2M7 11h7" />
-          <circle cx="10.5" cy="5" r="1.5" />
-          <circle cx="5.5" cy="11" r="1.5" />
-        </svg>
+        <Settings2 className="icon" />
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Backdrop className="dialog-backdrop" />
@@ -37,9 +34,7 @@ export function SettingsDialog(): React.JSX.Element {
                 {selected.name}
               </h3>
               <Dialog.Close className="button button-quiet button-icon" aria-label="Close settings">
-                <svg className="icon" viewBox="0 0 16 16" aria-hidden="true">
-                  <path d="m4 4 8 8M12 4l-8 8" />
-                </svg>
+                <X className="icon" />
               </Dialog.Close>
             </div>
           </section>

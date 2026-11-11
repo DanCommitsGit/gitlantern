@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react'
 import type { FileChange, FileStatus } from '../../../shared/repository-types'
 import type { CommandPreview } from '../command-preview'
 import { CommandButton } from './CommandButton'
@@ -18,7 +19,7 @@ interface FileRowProps {
   isSelected: boolean
   isPartlyStaged: boolean
   actionLabel: string
-  actionIconPath: string
+  actionIcon: LucideIcon
   actionPreview: CommandPreview
   onSelect(): void
   onAction(): void
@@ -29,7 +30,7 @@ export function FileRow({
   isSelected,
   isPartlyStaged,
   actionLabel,
-  actionIconPath,
+  actionIcon: ActionIcon,
   actionPreview,
   onSelect,
   onAction
@@ -53,9 +54,7 @@ export function FileRow({
         preview={actionPreview}
         onClick={onAction}
       >
-        <svg className="icon" viewBox="0 0 16 16" aria-hidden="true">
-          <path d={actionIconPath} />
-        </svg>
+        <ActionIcon className="icon" />
       </CommandButton>
     </li>
   )
