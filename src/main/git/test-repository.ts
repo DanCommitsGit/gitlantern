@@ -32,7 +32,8 @@ export interface TestRepository {
 }
 
 export function createTestRepository(): TestRepository {
-  const path = realpathSync(mkdtempSync(join(tmpdir(), 'gitlantern-test-')))
+  // Only the native call expands Windows short names such as RUNNER~1, which git reports in full.
+  const path = realpathSync.native(mkdtempSync(join(tmpdir(), 'gitlantern-test-')))
   const gitPath = testGitPath()
 
   const repository: TestRepository = {
