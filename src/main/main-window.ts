@@ -16,7 +16,8 @@ function currentThemeColors(): { background: string; symbol: string } {
 
 function titleBarOverlay(): { color: string; symbolColor: string; height: number } {
   const { background, symbol } = currentThemeColors()
-  return { color: background, symbolColor: symbol, height: TITLE_BAR_HEIGHT }
+  // One pixel short so the title bar's bottom border stays visible under the buttons.
+  return { color: background, symbolColor: symbol, height: TITLE_BAR_HEIGHT - 1 }
 }
 
 export function createMainWindow(rendererUrl: string): BrowserWindow {
