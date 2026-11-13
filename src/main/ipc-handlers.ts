@@ -9,9 +9,14 @@ import {
 } from './ipc-validation'
 import { logError } from './log'
 import type { RepositorySession } from './repository-session'
+import { readSettings, saveSetting, type SettingsStore } from './settings'
 import { isSameOrigin } from './url-policy'
 
-export function registerIpcHandlers(session: RepositorySession, rendererUrl: string): void {
+export function registerIpcHandlers(
+  session: RepositorySession,
+  settingsStore: SettingsStore,
+  rendererUrl: string
+): void {
   function handle(channel: string, handler: (...values: unknown[]) => unknown): void {
     ipcMain.handle(channel, async (event: IpcMainInvokeEvent, ...values: unknown[]) => {
       try {
@@ -65,4 +70,6 @@ export function registerIpcHandlers(session: RepositorySession, rendererUrl: str
     session.saveIdentity(requireString(name), requireString(email))
   )
   handle(IPC_CHANNELS.copyText, (text) => clipboard.writeText(requireString(text)))
+  handle(IPC_CHANNELS.readSettings, () => readSettings(settingsStore))
+  handle(IPC_CHANNELS.saveSetting, (key, value) => saveSetting(settingsStore, key, value))
 }

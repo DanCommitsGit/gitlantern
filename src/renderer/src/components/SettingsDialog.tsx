@@ -2,6 +2,7 @@ import { Dialog } from '@base-ui/react/dialog'
 import { Settings2, X } from 'lucide-react'
 import { useState } from 'react'
 import { SETTINGS_SECTIONS, type SettingsSection } from '../settings-sections'
+import { HintsAndCommandsSettings } from './HintsAndCommandsSettings'
 
 export function SettingsDialog(): React.JSX.Element {
   const [selected, setSelected] = useState<SettingsSection>(SETTINGS_SECTIONS[0])
@@ -37,6 +38,7 @@ export function SettingsDialog(): React.JSX.Element {
                 <X className="icon" />
               </Dialog.Close>
             </div>
+            {selected.id === 'hints-and-commands' && <HintsAndCommandsSettings />}
           </section>
         </Dialog.Popup>
       </Dialog.Portal>

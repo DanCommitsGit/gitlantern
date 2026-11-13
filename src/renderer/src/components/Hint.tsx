@@ -18,7 +18,7 @@ export function Hint({
         <Tooltip.Positioner sideOffset={6} align="start">
           <Tooltip.Popup className="hint-card">
             <strong>{entry.term}</strong>
-            <span className="hint-card-explanation">{entry.explanation}</span>
+            <span className="card-explanation">{entry.explanation}</span>
             {entry.command && <span className="command">{entry.command}</span>}
           </Tooltip.Popup>
         </Tooltip.Positioner>

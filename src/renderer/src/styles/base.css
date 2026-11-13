@@ -307,7 +307,8 @@ ol {
   cursor: help;
 }
 
-.hint-card {
+.hint-card,
+.command-card {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -320,6 +321,6 @@ ol {
   box-shadow: var(--shadow);
 }
 
-.hint-card-explanation {
+.card-explanation {
   color: var(--ink-2);
 }

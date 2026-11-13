@@ -14,11 +14,14 @@ import './styles/settings.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
+import { SettingsProvider } from './components/SettingsProvider'
 
 document.documentElement.dataset['platform'] = window.api.platform
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <SettingsProvider>
+      <App />
+    </SettingsProvider>
   </StrictMode>
 )
