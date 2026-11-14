@@ -10,7 +10,8 @@
   align-items: center;
   gap: 8px;
   flex: none;
-  min-height: 44px;
+  /* One pixel taller than the window buttons at any zoom, so the bottom border shows under them. */
+  min-height: max(44px, calc(env(titlebar-area-height, 0px) + 1px));
   padding-left: 12px;
   /* Leaves room for the system's window buttons. */
   padding-right: calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw) + 12px);
