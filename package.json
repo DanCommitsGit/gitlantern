@@ -1,6 +1,6 @@
 {
   "name": "gitlantern",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A git GUI that shows the command behind every action",
   "main": "./out/main/index.js",
   "author": "DanCommitsGit",
