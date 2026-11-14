@@ -1,7 +1,7 @@
 import { Tooltip } from '@base-ui/react/tooltip'
 import type { ButtonHTMLAttributes } from 'react'
 import { useSetCommandPreview, type CommandPreview } from '../command-preview'
-import { useSettings } from '../settings-context'
+import { useSettings } from '../settings/settings-context'
 
 interface CommandButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   preview: CommandPreview

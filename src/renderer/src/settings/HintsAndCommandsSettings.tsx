@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import { useSettings } from '../settings-context'
+import { useSettings } from './settings-context'
 
 export function HintsAndCommandsSettings(): React.JSX.Element {
   const { settings, saveSetting } = useSettings()

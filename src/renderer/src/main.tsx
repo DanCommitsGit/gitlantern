@@ -14,7 +14,7 @@ import './styles/settings.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
-import { SettingsProvider } from './components/SettingsProvider'
+import { SettingsProvider } from './settings/SettingsProvider'
 
 document.documentElement.dataset['platform'] = window.api.platform
 

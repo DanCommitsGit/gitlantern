@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { DEFAULT_SETTINGS, type SettingKey, type Settings } from '../../../shared/settings'
-import { SettingsContext } from '../settings-context'
+import { SettingsContext } from './settings-context'
 
 function logSettingsError(error: unknown): void {
   console.error('Settings call failed', error)

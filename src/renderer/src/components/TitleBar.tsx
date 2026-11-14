@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { SettingsDialog } from './SettingsDialog'
+import { SettingsDialog } from '../settings/SettingsDialog'
 
 export function TitleBar({ children }: { children?: ReactNode }): React.JSX.Element {
   return (

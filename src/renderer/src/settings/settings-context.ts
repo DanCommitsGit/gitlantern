@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import type { SettingKey, Settings } from '../../shared/settings'
+import type { SettingKey, Settings } from '../../../shared/settings'
 
 export interface SettingsContextValue {
   settings: Settings
