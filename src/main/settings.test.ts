@@ -20,15 +20,19 @@ describe('settings', () => {
   it('saves a change and returns every setting', () => {
     const store = createMemoryStore()
 
-    expect(saveSetting(store, 'commandCard', true)).toEqual({ commandCard: true })
-    expect(readSettings(store)).toEqual({ commandCard: true })
+    expect(saveSetting(store, 'fileList', 'checkboxes')).toEqual({
+      ...DEFAULT_SETTINGS,
+      fileList: 'checkboxes'
+    })
+    expect(readSettings(store)).toEqual({ ...DEFAULT_SETTINGS, fileList: 'checkboxes' })
   })
 
   it.each([
     ['an unknown setting', 'theme', true],
     ['a setting named after an object property', 'constructor', true],
     ['a key that is not a string', 1, true],
-    ['a value of the wrong type', 'commandCard', 'yes']
+    ['a value of the wrong type', 'commandCard', 'yes'],
+    ['a choice that does not exist', 'fileList', 'tree']
   ])('rejects %s', (_description, key, value) => {
     const store = createMemoryStore()
 

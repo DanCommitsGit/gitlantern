@@ -19,7 +19,7 @@
 ## Changes
 
 - Files appear in two lists, Unstaged and Staged, by default. A half-staged file is in both.
-- A setting swaps them for one list with checkboxes.
+- A setting swaps them for one list with checkboxes. There, a half-staged file shows a dash and Part, and clicking the dash stages the rest. A fully staged file shows its staged changes, and any other file its unstaged ones. The commit button says how many files go in.
 - The commit form is docked under the file lists.
 
 ## Diffs

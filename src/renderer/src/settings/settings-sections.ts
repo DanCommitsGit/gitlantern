@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react'
 import type { SettingKey } from '../../../shared/settings'
+import { ChangesSettings } from './ChangesSettings'
 import { HintsAndCommandsSettings } from './HintsAndCommandsSettings'
 
 export interface SettingsSection {
@@ -15,5 +16,6 @@ export const SETTINGS_SECTIONS = [
     name: 'Hints and commands',
     settings: ['commandCard'],
     Panel: HintsAndCommandsSettings
-  }
+  },
+  { id: 'changes', name: 'Changes', settings: ['fileList'], Panel: ChangesSettings }
 ] as const satisfies readonly SettingsSection[]

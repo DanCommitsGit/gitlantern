@@ -1,4 +1,10 @@
-import { DEFAULT_SETTINGS, type SettingKey, type Settings } from '../shared/settings'
+import {
+  DEFAULT_SETTINGS,
+  FILE_LIST_STYLES,
+  type FileListStyle,
+  type SettingKey,
+  type Settings
+} from '../shared/settings'
 
 export interface SettingsStore {
   get<Key extends SettingKey>(key: Key): Settings[Key]
@@ -6,7 +12,8 @@ export interface SettingsStore {
 }
 
 export const SETTING_CHECKS: { [Key in SettingKey]: (value: unknown) => value is Settings[Key] } = {
-  commandCard: (value): value is boolean => typeof value === 'boolean'
+  commandCard: (value): value is boolean => typeof value === 'boolean',
+  fileList: (value): value is FileListStyle => FILE_LIST_STYLES.includes(value as FileListStyle)
 }
 
 const SETTING_KEYS = Object.keys(DEFAULT_SETTINGS) as SettingKey[]

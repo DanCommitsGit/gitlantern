@@ -12,7 +12,8 @@ const sectionSearch = new Fuse(searchableSections, {
   keys: [
     { name: 'name', weight: 2 },
     { name: 'settings.label', weight: 2 },
-    { name: 'settings.description', weight: 1 }
+    { name: 'settings.description', weight: 1 },
+    { name: 'settings.choices.label', weight: 1 }
   ],
   threshold: 0.35,
   ignoreLocation: true,

@@ -27,11 +27,17 @@ describe('createSettingsStore', () => {
   it('reads a saved file', async () => {
     await writeFile(settingsFile, JSON.stringify({ commandCard: true }))
 
-    expect(readSettings(createSettingsStore(folder))).toEqual({ commandCard: true })
+    expect(readSettings(createSettingsStore(folder))).toEqual({
+      ...DEFAULT_SETTINGS,
+      commandCard: true
+    })
   })
 
-  it('resets a value of the wrong type', async () => {
-    await writeFile(settingsFile, JSON.stringify({ commandCard: 'yes' }))
+  it.each([
+    ['commandCard', 'yes'],
+    ['fileList', 'grid']
+  ])('resets a %s of the wrong type', async (key, value) => {
+    await writeFile(settingsFile, JSON.stringify({ [key]: value }))
 
     expect(readSettings(createSettingsStore(folder))).toEqual(DEFAULT_SETTINGS)
     expect(JSON.parse(await readFile(settingsFile, 'utf8'))).toEqual(DEFAULT_SETTINGS)
@@ -40,8 +46,12 @@ describe('createSettingsStore', () => {
   it('keeps a key it does not know', async () => {
     await writeFile(settingsFile, JSON.stringify({ commandCard: true, newerSetting: 'on' }))
 
-    expect(readSettings(createSettingsStore(folder))).toEqual({ commandCard: true })
+    expect(readSettings(createSettingsStore(folder))).toEqual({
+      ...DEFAULT_SETTINGS,
+      commandCard: true
+    })
     expect(JSON.parse(await readFile(settingsFile, 'utf8'))).toEqual({
+      ...DEFAULT_SETTINGS,
       commandCard: true,
       newerSetting: 'on'
     })

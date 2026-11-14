@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { CommandRecord } from '../../shared/command-record'
 import type { FileDiff, RepositoryStatus } from '../../shared/repository-types'
-import { resolveSelectedChange, type FileSelection, type SelectedChange } from './selected-change'
+import {
+  resolveCheckboxSelection,
+  resolveSelectedChange,
+  type FileSelection,
+  type SelectedChange
+} from './selected-change'
+import { useSettings } from './settings/settings-context'
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error)
@@ -23,6 +29,7 @@ export function useRepositoryState(onRecord: (record: CommandRecord) => void): R
   const [diff, setDiff] = useState<FileDiff | null>(null)
   const [largeDiffPath, setLargeDiffPath] = useState<string | null>(null)
   const [readError, setReadError] = useState<string | null>(null)
+  const { fileList } = useSettings().settings
 
   const refresh = useCallback(
     () =>
@@ -42,10 +49,12 @@ export function useRepositoryState(onRecord: (record: CommandRecord) => void): R
     return () => window.removeEventListener('focus', refresh)
   }, [refresh])
 
-  const selected = useMemo(
-    () => (status === null ? null : resolveSelectedChange(status, selection)),
-    [status, selection]
-  )
+  const selected = useMemo(() => {
+    if (status === null) return null
+    return fileList === 'checkboxes'
+      ? resolveCheckboxSelection(status, selection)
+      : resolveSelectedChange(status, selection)
+  }, [status, selection, fileList])
 
   useEffect(() => {
     if (selected === null) return

@@ -82,6 +82,13 @@
   font-weight: 500;
 }
 
+.setting-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
 .setting-description {
   margin-top: 4px;
   padding-left: 23px;

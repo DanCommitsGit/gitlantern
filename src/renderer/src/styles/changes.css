@@ -46,6 +46,21 @@
   visibility: hidden;
 }
 
+.file-check {
+  flex: none;
+  margin: 0;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+
+.file-check-row {
+  padding-left: 12px;
+}
+
+.file-check-row .file-row-select {
+  padding-left: 8px;
+}
+
 .file-row:hover .file-row-action,
 .file-row:focus-within .file-row-action,
 .file-row[data-selected='true'] .file-row-action {

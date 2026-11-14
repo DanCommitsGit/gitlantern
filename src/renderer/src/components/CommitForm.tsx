@@ -3,9 +3,16 @@ import type { CommandRecord } from '../../../shared/command-record'
 import { commitAction } from '../../../shared/git-actions'
 import type { Identity } from '../../../shared/gitlantern-api'
 import { previewAction } from '../command-preview'
+import { useSettings } from '../settings/settings-context'
 import { GLOSSARY } from '../glossary'
 import { CommandButton } from './CommandButton'
 import { Hint } from './Hint'
+
+// The checkbox list has no Staged list, so the button says how many files go in.
+function commitButtonLabel(branchName: string | null, fileCount: number): string {
+  const files = fileCount === 0 ? '' : ` ${fileCount} ${fileCount === 1 ? 'file' : 'files'}`
+  return branchName === null ? `Commit${files}` : `Commit${files} to ${branchName}`
+}
 
 interface CommitFormProps {
   branchName: string | null
@@ -23,6 +30,7 @@ export function CommitForm({
   const [summary, setSummary] = useState('')
   const [description, setDescription] = useState('')
   const [failureMessage, setFailureMessage] = useState<string | null>(null)
+  const { fileList } = useSettings().settings
 
   const trimmedSummary = summary.trim()
   const canCommit = stagedCount > 0 && trimmedSummary !== ''
@@ -88,7 +96,7 @@ export function CommitForm({
         )}
         onClick={() => void commit()}
       >
-        {branchName === null ? 'Commit' : `Commit to ${branchName}`}
+        {commitButtonLabel(branchName, fileList === 'checkboxes' ? stagedCount : 0)}
       </CommandButton>
       <div className="row-layout" style={{ justifyContent: 'space-between' }}>
         <span className="text-hint truncate">

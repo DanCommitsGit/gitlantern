@@ -7,7 +7,11 @@ function sectionNames(query: string): string[] {
 
 describe('searchSettingsSections', () => {
   it('lists every section for an empty query', () => {
-    expect(sectionNames('  ')).toEqual(['Hints and commands'])
+    expect(sectionNames('  ')).toEqual(['Hints and commands', 'Changes'])
+  })
+
+  it('matches a choice of a setting', () => {
+    expect(sectionNames('checkboxes')).toEqual(['Changes'])
   })
 
   it('matches a section name', () => {

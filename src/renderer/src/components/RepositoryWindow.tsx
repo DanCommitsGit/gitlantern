@@ -3,10 +3,12 @@ import { useState } from 'react'
 import type { CommandRecord } from '../../../shared/command-record'
 import type { Identity, OpenedRepository } from '../../../shared/gitlantern-api'
 import { SetCommandPreviewContext, type CommandPreview } from '../command-preview'
+import { useSettings } from '../settings/settings-context'
 import { useRepositoryState } from '../use-repository-state'
 import { CommandStrip } from './CommandStrip'
 import { CommitForm } from './CommitForm'
 import { DiffView } from './DiffView'
+import { FileChecklist } from './FileChecklist'
 import { FileLists } from './FileLists'
 import { IdentityForm } from './IdentityForm'
 import { Rail } from './Rail'
@@ -28,6 +30,7 @@ export function RepositoryWindow({
   const [preview, setPreview] = useState<CommandPreview | null>(null)
   const [identity, setIdentity] = useState<Identity>(repository.identity)
   const state = useRepositoryState(onRecord)
+  const FileList = useSettings().settings.fileList === 'checkboxes' ? FileChecklist : FileLists
   const { status } = state
 
   async function saveIdentity(name: string, email: string): Promise<void> {
@@ -59,7 +62,7 @@ export function RepositoryWindow({
           <div className="window-body">
             <Rail branchName={status.branchName} />
             <section className="pane file-pane">
-              <FileLists
+              <FileList
                 status={status}
                 selected={state.selected}
                 onSelect={state.select}
