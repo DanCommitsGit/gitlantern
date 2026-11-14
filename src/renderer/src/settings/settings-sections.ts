@@ -15,6 +15,5 @@ export const SETTINGS_SECTIONS = [
     name: 'Hints and commands',
     settings: ['commandCard'],
     Panel: HintsAndCommandsSettings
-  },
-  { id: 'diffs', name: 'Diffs', settings: [] }
+  }
 ] as const satisfies readonly SettingsSection[]

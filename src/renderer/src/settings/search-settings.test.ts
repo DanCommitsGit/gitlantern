@@ -7,11 +7,11 @@ function sectionNames(query: string): string[] {
 
 describe('searchSettingsSections', () => {
   it('lists every section for an empty query', () => {
-    expect(sectionNames('  ')).toEqual(['Hints and commands', 'Diffs'])
+    expect(sectionNames('  ')).toEqual(['Hints and commands'])
   })
 
   it('matches a section name', () => {
-    expect(sectionNames('diffs')).toEqual(['Diffs'])
+    expect(sectionNames('hints')).toEqual(['Hints and commands'])
   })
 
   it('matches a setting label despite a typo', () => {
