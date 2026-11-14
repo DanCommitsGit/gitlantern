@@ -12,7 +12,7 @@
 
 ## Commits
 
-Use Conventional Commits. Only `feat` and `fix` commits produce a release, so land Electron security updates with a `fix:` subject.
+Use Conventional Commits. Only `feat` and `fix` commits produce a release, so give a dependency update a `fix:` subject when it changes what ships in the app, and `build:` when it only changes development tools. See [docs/decisions/dependency-update-commit-types.md](docs/decisions/dependency-update-commit-types.md).
 
 ## Traps
 
