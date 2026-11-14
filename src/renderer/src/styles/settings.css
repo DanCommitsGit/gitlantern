@@ -22,6 +22,14 @@
   padding: 0 8px 12px;
 }
 
+.settings-search {
+  margin-bottom: 8px;
+}
+
+.settings-nav-empty {
+  padding: 0 8px;
+}
+
 .settings-nav-item {
   min-height: 30px;
   padding: 0 8px;

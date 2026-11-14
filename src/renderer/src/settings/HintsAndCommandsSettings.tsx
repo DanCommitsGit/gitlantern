@@ -1,4 +1,5 @@
 import { useId } from 'react'
+import { SETTING_TEXT } from './setting-text'
 import { useSettings } from './settings-context'
 
 export function HintsAndCommandsSettings(): React.JSX.Element {
@@ -14,10 +15,10 @@ export function HintsAndCommandsSettings(): React.JSX.Element {
           aria-describedby={descriptionId}
           onChange={(event) => saveSetting('commandCard', event.target.checked)}
         />
-        <span className="setting-label">Command card at each button</span>
+        <span className="setting-label">{SETTING_TEXT.commandCard.label}</span>
       </label>
       <p className="text-small setting-description" id={descriptionId}>
-        Shows the command and what it does when you point at a button.
+        {SETTING_TEXT.commandCard.description}
       </p>
     </div>
   )
