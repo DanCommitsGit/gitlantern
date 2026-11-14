@@ -25,7 +25,26 @@ export default defineConfig(
     },
     rules: {
       ...eslintPluginReactHooks.configs.recommended.rules,
-      ...eslintPluginReactRefresh.configs.vite.rules
+      ...eslintPluginReactRefresh.configs.vite.rules,
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'electron-log',
+              message:
+                'Use electron-log/node. The other entries register IPC listeners that skip the origin check.'
+            }
+          ],
+          patterns: [
+            {
+              group: ['electron-log/*', '!electron-log/node'],
+              message:
+                'Use electron-log/node. The other entries register IPC listeners that skip the origin check.'
+            }
+          ]
+        }
+      ]
     }
   },
   eslintConfigPrettier

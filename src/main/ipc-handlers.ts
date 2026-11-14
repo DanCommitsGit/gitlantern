@@ -7,17 +7,24 @@ import {
   requireNonEmptyStrings,
   requireString
 } from './ipc-validation'
+import { logError } from './log'
 import type { RepositorySession } from './repository-session'
 import { isSameOrigin } from './url-policy'
 
 export function registerIpcHandlers(session: RepositorySession, rendererUrl: string): void {
   function handle(channel: string, handler: (...values: unknown[]) => unknown): void {
-    ipcMain.handle(channel, (event: IpcMainInvokeEvent, ...values: unknown[]) => {
-      const origin = event.senderFrame?.origin
-      if (origin === undefined || !isSameOrigin(origin, rendererUrl)) {
-        throw new Error('Rejected a message from another origin')
+    ipcMain.handle(channel, async (event: IpcMainInvokeEvent, ...values: unknown[]) => {
+      try {
+        const origin = event.senderFrame?.origin
+        if (origin === undefined || !isSameOrigin(origin, rendererUrl)) {
+          throw new Error('Rejected a message from another origin')
+        }
+        return await handler(...values)
+      } catch (error) {
+        // The arguments can hold names, emails, paths and commit messages, so they stay out of the log.
+        logError(`${channel} failed`, error)
+        throw error
       }
-      return handler(...values)
     })
   }
 
