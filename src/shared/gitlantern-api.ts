@@ -56,6 +56,7 @@ export interface GitlanternApi {
   copyText(text: string): Promise<void>
   readSettings(): Promise<Settings>
   saveSetting<Key extends SettingKey>(key: Key, value: Settings[Key]): Promise<Settings>
+  showLogs(): Promise<void>
 }
 
 export const IPC_CHANNELS = {
@@ -77,5 +78,6 @@ export const IPC_CHANNELS = {
   saveIdentity: 'git:save-identity',
   copyText: 'clipboard:copy-text',
   readSettings: 'settings:read',
-  saveSetting: 'settings:save'
+  saveSetting: 'settings:save',
+  showLogs: 'logs:show'
 } as const

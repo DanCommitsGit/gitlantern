@@ -3,6 +3,7 @@ import type { SettingKey, Settings } from '../../../shared/settings'
 
 export interface SettingsContextValue {
   settings: Settings
+  saveFailed: boolean
   saveSetting<Key extends SettingKey>(key: Key, value: Settings[Key]): void
 }
 

@@ -2,6 +2,7 @@ import { Dialog } from '@base-ui/react/dialog'
 import { Settings2, X } from 'lucide-react'
 import { useState } from 'react'
 import { searchSettingsSections } from './search-settings'
+import { useSettings } from './settings-context'
 import { SETTINGS_SECTIONS, type SettingsSection } from './settings-sections'
 
 export function SettingsDialog(): React.JSX.Element {
@@ -10,6 +11,7 @@ export function SettingsDialog(): React.JSX.Element {
   const visibleSections = searchSettingsSections(query)
   const shown = visibleSections.includes(selected) ? selected : (visibleSections[0] ?? selected)
   const { Panel } = shown
+  const { saveFailed } = useSettings()
 
   return (
     <Dialog.Root>
@@ -53,6 +55,14 @@ export function SettingsDialog(): React.JSX.Element {
               </Dialog.Close>
             </div>
             {Panel && <Panel />}
+            {saveFailed && (
+              <div className="banner banner-danger row-layout" role="alert">
+                <span className="grow">Couldn&apos;t save that setting. Try again.</span>
+                <button className="button" type="button" onClick={() => void window.api.showLogs()}>
+                  Open logs
+                </button>
+              </div>
+            )}
           </section>
         </Dialog.Popup>
       </Dialog.Portal>

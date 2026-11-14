@@ -22,7 +22,8 @@ const api: GitlanternApi = {
   saveIdentity: (name, email) => ipcRenderer.invoke(IPC_CHANNELS.saveIdentity, name, email),
   copyText: (text) => ipcRenderer.invoke(IPC_CHANNELS.copyText, text),
   readSettings: () => ipcRenderer.invoke(IPC_CHANNELS.readSettings),
-  saveSetting: (key, value) => ipcRenderer.invoke(IPC_CHANNELS.saveSetting, key, value)
+  saveSetting: (key, value) => ipcRenderer.invoke(IPC_CHANNELS.saveSetting, key, value),
+  showLogs: () => ipcRenderer.invoke(IPC_CHANNELS.showLogs)
 }
 
 contextBridge.exposeInMainWorld('api', api)
