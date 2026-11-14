@@ -18,7 +18,7 @@
 
 ## Changes
 
-- Files appear in two lists, Unstaged and Staged, by default. A half-staged file is in both, labeled Part.
+- Files appear in two lists, Unstaged and Staged, by default. A half-staged file is in both.
 - A setting swaps them for one list with checkboxes.
 - The commit form is docked under the file lists.
 

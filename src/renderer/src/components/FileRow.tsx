@@ -16,7 +16,6 @@ const STATUS_CLASSES: Record<FileStatus, string> = {
 interface FileRowProps {
   change: FileChange
   isSelected: boolean
-  isPartlyStaged: boolean
   actionLabel: string
   actionIconPath: string
   actionPreview: CommandPreview
@@ -27,7 +26,6 @@ interface FileRowProps {
 export function FileRow({
   change,
   isSelected,
-  isPartlyStaged,
   actionLabel,
   actionIconPath,
   actionPreview,
@@ -45,7 +43,6 @@ export function FileRow({
       >
         <span className={`status-badge ${STATUS_CLASSES[change.status]}`}>{change.status}</span>
         <span className="truncate grow">{change.path}</span>
-        {isPartlyStaged && <span className="pill pill-plain">Part</span>}
       </button>
       <CommandButton
         className="button button-quiet button-icon file-row-action"

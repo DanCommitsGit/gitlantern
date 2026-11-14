@@ -35,8 +35,6 @@ export function FileLists({
 }: FileListsProps): React.JSX.Element {
   const isSelected = (change: FileChange, staged: boolean): boolean =>
     selected !== null && selected.staged === staged && selected.change.path === change.path
-  const stagedPaths = new Set(status.staged.map((change) => change.path))
-  const unstagedPaths = new Set(status.unstaged.map((change) => change.path))
 
   return (
     <div className="file-lists">
@@ -61,7 +59,6 @@ export function FileLists({
             key={change.path}
             change={change}
             isSelected={isSelected(change, false)}
-            isPartlyStaged={stagedPaths.has(change.path)}
             actionLabel="Stage"
             actionIconPath={PLUS_ICON_PATH}
             actionPreview={previewAction(
@@ -98,7 +95,6 @@ export function FileLists({
             key={change.path}
             change={change}
             isSelected={isSelected(change, true)}
-            isPartlyStaged={unstagedPaths.has(change.path)}
             actionLabel="Unstage"
             actionIconPath={MINUS_ICON_PATH}
             actionPreview={previewAction(
