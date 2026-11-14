@@ -1,18 +1,8 @@
 import type { LucideIcon } from 'lucide-react'
-import type { FileChange, FileStatus } from '../../../shared/repository-types'
+import type { FileChange } from '../../../shared/repository-types'
 import type { CommandPreview } from '../command-preview'
 import { CommandButton } from './CommandButton'
-
-const STATUS_CLASSES: Record<FileStatus, string> = {
-  M: 'status-changed',
-  T: 'status-changed',
-  R: 'status-changed',
-  C: 'status-changed',
-  A: 'status-added',
-  D: 'status-deleted',
-  '?': 'status-untracked',
-  U: 'status-conflict'
-}
+import { StatusBadge } from './StatusBadge'
 
 interface FileRowProps {
   change: FileChange
@@ -42,7 +32,7 @@ export function FileRow({
         aria-current={isSelected}
         onClick={onSelect}
       >
-        <span className={`status-badge ${STATUS_CLASSES[change.status]}`}>{change.status}</span>
+        <StatusBadge status={change.status} />
         <span className="truncate grow">{change.path}</span>
       </button>
       <CommandButton

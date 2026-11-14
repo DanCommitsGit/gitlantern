@@ -1,13 +1,13 @@
 import { Minus, Plus } from 'lucide-react'
 import type { CommandRecord } from '../../../shared/command-record'
-import {
-  stageAllAction,
-  stageFilesAction,
-  unstageAllAction,
-  unstageFilesAction
-} from '../../../shared/git-actions'
 import type { FileChange, RepositoryStatus } from '../../../shared/repository-types'
-import { previewAction } from '../command-preview'
+import {
+  pathsOf,
+  stageAllPreview,
+  stageFilePreview,
+  unstageAllPreview,
+  unstageFilePreview
+} from '../file-action-previews'
 import { GLOSSARY } from '../glossary'
 import type { FileSelection, SelectedChange } from '../selected-change'
 import { CommandButton } from './CommandButton'
@@ -19,10 +19,6 @@ interface FileListsProps {
   selected: SelectedChange | null
   onSelect(selection: FileSelection): void
   runCommand(command: () => Promise<CommandRecord>): void
-}
-
-function pathsOf(change: FileChange): string[] {
-  return change.originalPath === undefined ? [change.path] : [change.path, change.originalPath]
 }
 
 export function FileLists({
@@ -44,7 +40,7 @@ export function FileLists({
         {status.unstaged.length > 0 && (
           <CommandButton
             className="button button-quiet"
-            preview={previewAction(stageAllAction(), 'Stages every change')}
+            preview={stageAllPreview()}
             onClick={() => runCommand(() => window.api.stageAll())}
           >
             Stage all
@@ -59,10 +55,7 @@ export function FileLists({
             isSelected={isSelected(change, false)}
             actionLabel="Stage"
             actionIcon={Plus}
-            actionPreview={previewAction(
-              stageFilesAction([change.path]),
-              'Puts this file in the next commit'
-            )}
+            actionPreview={stageFilePreview(change.path)}
             onSelect={() => onSelect({ path: change.path, staged: false })}
             onAction={() => runCommand(() => window.api.stageFiles([change.path]))}
           />
@@ -77,10 +70,7 @@ export function FileLists({
         {status.staged.length > 0 && (
           <CommandButton
             className="button button-quiet"
-            preview={previewAction(
-              unstageAllAction(status.hasCommits),
-              'Takes everything out of the next commit and keeps your files as they are'
-            )}
+            preview={unstageAllPreview(status.hasCommits)}
             onClick={() => runCommand(() => window.api.unstageAll())}
           >
             Unstage all
@@ -95,10 +85,7 @@ export function FileLists({
             isSelected={isSelected(change, true)}
             actionLabel="Unstage"
             actionIcon={Minus}
-            actionPreview={previewAction(
-              unstageFilesAction(pathsOf(change), status.hasCommits),
-              'Takes this file out of the next commit and keeps it as it is'
-            )}
+            actionPreview={unstageFilePreview(change, status.hasCommits)}
             onSelect={() => onSelect({ path: change.path, staged: true })}
             onAction={() => runCommand(() => window.api.unstageFiles(pathsOf(change)))}
           />
