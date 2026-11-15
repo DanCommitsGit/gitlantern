@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.3.0](https://github.com/DanCommitsGit/gitlantern/compare/v0.2.0...v0.3.0) (2026-11-15)
+
+
+### Features
+
+* add a search box to settings ([adc111c](https://github.com/DanCommitsGit/gitlantern/commit/adc111cf0766353455c4452429ae05410c286db3))
+* add a setting to list changed files with checkboxes ([2212aec](https://github.com/DanCommitsGit/gitlantern/commit/2212aeceb27992483ee5a35a6fd78effc4e6fece))
+* add a setting to show a command card at each button ([50aa24a](https://github.com/DanCommitsGit/gitlantern/commit/50aa24ac2332fdbd71f2c657260a1a44a2845cf7))
+* drop the Part label from half-staged files in the two lists ([8f5290f](https://github.com/DanCommitsGit/gitlantern/commit/8f5290f76b42f3d4305e9ffd91c5625964380be8))
+* see a diff side by side or with changed text marked ([23ab01f](https://github.com/DanCommitsGit/gitlantern/commit/23ab01faa707b5240bb8ad0ba04f8eee30404112))
+* show a message with an Open logs button when a setting can't be saved ([adc7609](https://github.com/DanCommitsGit/gitlantern/commit/adc7609ba404d408b12337c4b552fb47ad57370c))
+* show the empty line after a file's last line break in diffs ([ddca3b8](https://github.com/DanCommitsGit/gitlantern/commit/ddca3b8fb5a53d904301e30695fdb891155e0d7f))
+* zoom in with Ctrl+= as well as Ctrl+Plus ([91b8b0c](https://github.com/DanCommitsGit/gitlantern/commit/91b8b0cd5e145d2dbb8000082a21331857373eb5))
+
+
+### Bug Fixes
+
+* draw icons at Lucide's default stroke width ([e65379d](https://github.com/DanCommitsGit/gitlantern/commit/e65379d4f6d71ae35a67d8abf4c023775aa4a275))
+* keep the title bar border visible under the window buttons when zoomed out ([c4f166c](https://github.com/DanCommitsGit/gitlantern/commit/c4f166c9d27317044c0ae9a56e30c34d246ddf1c))
+* recover from a damaged or unreadable settings.json or config.json ([6df37ae](https://github.com/DanCommitsGit/gitlantern/commit/6df37ae29335483fd58684ecffedb6936cda064e))
+* round the diff view group's end buttons instead of clipping them ([685bc45](https://github.com/DanCommitsGit/gitlantern/commit/685bc4582f13f618f00b0d22d41e37ab383a2007))
+* show the whole focus ring on the diff view, Stage all and History buttons ([45c8b45](https://github.com/DanCommitsGit/gitlantern/commit/45c8b451c175b6a9309c6126146b7e4044a67c0a))
+
 ## [0.2.0](https://github.com/DanCommitsGit/gitlantern/compare/v0.1.2...v0.2.0) (2026-11-14)
 
 
