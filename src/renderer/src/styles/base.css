@@ -339,6 +339,10 @@ ol {
   cursor: pointer;
 }
 
+.segmented button:focus-visible {
+  outline-offset: -2px;
+}
+
 .segmented button + button {
   border-left: 1px solid var(--line-strong);
 }

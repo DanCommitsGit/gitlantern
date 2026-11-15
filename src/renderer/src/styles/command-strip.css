@@ -13,6 +13,10 @@
   white-space: nowrap;
 }
 
+.command-strip-line .button:focus-visible {
+  outline-offset: -2px;
+}
+
 .command-strip-prompt {
   color: var(--ink-3);
 }
