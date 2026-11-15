@@ -9,6 +9,7 @@
 - `DESIGN.md` holds the UI direction the owner picked. Add it when they pick one.
 - Open work goes in GitHub issues. Rules the code can enforce go in a test, validation or lint rule.
 - Plans, session summaries and audit reports don't belong in the repo.
+- Renderer styles are Tailwind utilities in the component that uses them. A style shared by more than one component gets a class in `@layer components` under `src/renderer/src/styles/`, and colors and text sizes come from the theme in `theme.css`.
 
 ## Commits
 

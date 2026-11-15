@@ -33,10 +33,10 @@ export function FileLists({
   return (
     <div className="file-lists">
       <div className="pane-head">
-        <span className="grow">
+        <span className="min-w-0 flex-1">
           <Hint entry={GLOSSARY.unstaged}>Unstaged</Hint>
         </span>
-        <span className="text-hint">{status.unstaged.length}</span>
+        <span className="text-small text-ink-3">{status.unstaged.length}</span>
         {status.unstaged.length > 0 && (
           <CommandButton
             className="button button-quiet"
@@ -62,11 +62,11 @@ export function FileLists({
         ))}
       </ul>
 
-      <div className="pane-head file-list-staged-head">
-        <span className="grow">
+      <div className="pane-head border-t border-line">
+        <span className="min-w-0 flex-1">
           <Hint entry={GLOSSARY.staged}>Staged</Hint>
         </span>
-        <span className="text-hint">{status.staged.length}</span>
+        <span className="text-small text-ink-3">{status.staged.length}</span>
         {status.staged.length > 0 && (
           <CommandButton
             className="button button-quiet"

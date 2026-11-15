@@ -1,0 +1,95 @@
+@theme {
+  --color-*: initial;
+  --color-canvas: #ffffff;
+  --color-sunken: #f5f5f2;
+  --color-raised: #ffffff;
+  --color-hover: #efefeb;
+  --color-selected: #e8e7e1;
+  --color-line: #e2e1dc;
+  --color-line-strong: #c9c8c1;
+  --color-ink: #1c1c19;
+  --color-ink-2: #4f4e49;
+  --color-ink-3: #68675f;
+  --color-lamp: #7a5100;
+  --color-lamp-fill: #f2b53a;
+  --color-lamp-on: #1c1c19;
+  --color-lamp-tint: #fdf3da;
+  --color-lamp-line: #e3bc66;
+  --color-primary: #1c1c19;
+  --color-on-primary: #ffffff;
+  --color-ok: #17693f;
+  --color-ok-tint: #e4f4ea;
+  --color-info: #1d5fbf;
+  --color-info-tint: #e6effb;
+  --color-attn: #a8430a;
+  --color-attn-tint: #fcebdd;
+  --color-danger: #b3261e;
+  --color-danger-tint: #fbe7e5;
+  --color-add: #e3f5e8;
+  --color-add-ink: #115230;
+  --color-add-word: #b5e6c4;
+  --color-del: #fce9e7;
+  --color-del-ink: #8a1d16;
+  --color-del-word: #f7c5c0;
+  --color-shadow: rgb(28 28 25 / 0.16);
+  --color-scrim: rgb(28 28 25 / 0.32);
+
+  --shadow-popover: 0 8px 28px var(--color-shadow);
+
+  --font-sans: 'IBM Plex Sans Variable', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', Consolas, ui-monospace, monospace;
+
+  --text-*: initial;
+  --text-small: 12px;
+  --text-label: 12px;
+  --text-label--font-weight: 600;
+  --text-code: 12.5px;
+  --text-head: 15px;
+  --text-head--line-height: 1.35;
+  --text-head--font-weight: 600;
+  --text-display: 28px;
+  --text-display--font-weight: 600;
+  --text-title: 20px;
+  --text-title--line-height: 1.3;
+  --text-title--font-weight: 600;
+}
+
+@layer theme {
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-canvas: #1a1a18;
+      --color-sunken: #141412;
+      --color-raised: #24241f;
+      --color-hover: #2a2a26;
+      --color-selected: #34332d;
+      --color-line: #2f2f2a;
+      --color-line-strong: #4a4942;
+      --color-ink: #edede8;
+      --color-ink-2: #bdbcb3;
+      --color-ink-3: #9a9990;
+      --color-lamp: #f5c04e;
+      --color-lamp-fill: #f5c04e;
+      --color-lamp-on: #1c1c19;
+      --color-lamp-tint: #33290f;
+      --color-lamp-line: #6b5420;
+      --color-primary: #edede8;
+      --color-on-primary: #1a1a18;
+      --color-ok: #5fcb8f;
+      --color-ok-tint: #16301f;
+      --color-info: #7db0ff;
+      --color-info-tint: #172a48;
+      --color-attn: #ff9e5e;
+      --color-attn-tint: #3a2414;
+      --color-danger: #ff8078;
+      --color-danger-tint: #3d1b19;
+      --color-add: #16291d;
+      --color-add-ink: #8fe3b2;
+      --color-add-word: #24512f;
+      --color-del: #321b19;
+      --color-del-ink: #ffada6;
+      --color-del-word: #5e2b27;
+      --color-shadow: rgb(0 0 0 / 0.5);
+      --color-scrim: rgb(0 0 0 / 0.5);
+    }
+  }
+}

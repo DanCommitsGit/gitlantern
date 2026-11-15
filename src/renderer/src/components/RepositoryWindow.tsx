@@ -45,23 +45,25 @@ export function RepositoryWindow({
         <TitleBar>
           <button className="button button-quiet" type="button" onClick={onClose}>
             {repository.name}
-            <ChevronDown className="icon" />
+            <ChevronDown className="size-4 flex-none" />
           </button>
-          <nav className="tabs" aria-label="Views">
-            <button className="tab" type="button" aria-current="page">
+          <nav className="flex gap-1" aria-label="Views">
+            <button
+              className="min-h-7.5 cursor-pointer rounded-md px-3 font-medium text-ink-2 aria-[current=page]:bg-selected aria-[current=page]:font-semibold aria-[current=page]:text-ink"
+              type="button"
+              aria-current="page"
+            >
               Changes
             </button>
           </nav>
         </TitleBar>
         {state.errorMessage !== null && (
-          <div className="banner banner-danger" style={{ borderRadius: 0 }}>
-            {state.errorMessage}
-          </div>
+          <div className="banner banner-danger rounded-none">{state.errorMessage}</div>
         )}
         {status && (
-          <div className="window-body">
+          <div className="flex min-h-0 flex-1">
             <Rail branchName={status.branchName} />
-            <section className="pane file-pane">
+            <section className="pane w-80 flex-none">
               <FileList
                 status={status}
                 selected={state.selected}

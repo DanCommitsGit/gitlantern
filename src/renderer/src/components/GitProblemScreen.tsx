@@ -36,7 +36,7 @@ export function GitProblemScreen({
             : `You have git ${check.version}. gitlantern needs 2.38 or newer.`}
         </p>
         {command && <div className="command-box">{command}</div>}
-        <div className="row-layout">
+        <div className="flex items-center gap-2">
           {command && (
             <button
               className="button button-primary"
@@ -62,9 +62,8 @@ export function GitProblemScreen({
         </div>
         {isMissing && (
           <button
-            className="button button-quiet"
+            className="button button-quiet self-start pl-0"
             type="button"
-            style={{ alignSelf: 'flex-start', paddingLeft: 0 }}
             onClick={onChooseLocation}
           >
             Already installed? Choose its location

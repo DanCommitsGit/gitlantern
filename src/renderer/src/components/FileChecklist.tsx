@@ -65,7 +65,7 @@ export function FileChecklist({
             preview={allStaged ? unstageAllPreview(status.hasCommits) : stageAllPreview()}
             render={
               <input
-                className="file-check"
+                className="flex-none cursor-pointer accent-ink"
                 type="checkbox"
                 aria-label="All changed files"
                 checked={allStaged}
@@ -79,7 +79,7 @@ export function FileChecklist({
             }
           />
         )}
-        <span className="grow">
+        <span className="min-w-0 flex-1">
           {files.length} changed {files.length === 1 ? 'file' : 'files'}
         </span>
       </div>
@@ -90,14 +90,14 @@ export function FileChecklist({
           return (
             <li
               key={file.path}
-              className="file-row file-check-row"
+              className="file-row pl-3"
               data-selected={selected?.change.path === file.path}
             >
               <CommandControl
                 preview={filePreview(file)}
                 render={
                   <input
-                    className="file-check"
+                    className="flex-none cursor-pointer accent-ink"
                     type="checkbox"
                     aria-label={file.path}
                     checked={state === 'staged'}
@@ -109,7 +109,7 @@ export function FileChecklist({
                 }
               />
               <button
-                className="file-row-select"
+                className="file-row-select pl-2"
                 type="button"
                 title={
                   change.originalPath ? `${change.originalPath} → ${change.path}` : change.path
@@ -118,8 +118,10 @@ export function FileChecklist({
                 onClick={() => onSelect({ path: file.path, staged: state === 'staged' })}
               >
                 <StatusBadge status={change.status} />
-                <span className="truncate grow">{file.path}</span>
-                {state === 'partly-staged' && <span className="pill pill-plain">Part</span>}
+                <span className="min-w-0 flex-1 truncate">{file.path}</span>
+                {state === 'partly-staged' && (
+                  <span className="pill bg-hover text-ink-2">Part</span>
+                )}
               </button>
             </li>
           )

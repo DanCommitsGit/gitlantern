@@ -15,15 +15,15 @@ interface CommandStripProps {
 function PreviewLine({ preview }: { preview: CommandPreview }): React.JSX.Element {
   return (
     <>
-      {preview.ranCommand && <span className="text-small">You&apos;d type</span>}
-      <span className="command truncate grow">{preview.typedCommand}</span>
+      {preview.ranCommand && <span className="text-small text-ink-2">You&apos;d type</span>}
+      <span className="command min-w-0 flex-1 truncate">{preview.typedCommand}</span>
       {preview.ranCommand ? (
         <>
-          <span className="text-small">Runs</span>
-          <span className="mono text-hint">{preview.ranCommand}</span>
+          <span className="text-small text-ink-2">Runs</span>
+          <span className="font-mono text-small text-ink-3">{preview.ranCommand}</span>
         </>
       ) : (
-        <span className="text-hint">{preview.explanation}</span>
+        <span className="text-small text-ink-3">{preview.explanation}</span>
       )}
     </>
   )
@@ -40,27 +40,27 @@ export function CommandStrip({ preview, records }: CommandStripProps): React.JSX
   }, [])
 
   return (
-    <footer className="command-strip">
+    <footer className="flex-none border-t border-line bg-sunken">
       {isHistoryOpen && (
         <CommandHistory records={records} onClose={() => setIsHistoryOpen(false)} />
       )}
-      <div className="command-strip-line">
-        <Terminal className="icon command-strip-prompt" />
+      <div className="flex min-h-8.5 items-center gap-2 px-3 whitespace-nowrap">
+        <Terminal className="size-4 flex-none text-ink-3" />
         {preview ? (
           <PreviewLine preview={preview} />
         ) : lastRecord ? (
           <>
-            <span className="command-past truncate grow">{lastRecord.typedCommand}</span>
-            {lastRecord.exitCode !== 0 && <span className="text-small text-attention">Failed</span>}
-            <span className="text-hint">
+            <span className="command-past min-w-0 flex-1 truncate">{lastRecord.typedCommand}</span>
+            {lastRecord.exitCode !== 0 && <span className="text-small text-attn">Failed</span>}
+            <span className="text-small text-ink-3">
               {formatTimeAgo(lastRecord.finishedAt, Math.max(now, lastRecord.finishedAt))}
             </span>
           </>
         ) : (
-          <span className="grow" />
+          <span className="min-w-0 flex-1" />
         )}
         <button
-          className="button button-quiet"
+          className="button button-quiet focus-visible:-outline-offset-2"
           type="button"
           aria-expanded={isHistoryOpen}
           onClick={() => setIsHistoryOpen(!isHistoryOpen)}

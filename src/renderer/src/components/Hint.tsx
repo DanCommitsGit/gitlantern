@@ -11,14 +11,14 @@ export function Hint({
 }): React.JSX.Element {
   return (
     <Tooltip.Root>
-      <Tooltip.Trigger render={<span className="hint-term" tabIndex={0} />}>
+      <Tooltip.Trigger render={<span className="cursor-help" tabIndex={0} />}>
         {children}
       </Tooltip.Trigger>
       <Tooltip.Portal>
         <Tooltip.Positioner sideOffset={6} align="start">
-          <Tooltip.Popup className="hint-card">
+          <Tooltip.Popup className="popover-card">
             <strong>{entry.term}</strong>
-            <span className="card-explanation">{entry.explanation}</span>
+            <span className="text-ink-2">{entry.explanation}</span>
             {entry.command && <span className="command">{entry.command}</span>}
           </Tooltip.Popup>
         </Tooltip.Positioner>

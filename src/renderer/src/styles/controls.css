@@ -1,0 +1,93 @@
+@layer components {
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 28px;
+    padding: 0 10px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
+    background-color: var(--color-raised);
+    color: var(--color-ink);
+    font-weight: 500;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    .button:hover {
+      background-color: var(--color-hover);
+    }
+  }
+
+  .button-primary {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    border-color: transparent;
+  }
+
+  @media (hover: hover) {
+    .button-primary:hover {
+      background-color: var(--color-primary);
+      opacity: 0.88;
+    }
+  }
+
+  .button-quiet {
+    background-color: transparent;
+    border-color: transparent;
+  }
+
+  .button-icon {
+    width: 24px;
+    min-height: 24px;
+    padding: 0;
+  }
+
+  .button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .input {
+    width: 100%;
+    min-height: 30px;
+    padding: 4px 8px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+  }
+
+  .input:focus {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 0;
+    border-color: transparent;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 20px;
+    padding: 0 7px;
+    border-radius: var(--radius-xl);
+    font-size: var(--text-small);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .banner {
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    font-size: var(--text-small);
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+
+  .banner-danger {
+    background-color: var(--color-danger-tint);
+    color: var(--color-danger);
+  }
+}

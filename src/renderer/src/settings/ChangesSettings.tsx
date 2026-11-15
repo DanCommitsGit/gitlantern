@@ -8,11 +8,11 @@ export function ChangesSettings(): React.JSX.Element {
   const { label, choices } = SETTING_TEXT.fileList
 
   return (
-    <div className="panel setting" role="radiogroup" aria-labelledby={labelId}>
-      <p className="setting-label" id={labelId}>
+    <div className="panel px-3.5 py-3" role="radiogroup" aria-labelledby={labelId}>
+      <p className="font-medium" id={labelId}>
         {label}
       </p>
-      <div className="setting-choices">
+      <div className="mt-2.5 flex flex-col gap-2">
         {choices.map((choice) => (
           <label key={choice.value} className="setting-check">
             <input

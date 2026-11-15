@@ -25,9 +25,9 @@ export function IdentityForm({ identity, onSave }: IdentityFormProps): React.JSX
   return (
     <form className="commit-form" onSubmit={save}>
       <h2 className="text-head">Git needs your name and email</h2>
-      <p className="text-small">Commits record who made them.</p>
-      <div className="field">
-        <label className="text-label" htmlFor="identity-name">
+      <p className="text-small text-ink-2">Commits record who made them.</p>
+      <div className="flex flex-col gap-1">
+        <label className="text-label text-ink-2" htmlFor="identity-name">
           Name
         </label>
         <input
@@ -37,8 +37,8 @@ export function IdentityForm({ identity, onSave }: IdentityFormProps): React.JSX
           onChange={(event) => setName(event.target.value)}
         />
       </div>
-      <div className="field">
-        <label className="text-label" htmlFor="identity-email">
+      <div className="flex flex-col gap-1">
+        <label className="text-label text-ink-2" htmlFor="identity-email">
           Email
         </label>
         <input

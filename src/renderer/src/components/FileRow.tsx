@@ -24,7 +24,7 @@ export function FileRow({
   onAction
 }: FileRowProps): React.JSX.Element {
   return (
-    <li className="file-row" data-selected={isSelected}>
+    <li className="file-row group" data-selected={isSelected}>
       <button
         className="file-row-select"
         type="button"
@@ -33,15 +33,15 @@ export function FileRow({
         onClick={onSelect}
       >
         <StatusBadge status={change.status} />
-        <span className="truncate grow">{change.path}</span>
+        <span className="min-w-0 flex-1 truncate">{change.path}</span>
       </button>
       <CommandButton
-        className="button button-quiet button-icon file-row-action"
+        className="button button-quiet button-icon invisible group-focus-within:visible group-hover:visible group-data-[selected=true]:visible"
         aria-label={`${actionLabel} ${change.path}`}
         preview={actionPreview}
         onClick={onAction}
       >
-        <ActionIcon className="icon" />
+        <ActionIcon className="size-4 flex-none" />
       </CommandButton>
     </li>
   )

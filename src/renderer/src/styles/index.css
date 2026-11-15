@@ -1,0 +1,9 @@
+@import 'tailwindcss' source('..');
+@import './theme.css';
+@import './base.css';
+@import './layout.css';
+@import './controls.css';
+@import './commands.css';
+@import './overlays.css';
+@import './files.css';
+@import './settings.css';

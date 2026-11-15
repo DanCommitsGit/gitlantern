@@ -16,15 +16,18 @@ export function SettingsDialog(): React.JSX.Element {
   return (
     <Dialog.Root>
       <Dialog.Trigger className="button button-quiet button-icon" aria-label="Settings">
-        <Settings2 className="icon" />
+        <Settings2 className="size-4 flex-none" />
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Backdrop className="dialog-backdrop" />
-        <Dialog.Popup className="dialog dialog-settings">
-          <nav className="settings-nav" aria-label="Settings sections">
-            <Dialog.Title className="text-head settings-title">Settings</Dialog.Title>
+        <Dialog.Popup className="dialog h-[min(520px,calc(100vh-96px))] w-[min(760px,calc(100vw-48px))] flex-row gap-0 overflow-hidden p-0">
+          <nav
+            className="flex w-55 flex-none flex-col gap-0.5 border-r border-line bg-sunken px-2 py-4"
+            aria-label="Settings sections"
+          >
+            <Dialog.Title className="px-2 pb-3 text-head">Settings</Dialog.Title>
             <input
-              className="input settings-search"
+              className="input mb-2"
               placeholder="Search settings"
               aria-label="Search settings"
               value={query}
@@ -33,7 +36,7 @@ export function SettingsDialog(): React.JSX.Element {
             {visibleSections.map((section) => (
               <button
                 key={section.id}
-                className="settings-nav-item"
+                className="min-h-7.5 cursor-pointer rounded-md px-2 text-left font-medium text-ink-2 hover:bg-hover aria-[current=page]:bg-selected aria-[current=page]:font-semibold aria-[current=page]:text-ink"
                 type="button"
                 aria-current={section.id === shown.id ? 'page' : undefined}
                 onClick={() => setSelected(section)}
@@ -42,22 +45,25 @@ export function SettingsDialog(): React.JSX.Element {
               </button>
             ))}
             {visibleSections.length === 0 && (
-              <p className="text-small settings-nav-empty">No matching settings</p>
+              <p className="px-2 text-small text-ink-2">No matching settings</p>
             )}
           </nav>
-          <section className="settings-panel" aria-labelledby="settings-section-title">
-            <div className="row-layout">
-              <h3 className="text-head grow" id="settings-section-title">
+          <section
+            className="flex min-w-0 flex-1 flex-col gap-4 overflow-auto px-5 py-4"
+            aria-labelledby="settings-section-title"
+          >
+            <div className="flex items-center gap-2">
+              <h3 className="min-w-0 flex-1 text-head" id="settings-section-title">
                 {shown.name}
               </h3>
               <Dialog.Close className="button button-quiet button-icon" aria-label="Close settings">
-                <X className="icon" />
+                <X className="size-4 flex-none" />
               </Dialog.Close>
             </div>
             {Panel && <Panel />}
             {saveFailed && (
-              <div className="banner banner-danger row-layout" role="alert">
-                <span className="grow">Couldn&apos;t save that setting. Try again.</span>
+              <div className="banner banner-danger flex items-center gap-2" role="alert">
+                <span className="min-w-0 flex-1">Couldn&apos;t save that setting. Try again.</span>
                 <button className="button" type="button" onClick={() => void window.api.showLogs()}>
                   Open logs
                 </button>

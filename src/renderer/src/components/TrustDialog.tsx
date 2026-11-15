@@ -22,7 +22,7 @@ export function TrustDialog({
           <AlertDialog.Title className="text-title">
             This repository can run programs on your computer
           </AlertDialog.Title>
-          <p className="mono text-small">{path}</p>
+          <p className="font-mono text-small text-ink-2">{path}</p>
           <AlertDialog.Description>
             Its settings tell git to run the commands below. Only continue if you trust where this
             folder came from.
@@ -36,7 +36,7 @@ export function TrustDialog({
               </li>
             ))}
           </ul>
-          <div className="row-layout" style={{ justifyContent: 'flex-end' }}>
+          <div className="flex items-center justify-end gap-2">
             <AlertDialog.Close className="button" onClick={onCancel}>
               Don&apos;t open
             </AlertDialog.Close>

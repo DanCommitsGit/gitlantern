@@ -26,7 +26,7 @@ function DiffMessage({
     <div className="message-pane">
       <section className="panel message-card">
         <h2 className="text-head">{title}</h2>
-        <p className="text-small">{message}</p>
+        <p className="text-small text-ink-2">{message}</p>
         {details && <div className="output">{details}</div>}
         {children}
       </section>
@@ -85,12 +85,7 @@ function DiffContent({
           title={`Large diff: ${diff.lineCount.toLocaleString()} lines`}
           message="Not shown until you ask, to keep the app responsive."
         >
-          <button
-            className="button"
-            type="button"
-            style={{ alignSelf: 'flex-start' }}
-            onClick={onShowLarge}
-          >
+          <button className="button self-start" type="button" onClick={onShowLarge}>
             Show anyway
           </button>
         </DiffMessage>
@@ -131,14 +126,14 @@ export function DiffView({
 
   if (selected === null) {
     return (
-      <section className="pane grow" ref={paneRef}>
+      <section className="pane min-w-0 flex-1" ref={paneRef}>
         {hasCommits ? (
           <DiffMessage
             title="Nothing to commit"
             message="Your files match the last commit. Edit something and it will show up here."
           >
             <div>
-              <span className="pill pill-ok">Working tree clean</span>
+              <span className="pill bg-ok-tint text-ok">Working tree clean</span>
             </div>
           </DiffMessage>
         ) : (
@@ -152,9 +147,9 @@ export function DiffView({
   }
 
   return (
-    <section className="pane grow" ref={paneRef}>
+    <section className="pane min-w-0 flex-1" ref={paneRef}>
       <div className="pane-head">
-        <span className="mono grow truncate">
+        <span className="min-w-0 flex-1 truncate font-mono text-code">
           {selected.change.originalPath
             ? `${selected.change.originalPath} → ${selected.change.path}`
             : selected.change.path}

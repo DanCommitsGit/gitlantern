@@ -31,14 +31,14 @@ export function CommandControl({ preview, render }: CommandControlProps): React.
       <Tooltip.Trigger render={control} />
       <Tooltip.Portal>
         <Tooltip.Positioner side="bottom" sideOffset={6}>
-          <Tooltip.Popup className="command-card">
+          <Tooltip.Popup className="popover-card">
             <span className="command-box">{preview.typedCommand}</span>
             {preview.ranCommand && (
-              <span className="text-small">
-                Runs <span className="mono">{preview.ranCommand}</span>
+              <span className="text-small text-ink-2">
+                Runs <span className="font-mono text-code">{preview.ranCommand}</span>
               </span>
             )}
-            <span className="card-explanation">{preview.explanation}</span>
+            <span className="text-ink-2">{preview.explanation}</span>
           </Tooltip.Popup>
         </Tooltip.Positioner>
       </Tooltip.Portal>
