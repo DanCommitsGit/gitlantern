@@ -18,6 +18,8 @@ export function setApplicationMenu(): void {
             ] as MenuItemConstructorOptions[])),
         { role: 'resetZoom' },
         { role: 'zoomIn' },
+        // The zoomIn role is bound to Ctrl+Plus, which needs Shift on most layouts.
+        { role: 'zoomIn', accelerator: 'CommandOrControl+=', visible: false },
         { role: 'zoomOut' },
         { type: 'separator' },
         { role: 'togglefullscreen' }
