@@ -4,7 +4,7 @@ Status: Accepted
 
 ## Context
 
-gitlantern teaches git by showing the command behind each action, so the command it shows has to be one git actually runs. A library that reimplements git, such as isomorphic-git, has no command to show. Running the installed git also picks up the user's existing settings, credentials, SSH setup and hooks.
+Running the installed git picks up the user's existing settings, credentials, SSH setup and hooks.
 
 Repos, ref names and remote URLs can be written by an attacker, and passing arguments with no shell doesn't make them safe. On Windows, `spawn('git', args, { cwd: repo })` runs a `git.exe` committed to the repo, and a branch named `--output=x` passed to `git log` is parsed as a flag and writes a file.
 

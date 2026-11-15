@@ -1,6 +1,6 @@
 # gitlantern
 
-A desktop git client that shows the command behind every action, so you can learn git while you use it.
+An open source desktop git client.
 
 gitlantern is in early development and has no usable features yet.
 
