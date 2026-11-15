@@ -1,3 +1,4 @@
+import { Minus, Plus } from 'lucide-react'
 import type { CommandRecord } from '../../../shared/command-record'
 import {
   stageAllAction,
@@ -12,9 +13,6 @@ import type { FileSelection, SelectedChange } from '../selected-change'
 import { CommandButton } from './CommandButton'
 import { FileRow } from './FileRow'
 import { Hint } from './Hint'
-
-const PLUS_ICON_PATH = 'M8 3v10M3 8h10'
-const MINUS_ICON_PATH = 'M3 8h10'
 
 interface FileListsProps {
   status: RepositoryStatus
@@ -60,7 +58,7 @@ export function FileLists({
             change={change}
             isSelected={isSelected(change, false)}
             actionLabel="Stage"
-            actionIconPath={PLUS_ICON_PATH}
+            actionIcon={Plus}
             actionPreview={previewAction(
               stageFilesAction([change.path]),
               'Puts this file in the next commit'
@@ -96,7 +94,7 @@ export function FileLists({
             change={change}
             isSelected={isSelected(change, true)}
             actionLabel="Unstage"
-            actionIconPath={MINUS_ICON_PATH}
+            actionIcon={Minus}
             actionPreview={previewAction(
               unstageFilesAction(pathsOf(change), status.hasCommits),
               'Takes this file out of the next commit and keeps it as it is'

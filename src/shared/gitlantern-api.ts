@@ -1,5 +1,6 @@
 import type { CommandRecord } from './command-record'
 import type { FileChange, FileDiff, RepositoryStatus } from './repository-types'
+import type { SettingKey, Settings } from './settings'
 
 export type GitCheck =
   | { state: 'ok'; version: string; path: string }
@@ -53,6 +54,9 @@ export interface GitlanternApi {
     email: string
   ): Promise<{ identity: Identity; records: CommandRecord[] }>
   copyText(text: string): Promise<void>
+  readSettings(): Promise<Settings>
+  saveSetting<Key extends SettingKey>(key: Key, value: Settings[Key]): Promise<Settings>
+  showLogs(): Promise<void>
 }
 
 export const IPC_CHANNELS = {
@@ -72,5 +76,8 @@ export const IPC_CHANNELS = {
   unstageAll: 'repository:unstage-all',
   commit: 'repository:commit',
   saveIdentity: 'git:save-identity',
-  copyText: 'clipboard:copy-text'
+  copyText: 'clipboard:copy-text',
+  readSettings: 'settings:read',
+  saveSetting: 'settings:save',
+  showLogs: 'logs:show'
 } as const

@@ -1,3 +1,4 @@
+import { Terminal } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { CommandRecord } from '../../../shared/command-record'
 import type { CommandPreview } from '../command-preview'
@@ -44,9 +45,7 @@ export function CommandStrip({ preview, records }: CommandStripProps): React.JSX
         <CommandHistory records={records} onClose={() => setIsHistoryOpen(false)} />
       )}
       <div className="command-strip-line">
-        <svg className="icon command-strip-prompt" viewBox="0 0 16 16" aria-hidden="true">
-          <path d="m3 4 4 4-4 4M8.5 12H13" />
-        </svg>
+        <Terminal className="icon command-strip-prompt" />
         {preview ? (
           <PreviewLine preview={preview} />
         ) : lastRecord ? (

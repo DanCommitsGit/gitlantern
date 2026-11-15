@@ -53,11 +53,6 @@ ol {
   width: 16px;
   height: 16px;
   flex: none;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 .text-title {
@@ -307,7 +302,8 @@ ol {
   cursor: help;
 }
 
-.hint-card {
+.hint-card,
+.command-card {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -320,7 +316,7 @@ ol {
   box-shadow: var(--shadow);
 }
 
-.hint-card-explanation {
+.card-explanation {
   color: var(--ink-2);
 }
 

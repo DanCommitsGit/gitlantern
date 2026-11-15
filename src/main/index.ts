@@ -5,6 +5,7 @@ import { createAppDataStore } from './app-data-store'
 import { registerIpcHandlers } from './ipc-handlers'
 import { createMainWindow } from './main-window'
 import { RepositorySession } from './repository-session'
+import { createSettingsStore } from './settings-store'
 import { denyAllPermissions, restrictWebContents } from './window-security'
 
 // electron-serve's default scheme and hostname.
@@ -23,7 +24,11 @@ app.whenReady().then(() => {
 
   denyAllPermissions()
   setApplicationMenu()
-  registerIpcHandlers(new RepositorySession(createAppDataStore()), rendererUrl)
+  registerIpcHandlers(
+    new RepositorySession(createAppDataStore()),
+    createSettingsStore(),
+    rendererUrl
+  )
 
   createMainWindow(rendererUrl)
 
