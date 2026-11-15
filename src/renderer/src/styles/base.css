@@ -323,3 +323,36 @@ ol {
 .hint-card-explanation {
   color: var(--ink-2);
 }
+
+.segmented {
+  display: inline-flex;
+  flex: none;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.segmented button {
+  min-height: 26px;
+  padding: 0 10px;
+  border: 0;
+  background: var(--raised);
+  color: var(--ink-2);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.segmented button + button {
+  border-left: 1px solid var(--line-strong);
+}
+
+.segmented button[aria-pressed='true'] {
+  background: var(--selected);
+  color: var(--ink);
+}
+
+.segmented button:disabled {
+  color: var(--ink-3);
+  cursor: not-allowed;
+}

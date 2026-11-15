@@ -29,6 +29,8 @@
   --add-ink: #115230;
   --del-bg: #fce9e7;
   --del-ink: #8a1d16;
+  --add-word: #b5e6c4;
+  --del-word: #f7c5c0;
   --shadow: 0 8px 28px rgba(28, 28, 25, 0.16);
   --scrim: rgba(28, 28, 25, 0.32);
   --font-sans: 'IBM Plex Sans Variable', 'Segoe UI', system-ui, sans-serif;
@@ -67,6 +69,8 @@
     --add-ink: #8fe3b2;
     --del-bg: #321b19;
     --del-ink: #ffada6;
+    --add-word: #24512f;
+    --del-word: #5e2b27;
     --shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
     --scrim: rgba(0, 0, 0, 0.5);
   }

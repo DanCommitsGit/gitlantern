@@ -1,41 +1,15 @@
-import type { DiffHunk, DiffLine, FileDiff } from '../../../shared/repository-types'
+import { useRef, useState } from 'react'
+import type { FileDiff } from '../../../shared/repository-types'
+import {
+  loadDiffViewMode,
+  saveDiffViewMode,
+  SPLIT_MIN_WIDTH,
+  type DiffViewMode
+} from '../diff-view-mode'
 import type { SelectedChange } from '../selected-change'
-
-const LINE_CLASSES: Record<DiffLine['kind'], string> = {
-  context: '',
-  added: 'diff-line-added',
-  removed: 'diff-line-removed',
-  'no-newline': 'diff-line-note'
-}
-
-const LINE_MARKERS: Record<DiffLine['kind'], string> = {
-  context: '',
-  added: '+',
-  removed: '-',
-  'no-newline': ''
-}
-
-function DiffLineRow({ line }: { line: DiffLine }): React.JSX.Element {
-  return (
-    <div className={`diff-line ${LINE_CLASSES[line.kind]}`}>
-      <span className="diff-line-number">{line.oldLineNumber}</span>
-      <span className="diff-line-number">{line.newLineNumber}</span>
-      <span>{LINE_MARKERS[line.kind]}</span>
-      <span>{line.text}</span>
-    </div>
-  )
-}
-
-function HunkView({ hunk }: { hunk: DiffHunk }): React.JSX.Element {
-  return (
-    <>
-      <div className="diff-hunk-head">{hunk.header}</div>
-      {hunk.lines.map((line, lineIndex) => (
-        <DiffLineRow key={lineIndex} line={line} />
-      ))}
-    </>
-  )
-}
+import { useElementWidth } from '../use-element-width'
+import { DiffHunks } from './DiffHunks'
+import { DiffViewButtons } from './DiffViewButtons'
 
 function DiffMessage({
   title,
@@ -85,22 +59,16 @@ function noContentChangeMessage(details: string): React.JSX.Element {
 
 function DiffContent({
   diff,
+  mode,
   onShowLarge
 }: {
   diff: FileDiff
+  mode: DiffViewMode
   onShowLarge(): void
 }): React.JSX.Element {
   switch (diff.kind) {
     case 'text':
-      return (
-        <div className="diff-scroll">
-          <div className="diff-body">
-            {diff.hunks.map((hunk) => (
-              <HunkView key={hunk.header} hunk={hunk} />
-            ))}
-          </div>
-        </div>
-      )
+      return <DiffHunks hunks={diff.hunks} mode={mode} />
     case 'binary':
       return (
         <DiffMessage
@@ -150,9 +118,20 @@ export function DiffView({
   diff,
   onShowLarge
 }: DiffViewProps): React.JSX.Element {
+  const paneRef = useRef<HTMLElement>(null)
+  const paneWidth = useElementWidth(paneRef)
+  const [chosenMode, setChosenMode] = useState(loadDiffViewMode)
+  const splitFits = paneWidth >= SPLIT_MIN_WIDTH
+  const shownMode = chosenMode === 'split' && !splitFits ? 'unified' : chosenMode
+
+  function chooseMode(mode: DiffViewMode): void {
+    setChosenMode(mode)
+    saveDiffViewMode(mode)
+  }
+
   if (selected === null) {
     return (
-      <section className="pane grow">
+      <section className="pane grow" ref={paneRef}>
         {hasCommits ? (
           <DiffMessage
             title="Nothing to commit"
@@ -173,7 +152,7 @@ export function DiffView({
   }
 
   return (
-    <section className="pane grow">
+    <section className="pane grow" ref={paneRef}>
       <div className="pane-head">
         <span className="mono grow truncate">
           {selected.change.originalPath
@@ -181,8 +160,11 @@ export function DiffView({
             : selected.change.path}
           {selected.staged ? ', staged' : ', unstaged'}
         </span>
+        {diff?.kind === 'text' && (
+          <DiffViewButtons shownMode={shownMode} splitFits={splitFits} onChoose={chooseMode} />
+        )}
       </div>
-      {diff && <DiffContent diff={diff} onShowLarge={onShowLarge} />}
+      {diff && <DiffContent diff={diff} mode={shownMode} onShowLarge={onShowLarge} />}
     </section>
   )
 }
