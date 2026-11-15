@@ -57,3 +57,42 @@
 .diff-line-note {
   color: var(--ink-3);
 }
+
+.diff-split-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.diff-split-cell {
+  display: grid;
+  grid-template-columns: 40px 18px minmax(0, 1fr);
+  white-space: pre;
+}
+
+.diff-split-cell + .diff-split-cell {
+  border-left: 1px solid var(--line);
+}
+
+.diff-split-empty {
+  min-height: 20px;
+  background: var(--sunken);
+}
+
+.diff-word-added {
+  background: var(--add-word);
+  color: var(--add-ink);
+}
+
+.diff-word-removed {
+  background: var(--del-word);
+  color: var(--del-ink);
+  text-decoration: line-through;
+}
+
+.diff-line-added .diff-word-mark {
+  background: var(--add-word);
+}
+
+.diff-line-removed .diff-word-mark {
+  background: var(--del-word);
+}

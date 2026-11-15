@@ -27,7 +27,8 @@ export interface DiffHunk {
 }
 
 export type FileDiff =
-  | { kind: 'text'; hunks: DiffHunk[] }
+  // reachesEndOfFile: the last hunk ends at the last line of both versions.
+  | { kind: 'text'; hunks: DiffHunk[]; reachesEndOfFile: boolean }
   | { kind: 'binary'; details: string }
   | { kind: 'no-content-change'; details: string }
   | { kind: 'too-large'; lineCount: number }

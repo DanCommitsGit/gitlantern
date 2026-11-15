@@ -1,3 +1,5 @@
+import { lstat, readFile } from 'node:fs/promises'
+import { resolve, sep } from 'node:path'
 import parseDiff from 'parse-diff'
 import type { DiffHunk, DiffLine, FileChange, FileDiff } from '../../shared/repository-types'
 import { runGit } from './run-git'
@@ -71,6 +73,42 @@ function countLines(output: Buffer): number {
   return lineCount
 }
 
+// The new version's line count, counting a last line that has no line break.
+async function newVersionLineCount(
+  repository: { gitPath: string; repositoryPath: string },
+  change: FileChange,
+  staged: boolean
+): Promise<number | null> {
+  if (change.status === 'D') return 0
+  let contents: Buffer
+  if (staged) {
+    const result = await runGit({
+      ...repository,
+      gitArguments: ['--no-optional-locks', 'cat-file', 'blob', `:${change.path}`]
+    })
+    if (result.exitCode !== 0) return null
+    contents = result.stdout
+  } else {
+    const repositoryRoot = resolve(repository.repositoryPath)
+    const filePath = resolve(repositoryRoot, change.path)
+    if (!filePath.startsWith(repositoryRoot + sep)) return null
+    try {
+      // Git diffs a symbolic link's target path, not the file it points to.
+      if ((await lstat(filePath)).isSymbolicLink()) return null
+      contents = await readFile(filePath)
+    } catch {
+      return null
+    }
+  }
+  const endsWithoutLineBreak = contents.length > 0 && contents[contents.length - 1] !== 0x0a
+  return countLines(contents) + (endsWithoutLineBreak ? 1 : 0)
+}
+
+function lastNewLineNumber(hunks: DiffHunk[]): number {
+  const lastHunk = hunks.at(-1)
+  return Math.max(0, ...(lastHunk?.lines.map((line) => line.newLineNumber ?? 0) ?? []))
+}
+
 export async function readFileDiff(
   repository: { gitPath: string; repositoryPath: string },
   change: FileChange,
@@ -91,7 +129,11 @@ export async function readFileDiff(
 
   const diffText = result.stdout.toString()
   const chunks = parseDiff(diffText).flatMap((file) => file.chunks)
-  if (chunks.length > 0) return { kind: 'text', hunks: chunks.map(toHunk) }
+  if (chunks.length > 0) {
+    const hunks = chunks.map(toHunk)
+    const lineCount = await newVersionLineCount(repository, change, staged)
+    return { kind: 'text', hunks, reachesEndOfFile: lineCount === lastNewLineNumber(hunks) }
+  }
 
   const details = changeDetails(diffText)
   return details.includes('Binary files') || details.includes('GIT binary patch')
