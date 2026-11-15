@@ -68,7 +68,7 @@ function DiffContent({
 }): React.JSX.Element {
   switch (diff.kind) {
     case 'text':
-      return <DiffHunks hunks={diff.hunks} mode={mode} />
+      return <DiffHunks hunks={diff.hunks} reachesEndOfFile={diff.reachesEndOfFile} mode={mode} />
     case 'binary':
       return (
         <DiffMessage

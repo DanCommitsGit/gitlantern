@@ -1,7 +1,14 @@
 import { memo } from 'react'
 import type { DiffHunk, DiffLine } from '../../../shared/repository-types'
 import { alignDiff, type AlignedHunk, type WordSegment } from '../diff-alignment'
-import { splitRows, unifiedLines, wordLines, type MarkedLine, type WordLine } from '../diff-rows'
+import {
+  splitRows,
+  unifiedLines,
+  withEndOfFileLine,
+  wordLines,
+  type MarkedLine,
+  type WordLine
+} from '../diff-rows'
 import type { DiffViewMode } from '../diff-view-mode'
 
 const LINE_CLASSES: Record<DiffLine['kind'], string> = {
@@ -122,16 +129,19 @@ function HunkLines({ hunk, mode }: { hunk: AlignedHunk; mode: DiffViewMode }): R
 // Memoized so a hover redraw skips building every line again.
 export const DiffHunks = memo(function DiffHunks({
   hunks,
+  reachesEndOfFile,
   mode
 }: {
   hunks: DiffHunk[]
+  reachesEndOfFile: boolean
   mode: DiffViewMode
 }): React.JSX.Element {
-  const alignedHunks = alignDiff(hunks)
+  const shownHunks = reachesEndOfFile ? withEndOfFileLine(hunks) : hunks
+  const alignedHunks = alignDiff(shownHunks)
   return (
     <div className="diff-scroll">
       <div className="diff-body">
-        {hunks.map((hunk, index) => (
+        {shownHunks.map((hunk, index) => (
           <div key={hunk.header}>
             <div className="diff-hunk-head">{hunk.header}</div>
             <HunkLines hunk={alignedHunks[index]} mode={mode} />

@@ -246,4 +246,54 @@ describe('readFileDiff', () => {
     repository.git('diff')
     expect(existsSync(markerPath)).toBe(true)
   })
+
+  describe('reachesEndOfFile', () => {
+    const tenLines = 'one\ntwo\nthree\nfour\nfive\nsix\nseven\neight\nnine\nten\n'
+
+    async function reachesEnd(edited: string, staged = false): Promise<boolean> {
+      commitFile('a.txt', tenLines)
+      repository.writeFile('a.txt', edited)
+      if (staged) repository.git('add', '--', 'a.txt')
+      const result = await diff({ path: 'a.txt', status: 'M' }, staged)
+      if (result.kind !== 'text') throw new Error(`Expected a text diff, got ${result.kind}`)
+      return result.reachesEndOfFile
+    }
+
+    it('is true when the change is at the end', async () => {
+      expect(await reachesEnd(tenLines.replace('ten', 'TEN'))).toBe(true)
+    })
+
+    it('is true when the file ends exactly three lines after the change', async () => {
+      expect(await reachesEnd(tenLines.replace('seven', 'SEVEN'))).toBe(true)
+    })
+
+    it('is false when the file goes on past the last hunk', async () => {
+      expect(await reachesEnd(tenLines.replace('two', 'TWO'))).toBe(false)
+    })
+
+    it('counts a last line without a line break', async () => {
+      expect(await reachesEnd(tenLines.replace('ten\n', 'ten'))).toBe(true)
+    })
+
+    it('reads the staged version for a staged change at the end', async () => {
+      expect(await reachesEnd(tenLines.replace('ten', 'TEN'), true)).toBe(true)
+    })
+
+    it('reads the staged version for a staged change near the start', async () => {
+      expect(await reachesEnd(tenLines.replace('two', 'TWO'), true)).toBe(false)
+    })
+
+    it('is true for a new or deleted file', async () => {
+      repository.writeFile('new.txt', 'a\nb\n')
+      const created = await diff({ path: 'new.txt', status: '?' }, false)
+      commitFile('old.txt', 'a\nb\n')
+      repository.git('rm', '-q', '--', 'old.txt')
+      const deleted = await diff({ path: 'old.txt', status: 'D' }, true)
+
+      expect([created, deleted]).toMatchObject([
+        { kind: 'text', reachesEndOfFile: true },
+        { kind: 'text', reachesEndOfFile: true }
+      ])
+    })
+  })
 })

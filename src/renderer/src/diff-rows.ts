@@ -1,4 +1,4 @@
-import type { DiffLine } from '../../shared/repository-types'
+import type { DiffHunk, DiffLine } from '../../shared/repository-types'
 import type { AlignedHunk, AlignedRow, WordSegment } from './diff-alignment'
 
 /** A diff line drawn as `kind`, with its changed words marked when it has any. */
@@ -99,4 +99,34 @@ export function wordLines(hunk: AlignedHunk): WordLine[] {
   }
   flush()
   return result
+}
+
+// The empty line editors show after a file's last line break. A side that ends without one has none.
+function endOfFileLine(hunk: DiffHunk): DiffLine | null {
+  let lastOldLine: number | null = null
+  let lastNewLine: number | null = null
+  let oldEndsWithLineBreak = true
+  let newEndsWithLineBreak = true
+  let lastKind: DiffLine['kind'] = 'context'
+  for (const line of hunk.lines) {
+    if (isNote(line)) {
+      if (lastKind !== 'added') oldEndsWithLineBreak = false
+      if (lastKind !== 'removed') newEndsWithLineBreak = false
+      continue
+    }
+    lastKind = line.kind
+    lastOldLine = line.oldLineNumber ?? lastOldLine
+    lastNewLine = line.newLineNumber ?? lastNewLine
+  }
+  const oldLineNumber = lastOldLine !== null && oldEndsWithLineBreak ? lastOldLine + 1 : null
+  const newLineNumber = lastNewLine !== null && newEndsWithLineBreak ? lastNewLine + 1 : null
+  if (oldLineNumber === null && newLineNumber === null) return null
+  return { kind: 'context', oldLineNumber, newLineNumber, text: '' }
+}
+
+export function withEndOfFileLine(hunks: DiffHunk[]): DiffHunk[] {
+  const lastHunk = hunks.at(-1)
+  const finalLine = lastHunk && endOfFileLine(lastHunk)
+  if (!lastHunk || !finalLine) return hunks
+  return [...hunks.slice(0, -1), { ...lastHunk, lines: [...lastHunk.lines, finalLine] }]
 }

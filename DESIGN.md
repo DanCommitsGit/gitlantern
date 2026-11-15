@@ -28,6 +28,7 @@
 - Split puts the old and new file side by side, with each changed line across from its new version. In a window too narrow for it, the diff shows as Unified.
 - Split lines up and marks changes with VS Code's diff matching, inside each of git's hunks. Unified keeps git's line order and marks the same text.
 - Words shows each changed line once, with removed words struck through and added words marked.
+- A diff that reaches the end of a file ends with the empty line after its last line break, the way an editor shows it.
 
 ## Hints
 

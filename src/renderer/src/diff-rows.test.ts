@@ -3,7 +3,7 @@ import type { DiffHunk, DiffLine } from '../../shared/repository-types'
 import type { AlignedHunk } from './diff-alignment'
 import { alignDiff } from './diff-alignment'
 import type { SplitRow } from './diff-rows'
-import { splitRows, unifiedLines, wordLines } from './diff-rows'
+import { splitRows, unifiedLines, withEndOfFileLine, wordLines } from './diff-rows'
 
 const align = (lines: DiffLine[]): AlignedHunk => alignDiff([{ header: '@@ -1 +1 @@', lines }])[0]
 
@@ -282,15 +282,54 @@ describe('wordLines', () => {
     ])
   })
 
-  it('shows a line that only gained its final line break as unchanged, with the note', () => {
-    const lines = wordLines(align([removed(1, 'a'), noNewline, added(1, 'a')]))
+  it('shows a newline added at the end of the file as an added final line', () => {
+    const hunks = withEndOfFileLine([
+      { header: '@@ -1 +1 @@', lines: [removed(1, 'a'), noNewline, added(1, 'a')] }
+    ])
+    const lines = wordLines(alignDiff(hunks)[0])
 
     expect(
       lines.map((line) => [line.oldLineNumber, line.newLineNumber, line.segments[0].kind])
     ).toEqual([
       [1, 1, 'common'],
-      [null, null, 'common']
+      [null, null, 'common'],
+      [null, 2, 'added']
     ])
     expect(lines[1].isNote).toBe(true)
+  })
+})
+
+describe('withEndOfFileLine', () => {
+  const finalLine = (lines: DiffLine[]): DiffLine | undefined =>
+    withEndOfFileLine([{ header: '@@ -1 +1 @@', lines }])[0].lines.at(-1)
+
+  it('adds the empty line after the last line break on both sides', () => {
+    expect(finalLine([context(8, 11, 'x'), removed(9, 'a'), added(12, 'b')])).toEqual({
+      kind: 'context',
+      oldLineNumber: 10,
+      newLineNumber: 13,
+      text: ''
+    })
+  })
+
+  it('leaves it off a side that ends without a line break', () => {
+    expect(finalLine([removed(1, 'a'), noNewline, added(1, 'a')])).toMatchObject({
+      oldLineNumber: null,
+      newLineNumber: 2
+    })
+    expect(finalLine([context(1, 1, 'a'), noNewline])).toEqual(noNewline)
+  })
+
+  it('leaves it off the old side of a new file', () => {
+    expect(finalLine([added(1, 'a'), added(2, 'b')])).toMatchObject({
+      oldLineNumber: null,
+      newLineNumber: 3
+    })
+  })
+
+  it('shows a one-sided final line next to an empty cell in Split', () => {
+    const hunk = withEndOfFileLine([{ header: '@@ -0,0 +1 @@', lines: [added(1, 'a')] }])
+
+    expect(splitRows(alignDiff(hunk)[0]).at(-1)?.left).toBeNull()
   })
 })
