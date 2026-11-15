@@ -8,17 +8,8 @@ import {
   testGitPath,
   type TestRepository
 } from './git/test-repository'
-import { RepositorySession, type AppData, type AppDataStore } from './repository-session'
-
-function memoryStore(): AppDataStore {
-  const data: AppData = { recentRepositories: [], trustedPrograms: {}, gitLocation: null }
-  return {
-    get: (key) => data[key],
-    set: (key, value) => {
-      data[key] = value
-    }
-  }
-}
+import { createMemoryAppDataStore } from './app-data-store'
+import { RepositorySession, type AppDataStore } from './repository-session'
 
 describe('RepositorySession', () => {
   let repository: TestRepository
@@ -31,7 +22,7 @@ describe('RepositorySession', () => {
 
   beforeEach(() => {
     repository = createTestRepository()
-    store = memoryStore()
+    store = createMemoryAppDataStore()
     session = new RepositorySession(store)
   })
 

@@ -5,7 +5,7 @@ export interface SettingsStore {
   set(key: SettingKey, value: Settings[SettingKey]): void
 }
 
-const SETTING_CHECKS: { [Key in SettingKey]: (value: unknown) => value is Settings[Key] } = {
+export const SETTING_CHECKS: { [Key in SettingKey]: (value: unknown) => value is Settings[Key] } = {
   commandCard: (value): value is boolean => typeof value === 'boolean'
 }
 
