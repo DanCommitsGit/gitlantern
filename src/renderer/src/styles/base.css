@@ -325,18 +325,29 @@ ol {
   flex: none;
   border: 1px solid var(--line-strong);
   border-radius: 6px;
-  overflow: hidden;
 }
 
 .segmented button {
   min-height: 26px;
   padding: 0 10px;
   border: 0;
+  border-radius: 0;
   background: var(--raised);
   color: var(--ink-2);
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
+}
+
+/* 5px is the group's 6px radius minus its 1px border. */
+.segmented button:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.segmented button:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 .segmented button:focus-visible {
