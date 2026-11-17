@@ -1,5 +1,6 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
 import { IPC_CHANNELS, type GitlanternApi } from '../shared/gitlantern-api'
+import type { UpdateStatus } from '../shared/update-types'
 
 const api: GitlanternApi = {
   platform: process.platform,
@@ -23,7 +24,16 @@ const api: GitlanternApi = {
   copyText: (text) => ipcRenderer.invoke(IPC_CHANNELS.copyText, text),
   readSettings: () => ipcRenderer.invoke(IPC_CHANNELS.readSettings),
   saveSetting: (key, value) => ipcRenderer.invoke(IPC_CHANNELS.saveSetting, key, value),
-  showLogs: () => ipcRenderer.invoke(IPC_CHANNELS.showLogs)
+  showLogs: () => ipcRenderer.invoke(IPC_CHANNELS.showLogs),
+  readUpdateStatus: () => ipcRenderer.invoke(IPC_CHANNELS.readUpdateStatus),
+  checkForUpdates: () => ipcRenderer.invoke(IPC_CHANNELS.checkForUpdates),
+  downloadUpdate: () => ipcRenderer.invoke(IPC_CHANNELS.downloadUpdate),
+  installUpdate: () => ipcRenderer.invoke(IPC_CHANNELS.installUpdate),
+  onUpdateStatus: (listener) => {
+    const forward = (_event: IpcRendererEvent, status: UpdateStatus): void => listener(status)
+    ipcRenderer.on(IPC_CHANNELS.updateStatusChanged, forward)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.updateStatusChanged, forward)
+  }
 }
 
 contextBridge.exposeInMainWorld('api', api)

@@ -13,7 +13,8 @@ export interface SettingsStore {
 
 export const SETTING_CHECKS: { [Key in SettingKey]: (value: unknown) => value is Settings[Key] } = {
   commandCard: (value): value is boolean => typeof value === 'boolean',
-  fileList: (value): value is FileListStyle => FILE_LIST_STYLES.includes(value as FileListStyle)
+  fileList: (value): value is FileListStyle => FILE_LIST_STYLES.includes(value as FileListStyle),
+  autoUpdate: (value): value is boolean => typeof value === 'boolean'
 }
 
 const SETTING_KEYS = Object.keys(DEFAULT_SETTINGS) as SettingKey[]

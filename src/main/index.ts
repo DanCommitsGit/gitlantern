@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron'
 import serve from 'electron-serve'
 import { setApplicationMenu } from './app-menu'
+import { createAppUpdater } from './app-updater'
 import { createAppDataStore } from './app-data-store'
 import { registerIpcHandlers } from './ipc-handlers'
 import { createMainWindow } from './main-window'
@@ -24,13 +25,17 @@ app.whenReady().then(() => {
 
   denyAllPermissions()
   setApplicationMenu()
+  const settingsStore = createSettingsStore()
+  const updater = createAppUpdater(settingsStore)
   registerIpcHandlers(
     new RepositorySession(createAppDataStore()),
-    createSettingsStore(),
+    settingsStore,
+    updater,
     rendererUrl
   )
 
   createMainWindow(rendererUrl)
+  void updater.check()
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createMainWindow(rendererUrl)

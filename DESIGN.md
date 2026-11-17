@@ -43,6 +43,12 @@
 - Settings open in a dialog from the icon at the right end of the title bar.
 - A sidebar lists the sections, and the panel shows the selected one.
 
+## Updates
+
+- Updates have their own settings section, with the version, a button to check, and a switch for updating automatically, which is on by default.
+- A button appears in the title bar, left of the settings icon, only when an update is waiting. It restarts the app when the update is downloaded, and otherwise opens the Updates section.
+- On macOS the app only checks and links to the download page.
+
 ## Look
 
 - The app follows the system's light or dark theme.

@@ -10,11 +10,13 @@ import {
 import { logError, showLogFile } from './log'
 import type { RepositorySession } from './repository-session'
 import { readSettings, saveSetting, type SettingsStore } from './settings'
+import type { Updater } from './updater'
 import { isSameOrigin } from './url-policy'
 
 export function registerIpcHandlers(
   session: RepositorySession,
   settingsStore: SettingsStore,
+  updater: Updater,
   rendererUrl: string
 ): void {
   function handle(channel: string, handler: (...values: unknown[]) => unknown): void {
@@ -73,4 +75,8 @@ export function registerIpcHandlers(
   handle(IPC_CHANNELS.readSettings, () => readSettings(settingsStore))
   handle(IPC_CHANNELS.saveSetting, (key, value) => saveSetting(settingsStore, key, value))
   handle(IPC_CHANNELS.showLogs, showLogFile)
+  handle(IPC_CHANNELS.readUpdateStatus, () => updater.status())
+  handle(IPC_CHANNELS.checkForUpdates, () => updater.check())
+  handle(IPC_CHANNELS.downloadUpdate, () => updater.download())
+  handle(IPC_CHANNELS.installUpdate, () => updater.install())
 }

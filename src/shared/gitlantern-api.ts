@@ -1,6 +1,7 @@
 import type { CommandRecord } from './command-record'
 import type { FileChange, FileDiff, RepositoryStatus } from './repository-types'
 import type { SettingKey, Settings } from './settings'
+import type { UpdateStatus } from './update-types'
 
 export type GitCheck =
   | { state: 'ok'; version: string; path: string }
@@ -57,6 +58,12 @@ export interface GitlanternApi {
   readSettings(): Promise<Settings>
   saveSetting<Key extends SettingKey>(key: Key, value: Settings[Key]): Promise<Settings>
   showLogs(): Promise<void>
+  readUpdateStatus(): Promise<UpdateStatus>
+  checkForUpdates(): Promise<void>
+  downloadUpdate(): Promise<void>
+  installUpdate(): Promise<void>
+  /** Returns a function that stops the listening. */
+  onUpdateStatus(listener: (status: UpdateStatus) => void): () => void
 }
 
 export const IPC_CHANNELS = {
@@ -79,5 +86,10 @@ export const IPC_CHANNELS = {
   copyText: 'clipboard:copy-text',
   readSettings: 'settings:read',
   saveSetting: 'settings:save',
-  showLogs: 'logs:show'
+  showLogs: 'logs:show',
+  readUpdateStatus: 'updates:status',
+  checkForUpdates: 'updates:check',
+  downloadUpdate: 'updates:download',
+  installUpdate: 'updates:install',
+  updateStatusChanged: 'updates:status-changed'
 } as const

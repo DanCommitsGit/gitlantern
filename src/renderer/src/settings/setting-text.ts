@@ -17,5 +17,9 @@ export const SETTING_TEXT = {
       { value: 'two-lists', label: 'Two lists, unstaged and staged' },
       { value: 'checkboxes', label: 'One list with checkboxes' }
     ]
+  },
+  autoUpdate: {
+    label: 'Update automatically',
+    description: 'Downloads new versions and installs them when you quit.'
   }
 } as const satisfies Record<SettingKey, SettingText>

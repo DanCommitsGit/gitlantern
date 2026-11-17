@@ -1,20 +1,31 @@
 import { Dialog } from '@base-ui/react/dialog'
 import { Settings2, X } from 'lucide-react'
 import { useState } from 'react'
+import { UpdateButton } from '../components/UpdateButton'
 import { searchSettingsSections } from './search-settings'
 import { useSettings } from './settings-context'
 import { SETTINGS_SECTIONS, type SettingsSection } from './settings-sections'
 
+const UPDATES_SECTION = SETTINGS_SECTIONS.find((section) => section.id === 'updates')!
+
 export function SettingsDialog(): React.JSX.Element {
   const [selected, setSelected] = useState<SettingsSection>(SETTINGS_SECTIONS[0])
   const [query, setQuery] = useState('')
+  const [open, setOpen] = useState(false)
   const visibleSections = searchSettingsSections(query)
   const shown = visibleSections.includes(selected) ? selected : (visibleSections[0] ?? selected)
   const { Panel } = shown
   const { saveFailed } = useSettings()
 
+  function showUpdates(): void {
+    setQuery('')
+    setSelected(UPDATES_SECTION)
+    setOpen(true)
+  }
+
   return (
-    <Dialog.Root>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <UpdateButton onShowUpdates={showUpdates} />
       <Dialog.Trigger className="button button-quiet button-icon" aria-label="Settings">
         <Settings2 className="size-4 flex-none" />
       </Dialog.Trigger>

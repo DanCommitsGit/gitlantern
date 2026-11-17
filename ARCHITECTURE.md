@@ -6,4 +6,6 @@ The renderer is sandboxed, so all git and operating system access has to happen 
 
 All git commands run through `runGit` in `src/main/git`, which doesn't import Electron, so it can be tested with plain Vitest. A repository's programs are checked with `findRepositoryPrograms` before any other command runs in it.
 
+Updates come from the project's GitHub releases through `electron-updater`. The rules for what to do with one live in `src/main/updater.ts`, which doesn't import Electron, and the main process pushes each status change to the renderer.
+
 In production the renderer loads from `app://-`, which `electron-serve` limits to the renderer's build output. It can't navigate to another origin, and only `http:` and `https:` links open outside the app.
