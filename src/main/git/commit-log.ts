@@ -78,6 +78,8 @@ export async function readCommitLog(
     // Parents never come before their children, which the graph relies on.
     '--topo-order',
     '--decorate=full',
+    // log.showSignature would print gpg output into the parsed text.
+    '--no-show-signature',
     `--format=${LOG_FIELDS.join('%x00')}`,
     '-z',
     ...pageArguments

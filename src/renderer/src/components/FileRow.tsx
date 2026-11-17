@@ -24,9 +24,9 @@ export function FileRow({
   onAction
 }: FileRowProps): React.JSX.Element {
   return (
-    <li className="file-row group" data-selected={isSelected}>
+    <li className="list-row group" data-selected={isSelected}>
       <button
-        className="file-row-select"
+        className="list-row-select"
         type="button"
         title={change.originalPath ? `${change.originalPath} → ${change.path}` : change.path}
         aria-current={isSelected}

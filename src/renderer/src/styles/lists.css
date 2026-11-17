@@ -1,11 +1,11 @@
 @layer components {
-  .file-lists {
+  .list-scroll {
     flex: 1 1 0;
     min-height: 0;
     overflow: auto;
   }
 
-  .file-row {
+  .list-row {
     display: flex;
     align-items: center;
     min-height: 28px;
@@ -13,16 +13,16 @@
   }
 
   @media (hover: hover) {
-    .file-row:hover {
+    .list-row:hover {
       background-color: var(--color-hover);
     }
   }
 
-  .file-row[data-selected='true'] {
+  .list-row[data-selected='true'] {
     background-color: var(--color-selected);
   }
 
-  .file-row-select {
+  .list-row-select {
     display: flex;
     flex: 1 1 0;
     align-items: center;
@@ -34,7 +34,7 @@
     cursor: pointer;
   }
 
-  .file-row-select:focus-visible {
+  .list-row-select:focus-visible {
     outline-offset: -2px;
   }
 

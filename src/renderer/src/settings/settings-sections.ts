@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react'
 import type { SettingKey } from '../../../shared/settings'
 import { ChangesSettings } from './ChangesSettings'
+import { HistorySettings } from './HistorySettings'
 import { HintsAndCommandsSettings } from './HintsAndCommandsSettings'
 import { UpdatesSettings } from './UpdatesSettings'
 
@@ -19,5 +20,11 @@ export const SETTINGS_SECTIONS = [
     Panel: HintsAndCommandsSettings
   },
   { id: 'changes', name: 'Changes', settings: ['fileList'], Panel: ChangesSettings },
+  {
+    id: 'history',
+    name: 'History',
+    settings: ['logStyle', 'commitDetailPlace'],
+    Panel: HistorySettings
+  },
   { id: 'updates', name: 'Updates', settings: ['autoUpdate'], Panel: UpdatesSettings }
 ] as const satisfies readonly SettingsSection[]

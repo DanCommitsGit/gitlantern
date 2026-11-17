@@ -18,6 +18,20 @@ export const SETTING_TEXT = {
       { value: 'checkboxes', label: 'One list with checkboxes' }
     ]
   },
+  logStyle: {
+    label: 'Commit log',
+    choices: [
+      { value: 'graph', label: 'With the branch graph' },
+      { value: 'plain', label: 'Without the graph' }
+    ]
+  },
+  commitDetailPlace: {
+    label: 'Selected commit',
+    choices: [
+      { value: 'under', label: 'Under the log' },
+      { value: 'right', label: 'Right of the log' }
+    ]
+  },
   autoUpdate: {
     label: 'Update automatically',
     description: 'Downloads new versions and installs them when you quit.'

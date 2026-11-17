@@ -1,8 +1,13 @@
 import type { FileChange, FileStatus } from '../../shared/repository-types'
 import { runGit } from './run-git'
 
-// A merge commit is compared with its first parent, which is the branch it was merged into.
-export const COMMIT_DIFF_OPTIONS = ['--diff-merges=first-parent', '--find-renames']
+export const COMMIT_SHOW_OPTIONS = [
+  // A merge commit is compared with its first parent, which is the branch it was merged into.
+  '--diff-merges=first-parent',
+  '--find-renames',
+  // log.showSignature would print gpg output into the parsed text.
+  '--no-show-signature'
+]
 
 export function parseNameStatus(nameStatusOutput: string): FileChange[] {
   const fields = nameStatusOutput.split('\0')
@@ -32,7 +37,7 @@ export async function readCommitFiles(
       '--format=',
       '--name-status',
       '-z',
-      ...COMMIT_DIFF_OPTIONS,
+      ...COMMIT_SHOW_OPTIONS,
       commitHash
     ]
   })

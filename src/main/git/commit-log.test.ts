@@ -132,7 +132,9 @@ describe('commit history', () => {
 
   it('names HEAD when not on a branch and leaves out refs that are not branches or tags', () => {
     expect(
-      parseRefs('HEAD, refs/heads/main, refs/remotes/origin/main, refs/remotes/origin/HEAD, refs/stash')
+      parseRefs(
+        'HEAD, refs/heads/main, refs/remotes/origin/main, refs/remotes/origin/HEAD, refs/stash'
+      )
     ).toEqual([
       { kind: 'head', name: 'HEAD' },
       { kind: 'branch', name: 'main' },
@@ -165,7 +167,9 @@ describe('commit history', () => {
 
     expect(await readCommitFiles(location(), merge)).toEqual([{ path: 'side.txt', status: 'A' }])
     expect(
-      addedLines(await readCommitFileDiff(location(), merge, { path: 'side.txt', status: 'A' }, false))
+      addedLines(
+        await readCommitFileDiff(location(), merge, { path: 'side.txt', status: 'A' }, false)
+      )
     ).toEqual(['from side'])
   })
 

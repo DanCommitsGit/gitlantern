@@ -2,7 +2,7 @@ import { lstat, readFile } from 'node:fs/promises'
 import { resolve, sep } from 'node:path'
 import parseDiff from 'parse-diff'
 import type { DiffHunk, DiffLine, FileChange, FileDiff } from '../../shared/repository-types'
-import { COMMIT_DIFF_OPTIONS } from './commit-files'
+import { COMMIT_SHOW_OPTIONS } from './commit-files'
 import { runGit } from './run-git'
 
 const LARGE_DIFF_LINE_COUNT = 5000
@@ -174,7 +174,7 @@ export async function readCommitFileDiff(
       'show',
       '--format=',
       ...COMMON_DIFF_OPTIONS,
-      ...COMMIT_DIFF_OPTIONS,
+      ...COMMIT_SHOW_OPTIONS,
       commitHash,
       '--',
       change.path,

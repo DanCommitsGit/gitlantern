@@ -7,11 +7,8 @@ import {
   type FileSelection,
   type SelectedChange
 } from './selected-change'
+import { errorMessage } from './error-message'
 import { useSettings } from './settings/settings-context'
-
-function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error)
-}
 
 export interface RepositoryState {
   status: RepositoryStatus | null
