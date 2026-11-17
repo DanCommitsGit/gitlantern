@@ -15,6 +15,11 @@ const api: GitlanternApi = {
   readStatus: () => ipcRenderer.invoke(IPC_CHANNELS.readStatus),
   readDiff: (change, staged, showLarge) =>
     ipcRenderer.invoke(IPC_CHANNELS.readDiff, change, staged, showLarge),
+  readCommitLog: (scope, search, skip) =>
+    ipcRenderer.invoke(IPC_CHANNELS.readCommitLog, scope, search, skip),
+  readCommitFiles: (commitHash) => ipcRenderer.invoke(IPC_CHANNELS.readCommitFiles, commitHash),
+  readCommitDiff: (commitHash, change, showLarge) =>
+    ipcRenderer.invoke(IPC_CHANNELS.readCommitDiff, commitHash, change, showLarge),
   stageFiles: (paths) => ipcRenderer.invoke(IPC_CHANNELS.stageFiles, paths),
   stageAll: () => ipcRenderer.invoke(IPC_CHANNELS.stageAll),
   unstageFiles: (paths) => ipcRenderer.invoke(IPC_CHANNELS.unstageFiles, paths),

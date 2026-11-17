@@ -3,7 +3,10 @@ import { basename } from 'node:path'
 import { IPC_CHANNELS } from '../shared/gitlantern-api'
 import {
   requireBoolean,
+  requireCommitHash,
+  requireCount,
   requireFileChange,
+  requireLogScope,
   requireNonEmptyStrings,
   requireString
 } from './ipc-validation'
@@ -60,6 +63,19 @@ export function registerIpcHandlers(
   handle(IPC_CHANNELS.readStatus, () => session.readStatus())
   handle(IPC_CHANNELS.readDiff, (change, staged, showLarge) =>
     session.readDiff(requireFileChange(change), requireBoolean(staged), requireBoolean(showLarge))
+  )
+  handle(IPC_CHANNELS.readCommitLog, (scope, search, skip) =>
+    session.readCommitLog(requireLogScope(scope), requireString(search), requireCount(skip))
+  )
+  handle(IPC_CHANNELS.readCommitFiles, (commitHash) =>
+    session.readCommitFiles(requireCommitHash(commitHash))
+  )
+  handle(IPC_CHANNELS.readCommitDiff, (commitHash, change, showLarge) =>
+    session.readCommitDiff(
+      requireCommitHash(commitHash),
+      requireFileChange(change),
+      requireBoolean(showLarge)
+    )
   )
   handle(IPC_CHANNELS.stageFiles, (paths) => session.stageFiles(requireNonEmptyStrings(paths)))
   handle(IPC_CHANNELS.stageAll, () => session.stageAll())

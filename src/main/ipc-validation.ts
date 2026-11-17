@@ -1,3 +1,4 @@
+import { LOG_SCOPES, type LogScope } from '../shared/history-types'
 import type { FileChange, FileStatus } from '../shared/repository-types'
 
 const FILE_STATUSES = new Set<FileStatus>(['M', 'A', 'D', 'R', 'C', 'T', 'U', '?'])
@@ -10,6 +11,26 @@ export function requireString(value: unknown): string {
 export function requireBoolean(value: unknown): boolean {
   if (typeof value !== 'boolean') throw new TypeError('Expected a boolean')
   return value
+}
+
+export function requireCount(value: unknown): number {
+  if (!Number.isSafeInteger(value) || (value as number) < 0) {
+    throw new TypeError('Expected a count')
+  }
+  return value as number
+}
+
+// A full hash can't be mistaken for an option or a path.
+export function requireCommitHash(value: unknown): string {
+  if (typeof value !== 'string' || !/^[0-9a-f]{40,64}$/.test(value)) {
+    throw new TypeError('Expected a commit hash')
+  }
+  return value
+}
+
+export function requireLogScope(value: unknown): LogScope {
+  if (!LOG_SCOPES.includes(value as LogScope)) throw new TypeError('Unknown log scope')
+  return value as LogScope
 }
 
 export function requireNonEmptyStrings(value: unknown): string[] {

@@ -2,6 +2,7 @@ import { lstat, readFile } from 'node:fs/promises'
 import { resolve, sep } from 'node:path'
 import parseDiff from 'parse-diff'
 import type { DiffHunk, DiffLine, FileChange, FileDiff } from '../../shared/repository-types'
+import { COMMIT_DIFF_OPTIONS } from './commit-files'
 import { runGit } from './run-git'
 
 const LARGE_DIFF_LINE_COUNT = 5000
@@ -73,44 +74,71 @@ function countLines(output: Buffer): number {
   return lineCount
 }
 
-// The new version's line count, counting a last line that has no line break.
-async function newVersionLineCount(
-  repository: { gitPath: string; repositoryPath: string },
-  change: FileChange,
-  staged: boolean
-): Promise<number | null> {
-  if (change.status === 'D') return 0
-  let contents: Buffer
-  if (staged) {
-    const result = await runGit({
-      ...repository,
-      gitArguments: ['--no-optional-locks', 'cat-file', 'blob', `:${change.path}`]
-    })
-    if (result.exitCode !== 0) return null
-    contents = result.stdout
-  } else {
-    const repositoryRoot = resolve(repository.repositoryPath)
-    const filePath = resolve(repositoryRoot, change.path)
-    if (!filePath.startsWith(repositoryRoot + sep)) return null
-    try {
-      // Git diffs a symbolic link's target path, not the file it points to.
-      if ((await lstat(filePath)).isSymbolicLink()) return null
-      contents = await readFile(filePath)
-    } catch {
-      return null
-    }
+type Repository = { gitPath: string; repositoryPath: string }
+
+async function readBlob(repository: Repository, objectName: string): Promise<Buffer | null> {
+  const result = await runGit({
+    ...repository,
+    gitArguments: ['--no-optional-locks', 'cat-file', 'blob', objectName]
+  })
+  return result.exitCode === 0 ? result.stdout : null
+}
+
+async function readWorkingFile(repository: Repository, path: string): Promise<Buffer | null> {
+  const repositoryRoot = resolve(repository.repositoryPath)
+  const filePath = resolve(repositoryRoot, path)
+  if (!filePath.startsWith(repositoryRoot + sep)) return null
+  try {
+    // Git diffs a symbolic link's target path, not the file it points to.
+    if ((await lstat(filePath)).isSymbolicLink()) return null
+    return await readFile(filePath)
+  } catch {
+    return null
   }
+}
+
+// Counts a last line that has no line break.
+function fileLineCount(contents: Buffer): number {
   const endsWithoutLineBreak = contents.length > 0 && contents[contents.length - 1] !== 0x0a
   return countLines(contents) + (endsWithoutLineBreak ? 1 : 0)
 }
+
+const DELETED_FILE = Buffer.alloc(0)
 
 function lastNewLineNumber(hunks: DiffHunk[]): number {
   const lastHunk = hunks.at(-1)
   return Math.max(0, ...(lastHunk?.lines.map((line) => line.newLineNumber ?? 0) ?? []))
 }
 
+async function toFileDiff(
+  diffOutput: Buffer,
+  showLarge: boolean,
+  readNewVersion: () => Promise<Buffer | null>
+): Promise<FileDiff> {
+  const lineCount = countLines(diffOutput)
+  if (!showLarge && lineCount > LARGE_DIFF_LINE_COUNT) return { kind: 'too-large', lineCount }
+
+  const diffText = diffOutput.toString()
+  const chunks = parseDiff(diffText).flatMap((file) => file.chunks)
+  if (chunks.length > 0) {
+    const hunks = chunks.map(toHunk)
+    const newVersion = await readNewVersion()
+    return {
+      kind: 'text',
+      hunks,
+      reachesEndOfFile:
+        newVersion !== null && fileLineCount(newVersion) === lastNewLineNumber(hunks)
+    }
+  }
+
+  const details = changeDetails(diffText)
+  return details.includes('Binary files') || details.includes('GIT binary patch')
+    ? { kind: 'binary', details }
+    : { kind: 'no-content-change', details }
+}
+
 export async function readFileDiff(
-  repository: { gitPath: string; repositoryPath: string },
+  repository: Repository,
   change: FileChange,
   staged: boolean,
   showLarge: boolean
@@ -124,19 +152,38 @@ export async function readFileDiff(
   const failed = change.status === '?' ? result.exitCode > 1 : result.exitCode !== 0
   if (failed) throw new Error(result.stderr.toString().trim())
 
-  const lineCount = countLines(result.stdout)
-  if (!showLarge && lineCount > LARGE_DIFF_LINE_COUNT) return { kind: 'too-large', lineCount }
+  return toFileDiff(result.stdout, showLarge, async () => {
+    if (change.status === 'D') return DELETED_FILE
+    return staged
+      ? readBlob(repository, `:${change.path}`)
+      : readWorkingFile(repository, change.path)
+  })
+}
 
-  const diffText = result.stdout.toString()
-  const chunks = parseDiff(diffText).flatMap((file) => file.chunks)
-  if (chunks.length > 0) {
-    const hunks = chunks.map(toHunk)
-    const lineCount = await newVersionLineCount(repository, change, staged)
-    return { kind: 'text', hunks, reachesEndOfFile: lineCount === lastNewLineNumber(hunks) }
-  }
+export async function readCommitFileDiff(
+  repository: Repository,
+  commitHash: string,
+  change: FileChange,
+  showLarge: boolean
+): Promise<FileDiff> {
+  const result = await runGit({
+    ...repository,
+    gitArguments: [
+      '--literal-pathspecs',
+      '--no-optional-locks',
+      'show',
+      '--format=',
+      ...COMMON_DIFF_OPTIONS,
+      ...COMMIT_DIFF_OPTIONS,
+      commitHash,
+      '--',
+      change.path,
+      ...(change.originalPath === undefined ? [] : [change.originalPath])
+    ]
+  })
+  if (result.exitCode !== 0) throw new Error(result.stderr.toString().trim())
 
-  const details = changeDetails(diffText)
-  return details.includes('Binary files') || details.includes('GIT binary patch')
-    ? { kind: 'binary', details }
-    : { kind: 'no-content-change', details }
+  return toFileDiff(result.stdout, showLarge, async () =>
+    change.status === 'D' ? DELETED_FILE : readBlob(repository, `${commitHash}:${change.path}`)
+  )
 }
