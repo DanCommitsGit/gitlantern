@@ -19,6 +19,16 @@ export const GLOSSARY = {
     term: 'HEAD',
     explanation: "The commit you're on right now, usually the tip of the current branch."
   },
+  ahead: {
+    term: 'Ahead',
+    explanation: "Commits on this branch that its upstream doesn't have yet.",
+    command: 'git status'
+  },
+  behind: {
+    term: 'Behind',
+    explanation: "Commits on the upstream that this branch doesn't have yet.",
+    command: 'git status'
+  },
   summary: {
     term: 'Summary',
     explanation: 'One line saying what this commit does.',

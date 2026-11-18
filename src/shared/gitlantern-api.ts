@@ -1,6 +1,6 @@
 import type { CommandRecord } from './command-record'
 import type { CommitLogPage, LogScope } from './history-types'
-import type { FileChange, FileDiff, RepositoryStatus } from './repository-types'
+import type { Branch, FileChange, FileDiff, RepositoryStatus } from './repository-types'
 import type { SettingKey, Settings } from './settings'
 import type { UpdateStatus } from './update-types'
 
@@ -18,6 +18,7 @@ export interface OpenedRepository {
   path: string
   name: string
   identity: Identity
+  collapsedBranchGroups: string[]
 }
 
 export type RepositoryProgramSummary =
@@ -45,6 +46,8 @@ export interface GitlanternApi {
   createRepository(folder: string): Promise<{ result: OpenResult; record: CommandRecord | null }>
   closeRepository(): Promise<void>
   readStatus(): Promise<RepositoryStatus>
+  readBranches(): Promise<Branch[]>
+  saveCollapsedBranchGroups(groups: string[]): Promise<void>
   readDiff(change: FileChange, staged: boolean, showLarge: boolean): Promise<FileDiff>
   readCommitLog(scope: LogScope, search: string, skip: number): Promise<CommitLogPage>
   readCommitFiles(commitHash: string): Promise<FileChange[]>
@@ -80,6 +83,8 @@ export const IPC_CHANNELS = {
   createRepository: 'repository:create',
   closeRepository: 'repository:close',
   readStatus: 'repository:status',
+  readBranches: 'repository:branches',
+  saveCollapsedBranchGroups: 'repository:save-collapsed-branch-groups',
   readDiff: 'repository:diff',
   readCommitLog: 'repository:commit-log',
   readCommitFiles: 'repository:commit-files',

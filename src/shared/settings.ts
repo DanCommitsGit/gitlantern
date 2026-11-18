@@ -10,11 +10,21 @@ export const COMMIT_DETAIL_PLACES = ['under', 'right'] as const
 
 export type CommitDetailPlace = (typeof COMMIT_DETAIL_PLACES)[number]
 
+export const BRANCH_LIST_STYLES = ['one-list', 'grouped'] as const
+
+export type BranchListStyle = (typeof BRANCH_LIST_STYLES)[number]
+
+export const BRANCH_ORDERS = ['current-first', 'name', 'newest-commit'] as const
+
+export type BranchOrder = (typeof BRANCH_ORDERS)[number]
+
 export interface Settings {
   commandCard: boolean
   fileList: FileListStyle
   logStyle: LogStyle
   commitDetailPlace: CommitDetailPlace
+  branchList: BranchListStyle
+  branchOrder: BranchOrder
   autoUpdate: boolean
 }
 
@@ -25,5 +35,7 @@ export const DEFAULT_SETTINGS: Settings = {
   fileList: 'two-lists',
   logStyle: 'graph',
   commitDetailPlace: 'under',
+  branchList: 'one-list',
+  branchOrder: 'current-first',
   autoUpdate: true
 }

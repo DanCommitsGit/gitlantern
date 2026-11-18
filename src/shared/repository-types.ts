@@ -14,6 +14,15 @@ export interface RepositoryStatus {
   staged: FileChange[]
 }
 
+export interface Branch {
+  name: string
+  // Commits this branch and its upstream don't share; both 0 without an upstream.
+  ahead: number
+  behind: number
+  // Unix seconds of the tip commit.
+  committedAt: number
+}
+
 export interface DiffLine {
   kind: 'context' | 'added' | 'removed' | 'no-newline'
   oldLineNumber: number | null

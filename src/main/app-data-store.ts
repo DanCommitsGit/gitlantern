@@ -12,12 +12,28 @@ const APP_DATA_REPAIRS: StoredDataRepairs<AppData> = {
           Object.entries(value).filter(([, fingerprint]) => typeof fingerprint === 'string')
         ) as Record<string, string>)
       : undefined,
-  gitLocation: (value) => (typeof value === 'string' || value === null ? value : undefined)
+  gitLocation: (value) => (typeof value === 'string' || value === null ? value : undefined),
+  collapsedBranchGroups: (value) =>
+    isPlainObject(value)
+      ? (Object.fromEntries(
+          Object.entries(value)
+            .filter(([, groups]) => Array.isArray(groups))
+            .map(([path, groups]) => [
+              path,
+              (groups as unknown[]).filter((group) => typeof group === 'string')
+            ])
+        ) as Record<string, string[]>)
+      : undefined
 }
 
 // A mapped type, unlike the AppData interface, fits electron-store's type for defaults.
 function createAppDataDefaults(): { [Key in keyof AppData]: AppData[Key] } {
-  return { recentRepositories: [], trustedPrograms: {}, gitLocation: null }
+  return {
+    recentRepositories: [],
+    trustedPrograms: {},
+    gitLocation: null,
+    collapsedBranchGroups: {}
+  }
 }
 
 export function createMemoryAppDataStore(data: AppData = createAppDataDefaults()): AppDataStore {
@@ -33,7 +49,8 @@ function moveToMemoryWhenFileFails(fileStore: AppDataStore): AppDataStore {
   const lastKnown: AppData = {
     recentRepositories: fileStore.get('recentRepositories'),
     trustedPrograms: fileStore.get('trustedPrograms'),
-    gitLocation: fileStore.get('gitLocation')
+    gitLocation: fileStore.get('gitLocation'),
+    collapsedBranchGroups: fileStore.get('collapsedBranchGroups')
   }
   let memoryStore: AppDataStore | null = null
 

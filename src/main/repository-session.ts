@@ -12,7 +12,8 @@ import {
 import type { CommandRecord } from '../shared/command-record'
 import type { GitCheck, Identity, OpenResult } from '../shared/gitlantern-api'
 import type { CommitLogPage, LogScope } from '../shared/history-types'
-import type { FileChange, FileDiff, RepositoryStatus } from '../shared/repository-types'
+import type { Branch, FileChange, FileDiff, RepositoryStatus } from '../shared/repository-types'
+import { readBranches } from './git/branches'
 import { readCommitFiles } from './git/commit-files'
 import { readCommitLog } from './git/commit-log'
 import { readCommitFileDiff, readFileDiff } from './git/file-diff'
@@ -30,6 +31,8 @@ export interface AppData {
   // Repository path to a fingerprint of the programs the user trusted.
   trustedPrograms: Record<string, string>
   gitLocation: string | null
+  // Repository path to the branch groups collapsed in the rail.
+  collapsedBranchGroups: Record<string, string[]>
 }
 
 export interface AppDataStore {
@@ -143,6 +146,18 @@ export class RepositorySession {
     return readRepositoryStatus(this.requireRepository())
   }
 
+  async readBranches(): Promise<Branch[]> {
+    return readBranches(this.requireRepository())
+  }
+
+  saveCollapsedBranchGroups(groups: string[]): void {
+    const { repositoryPath } = this.requireRepository()
+    const collapsedBranchGroups = { ...this.store.get('collapsedBranchGroups') }
+    if (groups.length === 0) delete collapsedBranchGroups[repositoryPath]
+    else collapsedBranchGroups[repositoryPath] = groups
+    this.store.set('collapsedBranchGroups', collapsedBranchGroups)
+  }
+
   async readDiff(change: FileChange, staged: boolean, showLarge: boolean): Promise<FileDiff> {
     return readFileDiff(this.requireRepository(), change, staged, showLarge)
   }
@@ -212,7 +227,8 @@ export class RepositorySession {
       repository: {
         path: repositoryPath,
         name: basename(repositoryPath),
-        identity: await this.readIdentity(this.requireRepository())
+        identity: await this.readIdentity(this.requireRepository()),
+        collapsedBranchGroups: this.store.get('collapsedBranchGroups')[repositoryPath] ?? []
       }
     }
   }

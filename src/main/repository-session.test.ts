@@ -58,6 +58,22 @@ describe('RepositorySession', () => {
     expect(store.get('recentRepositories')).toEqual([normalize(repository.path)])
   })
 
+  it('remembers collapsed branch groups for each repository', async () => {
+    await session.checkGit()
+    await session.open(repository.path)
+
+    session.saveCollapsedBranchGroups(['feature'])
+    session.close()
+
+    expect(await session.open(repository.path)).toMatchObject({
+      repository: { collapsedBranchGroups: ['feature'] }
+    })
+
+    session.saveCollapsedBranchGroups([])
+
+    expect(store.get('collapsedBranchGroups')).toEqual({})
+  })
+
   it('opens the top of a repository from one of its folders', async () => {
     repository.writeFile('folder/a.txt', 'a\n')
     await session.checkGit()

@@ -32,6 +32,21 @@ export const SETTING_TEXT = {
       { value: 'right', label: 'Right of the log' }
     ]
   },
+  branchList: {
+    label: 'Branch list',
+    choices: [
+      { value: 'one-list', label: 'One list' },
+      { value: 'grouped', label: 'Grouped by the part before /' }
+    ]
+  },
+  branchOrder: {
+    label: 'Branch order',
+    choices: [
+      { value: 'current-first', label: 'Current branch first, then by name' },
+      { value: 'name', label: 'By name' },
+      { value: 'newest-commit', label: 'Newest commit first' }
+    ]
+  },
   autoUpdate: {
     label: 'Update automatically',
     description: 'Downloads new versions and installs them when you quit.'

@@ -1,5 +1,9 @@
 import {
+  BRANCH_LIST_STYLES,
+  BRANCH_ORDERS,
   COMMIT_DETAIL_PLACES,
+  type BranchListStyle,
+  type BranchOrder,
   DEFAULT_SETTINGS,
   FILE_LIST_STYLES,
   LOG_STYLES,
@@ -21,6 +25,9 @@ export const SETTING_CHECKS: { [Key in SettingKey]: (value: unknown) => value is
   logStyle: (value): value is LogStyle => LOG_STYLES.includes(value as LogStyle),
   commitDetailPlace: (value): value is CommitDetailPlace =>
     COMMIT_DETAIL_PLACES.includes(value as CommitDetailPlace),
+  branchList: (value): value is BranchListStyle =>
+    BRANCH_LIST_STYLES.includes(value as BranchListStyle),
+  branchOrder: (value): value is BranchOrder => BRANCH_ORDERS.includes(value as BranchOrder),
   autoUpdate: (value): value is boolean => typeof value === 'boolean'
 }
 

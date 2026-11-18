@@ -29,6 +29,13 @@
 - More commits load as you scroll to the end of the log.
 - Selecting a commit shows its message, its changed files and the diff of one file, picked from the list as in Changes. A setting puts this under the log or to the right of it.
 
+## Branches
+
+- The rail lists local branches in one list by default, with HEAD on the current one.
+- A setting groups them by the part before the first slash. Branches without one come first, and collapsed groups stay collapsed for that repository.
+- A setting orders them current branch first and then by name, which is the default, by name, or newest commit first.
+- Each branch shows how many commits it is ahead of and behind its upstream.
+
 ## Diffs
 
 - Diffs are unified by default. Buttons above the diff switch between Unified, Split and Words, and the last one picked stays for every file and the next launch.

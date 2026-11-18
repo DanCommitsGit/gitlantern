@@ -33,6 +33,11 @@ export function requireLogScope(value: unknown): LogScope {
   return value as LogScope
 }
 
+export function requireStrings(value: unknown): string[] {
+  if (!Array.isArray(value)) throw new TypeError('Expected a list of strings')
+  return value.map(requireString)
+}
+
 export function requireNonEmptyStrings(value: unknown): string[] {
   if (!Array.isArray(value) || value.length === 0) throw new TypeError('Expected a list of paths')
   return value.map(requireString)

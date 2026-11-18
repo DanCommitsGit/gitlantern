@@ -13,6 +13,9 @@ const api: GitlanternApi = {
   createRepository: (folder) => ipcRenderer.invoke(IPC_CHANNELS.createRepository, folder),
   closeRepository: () => ipcRenderer.invoke(IPC_CHANNELS.closeRepository),
   readStatus: () => ipcRenderer.invoke(IPC_CHANNELS.readStatus),
+  readBranches: () => ipcRenderer.invoke(IPC_CHANNELS.readBranches),
+  saveCollapsedBranchGroups: (groups) =>
+    ipcRenderer.invoke(IPC_CHANNELS.saveCollapsedBranchGroups, groups),
   readDiff: (change, staged, showLarge) =>
     ipcRenderer.invoke(IPC_CHANNELS.readDiff, change, staged, showLarge),
   readCommitLog: (scope, search, skip) =>

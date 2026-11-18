@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { CommandRecord } from '../../shared/command-record'
-import type { FileDiff, RepositoryStatus } from '../../shared/repository-types'
+import type { Branch, FileDiff, RepositoryStatus } from '../../shared/repository-types'
 import {
   resolveCheckboxSelection,
   resolveSelectedChange,
@@ -12,6 +12,7 @@ import { useSettings } from './settings/settings-context'
 
 export interface RepositoryState {
   status: RepositoryStatus | null
+  branches: Branch[]
   selected: SelectedChange | null
   diff: FileDiff | null
   errorMessage: string | null
@@ -22,6 +23,7 @@ export interface RepositoryState {
 
 export function useRepositoryState(onRecord: (record: CommandRecord) => void): RepositoryState {
   const [status, setStatus] = useState<RepositoryStatus | null>(null)
+  const [branches, setBranches] = useState<Branch[]>([])
   const [selection, setSelection] = useState<FileSelection | null>(null)
   const [diff, setDiff] = useState<FileDiff | null>(null)
   const [largeDiffPath, setLargeDiffPath] = useState<string | null>(null)
@@ -30,9 +32,10 @@ export function useRepositoryState(onRecord: (record: CommandRecord) => void): R
 
   const refresh = useCallback(
     () =>
-      window.api.readStatus().then(
-        (nextStatus) => {
+      Promise.all([window.api.readStatus(), window.api.readBranches()]).then(
+        ([nextStatus, nextBranches]) => {
           setStatus(nextStatus)
+          setBranches(nextBranches)
           setReadError(null)
         },
         (error) => setReadError(errorMessage(error))
@@ -88,6 +91,7 @@ export function useRepositoryState(onRecord: (record: CommandRecord) => void): R
 
   return {
     status,
+    branches,
     selected,
     diff: selected === null ? null : diff,
     errorMessage: readError,

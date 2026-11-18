@@ -8,7 +8,8 @@ import {
   requireFileChange,
   requireLogScope,
   requireNonEmptyStrings,
-  requireString
+  requireString,
+  requireStrings
 } from './ipc-validation'
 import { logError, showLogFile } from './log'
 import type { RepositorySession } from './repository-session'
@@ -61,6 +62,10 @@ export function registerIpcHandlers(
   handle(IPC_CHANNELS.createRepository, (folder) => session.create(requireString(folder)))
   handle(IPC_CHANNELS.closeRepository, () => session.close())
   handle(IPC_CHANNELS.readStatus, () => session.readStatus())
+  handle(IPC_CHANNELS.readBranches, () => session.readBranches())
+  handle(IPC_CHANNELS.saveCollapsedBranchGroups, (groups) =>
+    session.saveCollapsedBranchGroups(requireStrings(groups))
+  )
   handle(IPC_CHANNELS.readDiff, (change, staged, showLarge) =>
     session.readDiff(requireFileChange(change), requireBoolean(staged), requireBoolean(showLarge))
   )

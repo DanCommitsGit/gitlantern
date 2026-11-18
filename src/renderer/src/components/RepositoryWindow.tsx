@@ -78,7 +78,11 @@ export function RepositoryWindow({
         )}
         {status && (
           <div className="flex min-h-0 flex-1">
-            <Rail branchName={status.branchName} />
+            <Rail
+              branches={state.branches}
+              currentBranchName={status.branchName}
+              initialCollapsedBranchGroups={repository.collapsedBranchGroups}
+            />
             {/* Both views stay mounted, so a half-written commit message survives a look at History. */}
             <div className={viewClassName(view === 'changes')}>
               <ChangesView
