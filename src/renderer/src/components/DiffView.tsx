@@ -6,33 +6,10 @@ import {
   SPLIT_MIN_WIDTH,
   type DiffViewMode
 } from '../diff-view-mode'
-import type { SelectedChange } from '../selected-change'
 import { useElementWidth } from '../use-element-width'
 import { DiffHunks } from './DiffHunks'
+import { DiffMessage } from './DiffMessage'
 import { DiffViewButtons } from './DiffViewButtons'
-
-function DiffMessage({
-  title,
-  message,
-  details,
-  children
-}: {
-  title: string
-  message: string
-  details?: string
-  children?: React.ReactNode
-}): React.JSX.Element {
-  return (
-    <div className="message-pane">
-      <section className="panel message-card">
-        <h2 className="text-head">{title}</h2>
-        <p className="text-small text-ink-2">{message}</p>
-        {details && <div className="output">{details}</div>}
-        {children}
-      </section>
-    </div>
-  )
-}
 
 function noContentChangeMessage(details: string): React.JSX.Element {
   const similarity = /similarity index (\d+)%/.exec(details)
@@ -101,18 +78,14 @@ function DiffContent({
 }
 
 interface DiffViewProps {
-  hasCommits: boolean
-  selected: SelectedChange | null
+  // null when nothing is selected, which shows the children instead.
+  title: string | null
   diff: FileDiff | null
   onShowLarge(): void
+  children?: React.ReactNode
 }
 
-export function DiffView({
-  hasCommits,
-  selected,
-  diff,
-  onShowLarge
-}: DiffViewProps): React.JSX.Element {
+export function DiffView({ title, diff, onShowLarge, children }: DiffViewProps): React.JSX.Element {
   const paneRef = useRef<HTMLElement>(null)
   const paneWidth = useElementWidth(paneRef)
   const [chosenMode, setChosenMode] = useState(loadDiffViewMode)
@@ -124,42 +97,21 @@ export function DiffView({
     saveDiffViewMode(mode)
   }
 
-  if (selected === null) {
-    return (
-      <section className="pane min-w-0 flex-1" ref={paneRef}>
-        {hasCommits ? (
-          <DiffMessage
-            title="Nothing to commit"
-            message="Your files match the last commit. Edit something and it will show up here."
-          >
-            <div>
-              <span className="pill bg-ok-tint text-ok">Working tree clean</span>
-            </div>
-          </DiffMessage>
-        ) : (
-          <DiffMessage
-            title="No commits yet"
-            message="This repository is empty. Add a file, stage it and make your first commit."
-          />
-        )}
-      </section>
-    )
-  }
-
   return (
     <section className="pane min-w-0 flex-1" ref={paneRef}>
-      <div className="pane-head">
-        <span className="min-w-0 flex-1 truncate font-mono text-code">
-          {selected.change.originalPath
-            ? `${selected.change.originalPath} → ${selected.change.path}`
-            : selected.change.path}
-          {selected.staged ? ', staged' : ', unstaged'}
-        </span>
-        {diff?.kind === 'text' && (
-          <DiffViewButtons shownMode={shownMode} splitFits={splitFits} onChoose={chooseMode} />
-        )}
-      </div>
-      {diff && <DiffContent diff={diff} mode={shownMode} onShowLarge={onShowLarge} />}
+      {title === null ? (
+        children
+      ) : (
+        <>
+          <div className="pane-head">
+            <span className="min-w-0 flex-1 truncate font-mono text-code">{title}</span>
+            {diff?.kind === 'text' && (
+              <DiffViewButtons shownMode={shownMode} splitFits={splitFits} onChoose={chooseMode} />
+            )}
+          </div>
+          {diff && <DiffContent diff={diff} mode={shownMode} onShowLarge={onShowLarge} />}
+        </>
+      )}
     </section>
   )
 }

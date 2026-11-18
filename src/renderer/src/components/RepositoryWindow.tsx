@@ -3,16 +3,23 @@ import { useState } from 'react'
 import type { CommandRecord } from '../../../shared/command-record'
 import type { Identity, OpenedRepository } from '../../../shared/gitlantern-api'
 import { SetCommandPreviewContext, type CommandPreview } from '../command-preview'
-import { useSettings } from '../settings/settings-context'
 import { useRepositoryState } from '../use-repository-state'
+import { ChangesView } from './ChangesView'
 import { CommandStrip } from './CommandStrip'
-import { CommitForm } from './CommitForm'
-import { DiffView } from './DiffView'
-import { FileChecklist } from './FileChecklist'
-import { FileLists } from './FileLists'
-import { IdentityForm } from './IdentityForm'
+import { HistoryView } from './HistoryView'
 import { Rail } from './Rail'
 import { TitleBar } from './TitleBar'
+
+const VIEWS = ['changes', 'history'] as const
+
+type View = (typeof VIEWS)[number]
+
+const VIEW_LABELS: Record<View, string> = { changes: 'Changes', history: 'History' }
+
+// The view sits after the rail, a pane, so it takes over the border `.pane + .pane` would draw.
+function viewClassName(isShown: boolean): string {
+  return isShown ? 'flex min-w-0 flex-1 border-l border-line' : 'hidden'
+}
 
 interface RepositoryWindowProps {
   repository: OpenedRepository
@@ -30,7 +37,9 @@ export function RepositoryWindow({
   const [preview, setPreview] = useState<CommandPreview | null>(null)
   const [identity, setIdentity] = useState<Identity>(repository.identity)
   const state = useRepositoryState(onRecord)
-  const FileList = useSettings().settings.fileList === 'checkboxes' ? FileChecklist : FileLists
+  const [view, setView] = useState<View>('changes')
+  // History reads the log only once it has been opened.
+  const [hasOpenedHistory, setHasOpenedHistory] = useState(false)
   const { status } = state
 
   async function saveIdentity(name: string, email: string): Promise<void> {
@@ -48,13 +57,20 @@ export function RepositoryWindow({
             <ChevronDown className="size-4 flex-none" />
           </button>
           <nav className="flex gap-1" aria-label="Views">
-            <button
-              className="min-h-7.5 cursor-pointer rounded-md px-3 font-medium text-ink-2 aria-[current=page]:bg-selected aria-[current=page]:font-semibold aria-[current=page]:text-ink"
-              type="button"
-              aria-current="page"
-            >
-              Changes
-            </button>
+            {VIEWS.map((viewName) => (
+              <button
+                key={viewName}
+                className="min-h-7.5 cursor-pointer rounded-md px-3 font-medium text-ink-2 aria-[current=page]:bg-selected aria-[current=page]:font-semibold aria-[current=page]:text-ink"
+                type="button"
+                aria-current={viewName === view ? 'page' : undefined}
+                onClick={() => {
+                  setView(viewName)
+                  if (viewName === 'history') setHasOpenedHistory(true)
+                }}
+              >
+                {VIEW_LABELS[viewName]}
+              </button>
+            ))}
           </nav>
         </TitleBar>
         {state.errorMessage !== null && (
@@ -63,33 +79,24 @@ export function RepositoryWindow({
         {status && (
           <div className="flex min-h-0 flex-1">
             <Rail branchName={status.branchName} />
-            <section className="pane w-80 flex-none">
-              <FileList
+            {/* Both views stay mounted, so a half-written commit message survives a look at History. */}
+            <div className={viewClassName(view === 'changes')}>
+              <ChangesView
                 status={status}
-                selected={state.selected}
-                onSelect={state.select}
-                runCommand={(command) => void state.runCommand(command)}
+                state={state}
+                identity={identity}
+                onSaveIdentity={(name, email) => void saveIdentity(name, email)}
               />
-              {identity.name === null || identity.email === null ? (
-                <IdentityForm
-                  identity={identity}
-                  onSave={(name, email) => void saveIdentity(name, email)}
+            </div>
+            {hasOpenedHistory && (
+              <div className={viewClassName(view === 'history')}>
+                <HistoryView
+                  isShown={view === 'history'}
+                  hasCommits={status.hasCommits}
+                  onRecord={onRecord}
                 />
-              ) : (
-                <CommitForm
-                  branchName={status.branchName}
-                  stagedCount={status.staged.length}
-                  identity={identity}
-                  runCommand={state.runCommand}
-                />
-              )}
-            </section>
-            <DiffView
-              hasCommits={status.hasCommits}
-              selected={state.selected}
-              diff={state.diff}
-              onShowLarge={state.showLargeDiff}
-            />
+              </div>
+            )}
           </div>
         )}
         <CommandStrip preview={preview} records={records} />

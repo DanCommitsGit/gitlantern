@@ -67,6 +67,49 @@
     border-color: transparent;
   }
 
+  .segmented {
+    display: inline-flex;
+    flex: none;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
+  }
+
+  .segmented button {
+    min-height: 26px;
+    padding: 0 10px;
+    background-color: var(--color-raised);
+    color: var(--color-ink-2);
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .segmented button + button {
+    border-left: 1px solid var(--color-line-strong);
+  }
+
+  .segmented button:first-child {
+    border-radius: calc(var(--radius-md) - 1px) 0 0 calc(var(--radius-md) - 1px);
+  }
+
+  .segmented button:last-child {
+    border-radius: 0 calc(var(--radius-md) - 1px) calc(var(--radius-md) - 1px) 0;
+  }
+
+  .segmented button:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .segmented button[aria-pressed='true'] {
+    background-color: var(--color-selected);
+    color: var(--color-ink);
+  }
+
+  .segmented button:disabled {
+    color: var(--color-ink-3);
+    cursor: not-allowed;
+  }
+
   .pill {
     display: inline-flex;
     align-items: center;

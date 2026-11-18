@@ -18,6 +18,10 @@ export function listChangedFiles(status: RepositoryStatus): ChangedFile[] {
   return [...files.values()].sort((first, second) => (first.path < second.path ? -1 : 1))
 }
 
+export function pathLabelOf(change: FileChange): string {
+  return change.originalPath ? `${change.originalPath} → ${change.path}` : change.path
+}
+
 export function stagedStateOf(file: ChangedFile): StagedState {
   if (file.unstaged === undefined) return 'staged'
   return file.staged === undefined ? 'unstaged' : 'partly-staged'

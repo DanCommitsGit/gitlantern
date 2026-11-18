@@ -31,6 +31,11 @@
   --color-del: #fce9e7;
   --color-del-ink: #8a1d16;
   --color-del-word: #f7c5c0;
+  --color-lane-0: #b57a00;
+  --color-lane-1: #1d5fbf;
+  --color-lane-2: #0e8a7d;
+  --color-lane-3: #8e3bb5;
+  --color-lane-4: #c2500f;
   --color-shadow: rgb(28 28 25 / 0.16);
   --color-scrim: rgb(28 28 25 / 0.32);
 
@@ -88,6 +93,11 @@
       --color-del: #321b19;
       --color-del-ink: #ffada6;
       --color-del-word: #5e2b27;
+      --color-lane-0: #f5c04e;
+      --color-lane-1: #7db0ff;
+      --color-lane-2: #4fd1c5;
+      --color-lane-3: #c792ea;
+      --color-lane-4: #ff9e5e;
       --color-shadow: rgb(0 0 0 / 0.5);
       --color-scrim: rgb(0 0 0 / 0.5);
     }

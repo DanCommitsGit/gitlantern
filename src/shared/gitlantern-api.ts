@@ -1,4 +1,5 @@
 import type { CommandRecord } from './command-record'
+import type { CommitLogPage, LogScope } from './history-types'
 import type { FileChange, FileDiff, RepositoryStatus } from './repository-types'
 import type { SettingKey, Settings } from './settings'
 import type { UpdateStatus } from './update-types'
@@ -45,6 +46,9 @@ export interface GitlanternApi {
   closeRepository(): Promise<void>
   readStatus(): Promise<RepositoryStatus>
   readDiff(change: FileChange, staged: boolean, showLarge: boolean): Promise<FileDiff>
+  readCommitLog(scope: LogScope, search: string, skip: number): Promise<CommitLogPage>
+  readCommitFiles(commitHash: string): Promise<FileChange[]>
+  readCommitDiff(commitHash: string, change: FileChange, showLarge: boolean): Promise<FileDiff>
   stageFiles(paths: string[]): Promise<CommandRecord>
   stageAll(): Promise<CommandRecord>
   unstageFiles(paths: string[]): Promise<CommandRecord>
@@ -77,6 +81,9 @@ export const IPC_CHANNELS = {
   closeRepository: 'repository:close',
   readStatus: 'repository:status',
   readDiff: 'repository:diff',
+  readCommitLog: 'repository:commit-log',
+  readCommitFiles: 'repository:commit-files',
+  readCommitDiff: 'repository:commit-diff',
   stageFiles: 'repository:stage-files',
   stageAll: 'repository:stage-all',
   unstageFiles: 'repository:unstage-files',

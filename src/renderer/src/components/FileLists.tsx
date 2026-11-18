@@ -31,7 +31,7 @@ export function FileLists({
     selected !== null && selected.staged === staged && selected.change.path === change.path
 
   return (
-    <div className="file-lists">
+    <div className="list-scroll">
       <div className="pane-head">
         <span className="min-w-0 flex-1">
           <Hint entry={GLOSSARY.unstaged}>Unstaged</Hint>

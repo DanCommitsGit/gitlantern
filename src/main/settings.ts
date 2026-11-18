@@ -1,7 +1,11 @@
 import {
+  COMMIT_DETAIL_PLACES,
   DEFAULT_SETTINGS,
   FILE_LIST_STYLES,
+  LOG_STYLES,
+  type CommitDetailPlace,
   type FileListStyle,
+  type LogStyle,
   type SettingKey,
   type Settings
 } from '../shared/settings'
@@ -14,6 +18,9 @@ export interface SettingsStore {
 export const SETTING_CHECKS: { [Key in SettingKey]: (value: unknown) => value is Settings[Key] } = {
   commandCard: (value): value is boolean => typeof value === 'boolean',
   fileList: (value): value is FileListStyle => FILE_LIST_STYLES.includes(value as FileListStyle),
+  logStyle: (value): value is LogStyle => LOG_STYLES.includes(value as LogStyle),
+  commitDetailPlace: (value): value is CommitDetailPlace =>
+    COMMIT_DETAIL_PLACES.includes(value as CommitDetailPlace),
   autoUpdate: (value): value is boolean => typeof value === 'boolean'
 }
 

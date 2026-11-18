@@ -11,8 +11,11 @@ import {
 } from '../shared/git-actions'
 import type { CommandRecord } from '../shared/command-record'
 import type { GitCheck, Identity, OpenResult } from '../shared/gitlantern-api'
+import type { CommitLogPage, LogScope } from '../shared/history-types'
 import type { FileChange, FileDiff, RepositoryStatus } from '../shared/repository-types'
-import { readFileDiff } from './git/file-diff'
+import { readCommitFiles } from './git/commit-files'
+import { readCommitLog } from './git/commit-log'
+import { readCommitFileDiff, readFileDiff } from './git/file-diff'
 import { findGitPath } from './git/find-git'
 import { isSupportedGitVersion } from './git/git-version'
 import { findRepositoryPrograms, type RepositoryProgram } from './git/repository-trust'
@@ -142,6 +145,22 @@ export class RepositorySession {
 
   async readDiff(change: FileChange, staged: boolean, showLarge: boolean): Promise<FileDiff> {
     return readFileDiff(this.requireRepository(), change, staged, showLarge)
+  }
+
+  async readCommitLog(scope: LogScope, search: string, skip: number): Promise<CommitLogPage> {
+    return readCommitLog(this.requireRepository(), scope, search, skip)
+  }
+
+  async readCommitFiles(commitHash: string): Promise<FileChange[]> {
+    return readCommitFiles(this.requireRepository(), commitHash)
+  }
+
+  async readCommitDiff(
+    commitHash: string,
+    change: FileChange,
+    showLarge: boolean
+  ): Promise<FileDiff> {
+    return readCommitFileDiff(this.requireRepository(), commitHash, change, showLarge)
   }
 
   async stageFiles(paths: string[]): Promise<CommandRecord> {

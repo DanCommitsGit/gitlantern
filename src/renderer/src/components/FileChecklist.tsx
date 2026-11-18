@@ -58,7 +58,7 @@ export function FileChecklist({
   }
 
   return (
-    <div className="file-lists">
+    <div className="list-scroll">
       <div className="pane-head">
         {files.length > 0 && (
           <CommandControl
@@ -90,7 +90,7 @@ export function FileChecklist({
           return (
             <li
               key={file.path}
-              className="file-row pl-3"
+              className="list-row pl-3"
               data-selected={selected?.change.path === file.path}
             >
               <CommandControl
@@ -109,7 +109,7 @@ export function FileChecklist({
                 }
               />
               <button
-                className="file-row-select pl-2"
+                className="list-row-select pl-2"
                 type="button"
                 title={
                   change.originalPath ? `${change.originalPath} → ${change.path}` : change.path

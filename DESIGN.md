@@ -22,6 +22,13 @@
 - A setting swaps them for one list with checkboxes. There, a half-staged file shows a dash and Part, and clicking the dash stages the rest. A fully staged file shows its staged changes, and any other file its unstaged ones. The commit button says how many files go in.
 - The commit form is docked under the file lists.
 
+## History
+
+- The log is a table of commits with a lane graph beside it, the way `git log --graph` draws one. A setting hides the graph and leaves the plain table.
+- Buttons above the log show all branches, this branch, or first parents only, and a search box matches the message, author or commit.
+- More commits load as you scroll to the end of the log.
+- Selecting a commit shows its message, its changed files and the diff of one file, picked from the list as in Changes. A setting puts this under the log or to the right of it.
+
 ## Diffs
 
 - Diffs are unified by default. Buttons above the diff switch between Unified, Split and Words, and the last one picked stays for every file and the next launch.
