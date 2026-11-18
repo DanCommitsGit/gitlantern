@@ -9,6 +9,7 @@ export type UpdateSource = Pick<
 export interface UpdaterOptions {
   currentVersion: string
   canInstall: boolean
+  canCheck: boolean
   isAutomatic(): boolean
   openDownloadPage(version: string): void
   onChange(status: UpdateStatus): void
@@ -23,10 +24,10 @@ export interface Updater {
 }
 
 export function createUpdater(source: UpdateSource, options: UpdaterOptions): Updater {
-  const { currentVersion, canInstall } = options
+  const { currentVersion, canInstall, canCheck } = options
   let state: UpdateState = { kind: 'idle' }
 
-  const status = (): UpdateStatus => ({ currentVersion, canInstall, state })
+  const status = (): UpdateStatus => ({ currentVersion, canInstall, canCheck, state })
 
   function setState(nextState: UpdateState): void {
     state = nextState
@@ -47,6 +48,7 @@ export function createUpdater(source: UpdateSource, options: UpdaterOptions): Up
   return {
     status,
     async check() {
+      if (!canCheck) return
       if (state.kind === 'checking' || state.kind === 'downloading' || state.kind === 'ready') {
         return
       }

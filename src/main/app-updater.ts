@@ -15,6 +15,7 @@ export function createAppUpdater(settingsStore: SettingsStore): Updater {
     currentVersion: app.getVersion(),
     // The macOS build has no Developer ID signature, which installing an update there needs.
     canInstall: process.platform !== 'darwin',
+    canCheck: app.isPackaged,
     isAutomatic: () => settingsStore.get('autoUpdate'),
     openDownloadPage: (version) => void shell.openExternal(`${RELEASES_URL}/tag/v${version}`),
     onChange: (status) => {

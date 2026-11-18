@@ -9,15 +9,15 @@ class FakeSource extends EventEmitter {
   downloadUpdate = vi.fn(async () => [])
   availableVersion: string | null = null
 
-  async checkForUpdates(): Promise<null> {
+  checkForUpdates = vi.fn(async (): Promise<null> => {
     this.emit('checking-for-update')
     if (this.availableVersion === null) this.emit('update-not-available', {})
     else this.emit('update-available', { version: this.availableVersion })
     return null
-  }
+  })
 }
 
-function setUp({ automatic = true, canInstall = true } = {}): {
+function setUp({ automatic = true, canInstall = true, canCheck = true } = {}): {
   source: FakeSource
   updater: Updater
   changes: UpdateStatus[]
@@ -29,6 +29,7 @@ function setUp({ automatic = true, canInstall = true } = {}): {
   const updater = createUpdater(source as unknown as UpdateSource, {
     currentVersion: '1.0.0',
     canInstall,
+    canCheck,
     isAutomatic: () => automatic,
     openDownloadPage,
     onChange: (status) => changes.push(status),
@@ -90,11 +91,18 @@ describe('createUpdater', () => {
     expect(source.quitAndInstall).not.toHaveBeenCalled()
   })
 
+  it('does not check where checking is unavailable', async () => {
+    const { source, updater, changes } = setUp({ canCheck: false })
+
+    await updater.check()
+
+    expect(source.checkForUpdates).not.toHaveBeenCalled()
+    expect(changes).toEqual([])
+  })
+
   it('reports a failed check', async () => {
     const { source, updater } = setUp()
-    source.checkForUpdates = async () => {
-      throw new Error('offline')
-    }
+    source.checkForUpdates.mockRejectedValueOnce(new Error('offline'))
 
     await updater.check()
 

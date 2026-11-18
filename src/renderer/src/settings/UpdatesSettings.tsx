@@ -77,14 +77,18 @@ export function UpdatesSettings(): React.JSX.Element | null {
           <button
             className="button"
             type="button"
-            disabled={isBusy}
+            disabled={isBusy || !status.canCheck}
             onClick={() => void window.api.checkForUpdates()}
           >
             Check for updates
           </button>
         </div>
         <div className="flex items-center gap-2 text-small text-ink-2" role="status">
-          <UpdateStateLine state={state} />
+          {status.canCheck ? (
+            <UpdateStateLine state={state} />
+          ) : (
+            <span>Updates aren&apos;t available in development builds.</span>
+          )}
         </div>
       </div>
     </>
