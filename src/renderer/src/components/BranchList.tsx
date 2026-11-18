@@ -3,7 +3,7 @@ import { useState } from 'react'
 import type { Branch } from '../../../shared/repository-types'
 import { groupBranches, orderBranches, withCurrentBranch, type BranchGroup } from '../branch-list'
 import { useSettings } from '../settings/settings-context'
-import { BranchRow, HeadLabel, RailRow } from './BranchRow'
+import { BranchRow, HeadLabel, SidebarRow } from './BranchRow'
 
 interface BranchListProps {
   branches: Branch[]
@@ -74,10 +74,10 @@ export function BranchList({
   return (
     <>
       {currentBranchName === null && (
-        <RailRow>
+        <SidebarRow>
           <HeadLabel />
           <span className="min-w-0 flex-1 truncate">Not on a branch</span>
-        </RailRow>
+        </SidebarRow>
       )}
       {branchList === 'one-list'
         ? orderedBranches.map((branch) => branchRow(branch))

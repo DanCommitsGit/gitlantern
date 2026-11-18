@@ -31,7 +31,7 @@ export interface AppData {
   // Repository path to a fingerprint of the programs the user trusted.
   trustedPrograms: Record<string, string>
   gitLocation: string | null
-  // Repository path to the branch groups collapsed in the rail.
+  // Repository path to the branch groups collapsed in the repository sidebar.
   collapsedBranchGroups: Record<string, string[]>
 }
 

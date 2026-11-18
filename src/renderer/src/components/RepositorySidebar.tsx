@@ -1,17 +1,17 @@
 import type { Branch } from '../../../shared/repository-types'
 import { BranchList } from './BranchList'
 
-interface RailProps {
+interface RepositorySidebarProps {
   branches: Branch[]
   currentBranchName: string | null
   initialCollapsedBranchGroups: string[]
 }
 
-export function Rail({
+export function RepositorySidebar({
   branches,
   currentBranchName,
   initialCollapsedBranchGroups
-}: RailProps): React.JSX.Element {
+}: RepositorySidebarProps): React.JSX.Element {
   return (
     <aside className="pane w-57.5 flex-none bg-sunken">
       <div className="list-scroll">

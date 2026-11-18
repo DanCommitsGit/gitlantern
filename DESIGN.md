@@ -3,9 +3,9 @@
 ## Layout
 
 - The window has two views, Changes and History, with tabs in the top bar.
-- A rail on the left holds branches, remotes and tags, and stays visible in both views.
-- A new feature becomes a view or a rail group. Don't add a permanent pane for it.
-- The diff gets all the width left over. In Changes that means a 230 px rail, a 320 px file pane, and the diff filling the rest.
+- A repository sidebar on the left holds branches, remotes and tags, and stays visible in both views.
+- A new feature becomes a view or a group in the repository sidebar. Don't add a permanent pane for it.
+- The diff gets all the width left over. In Changes that means a 230 px repository sidebar, a 320 px file pane, and the diff filling the rest.
 - The window opens at 1360×840, and its minimum size is 960×600.
 - The window's title bar and the app's top bar are one bar, with the system's own window buttons inside it.
 
@@ -31,7 +31,7 @@
 
 ## Branches
 
-- The rail lists local branches in one list by default, with HEAD on the current one.
+- The repository sidebar lists local branches in one list by default, with HEAD on the current one.
 - A setting groups them by the part before the first slash. Branches without one come first, and collapsed groups stay collapsed for that repository.
 - A setting orders them current branch first and then by name, which is the default, by name, or newest commit first.
 - Each branch shows how many commits it is ahead of and behind its upstream.

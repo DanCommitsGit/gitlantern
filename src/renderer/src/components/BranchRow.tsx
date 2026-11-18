@@ -37,7 +37,7 @@ export function HeadLabel(): React.JSX.Element {
   )
 }
 
-export function RailRow({
+export function SidebarRow({
   isIndented = false,
   children
 }: {
@@ -65,11 +65,11 @@ export function BranchRow({
   isIndented?: boolean
 }): React.JSX.Element {
   return (
-    <RailRow isIndented={isIndented}>
+    <SidebarRow isIndented={isIndented}>
       {isCurrent && <HeadLabel />}
       <span className="min-w-0 flex-1 truncate">{label}</span>
       {branch.ahead > 0 && <TrackCount entry={GLOSSARY.ahead} arrow="↑" count={branch.ahead} />}
       {branch.behind > 0 && <TrackCount entry={GLOSSARY.behind} arrow="↓" count={branch.behind} />}
-    </RailRow>
+    </SidebarRow>
   )
 }

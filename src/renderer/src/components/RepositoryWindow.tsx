@@ -7,7 +7,7 @@ import { useRepositoryState } from '../use-repository-state'
 import { ChangesView } from './ChangesView'
 import { CommandStrip } from './CommandStrip'
 import { HistoryView } from './HistoryView'
-import { Rail } from './Rail'
+import { RepositorySidebar } from './RepositorySidebar'
 import { TitleBar } from './TitleBar'
 
 const VIEWS = ['changes', 'history'] as const
@@ -16,7 +16,7 @@ type View = (typeof VIEWS)[number]
 
 const VIEW_LABELS: Record<View, string> = { changes: 'Changes', history: 'History' }
 
-// The view sits after the rail, a pane, so it takes over the border `.pane + .pane` would draw.
+// The view sits after the repository sidebar, a pane, so it takes over the border `.pane + .pane` would draw.
 function viewClassName(isShown: boolean): string {
   return isShown ? 'flex min-w-0 flex-1 border-l border-line' : 'hidden'
 }
@@ -78,7 +78,7 @@ export function RepositoryWindow({
         )}
         {status && (
           <div className="flex min-h-0 flex-1">
-            <Rail
+            <RepositorySidebar
               branches={state.branches}
               currentBranchName={status.branchName}
               initialCollapsedBranchGroups={repository.collapsedBranchGroups}
