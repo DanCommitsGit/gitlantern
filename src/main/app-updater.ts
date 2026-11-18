@@ -14,7 +14,8 @@ export function createAppUpdater(settingsStore: SettingsStore): Updater {
   return createUpdater(autoUpdater, {
     currentVersion: app.getVersion(),
     // The macOS build has no Developer ID signature, which installing an update there needs.
-    canInstall: process.platform !== 'darwin',
+    // The portable build is a single exe that the installer-based update would not replace.
+    canInstall: process.platform !== 'darwin' && !process.env.PORTABLE_EXECUTABLE_FILE,
     canCheck: app.isPackaged,
     isAutomatic: () => settingsStore.get('autoUpdate'),
     openDownloadPage: (version) => void shell.openExternal(`${RELEASES_URL}/tag/v${version}`),

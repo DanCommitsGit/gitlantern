@@ -56,12 +56,14 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+      - run: sudo apt-get install --yes rpm
+        if: runner.os == 'Linux'
       - run: npm ci
       - run: npm test
       - run: npm run ${{ matrix.build_script }} -- --publish always
         env:
           GH_TOKEN: ${{ github.token }}
-      - run: codesign --verify --deep --strict --verbose=2 dist/mac-arm64/GitLantern.app
+      - run: codesign --verify --deep --strict --verbose=2 dist/mac-universal/GitLantern.app
         if: runner.os == 'macOS'
 
   publish:
