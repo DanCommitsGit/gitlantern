@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.4.0](https://github.com/DanCommitsGit/gitlantern/compare/v0.3.0...v0.4.0) (2026-11-18)
+
+
+### Features
+
+* add a History view with the commit log, graph and commit details ([5015ce1](https://github.com/DanCommitsGit/gitlantern/commit/5015ce113b0e481725ac82f21877e3c1c4e491dc))
+* add macOS universal, Windows portable and Linux rpm downloads ([f4e7a5a](https://github.com/DanCommitsGit/gitlantern/commit/f4e7a5a0c995db4109d5fd42b9b51009e38eee45))
+* change settings to one scrolling page with a sidebar that jumps to sections ([9ebe98f](https://github.com/DanCommitsGit/gitlantern/commit/9ebe98fc9e7ca8977380c63bbb65df7efe329176))
+* check for updates and install them automatically ([9d2aacf](https://github.com/DanCommitsGit/gitlantern/commit/9d2aacfe77de48a218bd5728f26cfb9fa76f4ba3))
+* read the commit log, a commit's files and their diffs ([4c88493](https://github.com/DanCommitsGit/gitlantern/commit/4c8849302ef12b91aedad5ce7bad44ee8a5fcbab))
+
+
+### Bug Fixes
+
+* disable checking for updates in development builds ([240725a](https://github.com/DanCommitsGit/gitlantern/commit/240725a7f34e19f8b5a0cc2cdefeefa47ca2c2be))
+* spell the product name GitLantern ([b3bb7c7](https://github.com/DanCommitsGit/gitlantern/commit/b3bb7c71bee08858971c0da90009144d7f9960f3))
+
 ## [0.3.0](https://github.com/DanCommitsGit/gitlantern/compare/v0.2.0...v0.3.0) (2026-11-15)
 
 
