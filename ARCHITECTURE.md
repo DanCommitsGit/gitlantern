@@ -1,6 +1,6 @@
 # Architecture
 
-gitlantern is an Electron app with a main process (`src/main`), a preload script (`src/preload`) and a React renderer (`src/renderer`).
+GitLantern is an Electron app with a main process (`src/main`), a preload script (`src/preload`) and a React renderer (`src/renderer`).
 
 The renderer is sandboxed, so all git and operating system access has to happen in the main process. The renderer reaches the main process only through `window.api`, which the preload script defines. Every handler checks the sender's origin and validates its arguments, and logs any failure to `main.log` without the arguments. Logging uses `electron-log/node`, because the package's other entries register IPC listeners that skip the origin check, and a lint rule enforces this. The renderer asks for named actions and never sends git arguments, and the main process keeps track of which repository is open. Code both sides need lives in `src/shared`.
 

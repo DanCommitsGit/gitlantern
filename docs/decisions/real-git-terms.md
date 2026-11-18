@@ -4,7 +4,7 @@ Status: Accepted
 
 ## Context
 
-gitlantern teaches git by showing the real command behind each action. Friendly labels next to those commands would teach two vocabularies.
+GitLantern teaches git by showing the real command behind each action. Friendly labels next to those commands would teach two vocabularies.
 
 ## Decision
 

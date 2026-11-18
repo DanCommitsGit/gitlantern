@@ -2,7 +2,7 @@
 
 ## Where things go
 
-- `README.md` is for people using gitlantern, and `CONTRIBUTING.md` holds development setup, checks and the release process.
+- `README.md` is for people using GitLantern, and `CONTRIBUTING.md` holds development setup, checks and the release process.
 - `ARCHITECTURE.md` is a short map of the main parts, their boundaries and the rules that hold everywhere. Update it when a boundary or one of those rules changes.
 - `docs/decisions/` holds one record per choice the project owner has made that is hard to reverse or likely to be questioned. Name each file by its title, and add a record only after the owner has decided.
 - Read the relevant decision record before changing something it covers. Don't rewrite an accepted record. Add a new one, and change the old record's status to `Superseded by <file>`.

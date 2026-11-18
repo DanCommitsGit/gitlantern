@@ -4,7 +4,7 @@ import { SettingsDialog } from '../settings/SettingsDialog'
 export function TitleBar({ children }: { children?: ReactNode }): React.JSX.Element {
   return (
     <header className="title-bar">
-      <span className="font-mono font-semibold">gitlantern</span>
+      <span className="font-mono font-semibold">GitLantern</span>
       {children}
       <span className="min-w-0 flex-1" />
       <SettingsDialog />

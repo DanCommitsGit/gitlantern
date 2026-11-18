@@ -32,8 +32,8 @@ export function GitProblemScreen({
         <h1 className="text-head">{isMissing ? "Git isn't installed" : 'This git is too old'}</h1>
         <p>
           {isMissing
-            ? "gitlantern runs the git on your computer, and it couldn't find one."
-            : `You have git ${check.version}. gitlantern needs 2.38 or newer.`}
+            ? "GitLantern runs the git on your computer, and it couldn't find one."
+            : `You have git ${check.version}. GitLantern needs 2.38 or newer.`}
         </p>
         {command && <div className="command-box">{command}</div>}
         <div className="flex items-center gap-2">

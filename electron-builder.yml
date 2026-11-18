@@ -1,5 +1,5 @@
 appId: io.github.dancommitsgit.gitlantern
-productName: gitlantern
+productName: GitLantern
 directories:
   buildResources: build
 files:
@@ -17,8 +17,8 @@ nsis:
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
-    NSDocumentsFolderUsageDescription: gitlantern needs access to open git repositories in your Documents folder.
-    NSDownloadsFolderUsageDescription: gitlantern needs access to open git repositories in your Downloads folder.
+    NSDocumentsFolderUsageDescription: GitLantern needs access to open git repositories in your Documents folder.
+    NSDownloadsFolderUsageDescription: GitLantern needs access to open git repositories in your Downloads folder.
   notarize: false
 dmg:
   artifactName: ${name}-${version}.${ext}

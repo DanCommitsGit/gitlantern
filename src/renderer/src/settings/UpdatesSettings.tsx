@@ -11,7 +11,7 @@ function UpdateStateLine({ state }: { state: UpdateState }): React.JSX.Element |
     case 'checking':
       return <span>Checking…</span>
     case 'up-to-date':
-      return <span>gitlantern is up to date.</span>
+      return <span>GitLantern is up to date.</span>
     case 'downloading':
       return <span>Downloading {state.version}…</span>
     case 'available':
@@ -73,7 +73,7 @@ export function UpdatesSettings(): React.JSX.Element | null {
       )}
       <div className="panel flex flex-col gap-2 px-3.5 py-3">
         <div className="flex items-center gap-2">
-          <span className="min-w-0 flex-1 font-medium">gitlantern {status.currentVersion}</span>
+          <span className="min-w-0 flex-1 font-medium">GitLantern {status.currentVersion}</span>
           <button
             className="button"
             type="button"

@@ -1,12 +1,12 @@
-# gitlantern
+# GitLantern
 
 An open source desktop git client.
 
-gitlantern is in early development and has no usable features yet.
+GitLantern is in early development and has no usable features yet.
 
 ## Build from source
 
-There are no releases yet, so building from source is the only way to get gitlantern. You need Node.js 24 and git.
+There are no releases yet, so building from source is the only way to get GitLantern. You need Node.js 24 and git.
 
 ```bash
 git clone https://github.com/DanCommitsGit/gitlantern.git
