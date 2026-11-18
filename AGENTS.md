@@ -13,7 +13,7 @@
 
 ## Commits
 
-Use Conventional Commits. Only `feat` and `fix` commits produce a release, so give a dependency update a `fix:` subject when it changes what ships in the app, and `build:` when it only changes development tools. See [docs/decisions/dependency-update-commit-types.md](docs/decisions/dependency-update-commit-types.md).
+Use Conventional Commits. Only `feat` and `fix` commits produce a release, so give a dependency update a `fix:` subject when it changes what ships in the app, and `build:` when it only changes development tools. See [docs/decisions/dependency-update-commit-types.md](docs/decisions/dependency-update-commit-types.md). A commit that changes only tests, docs, CI or development tooling is never `feat` or `fix`. Use `test`, `docs`, `ci`, `build` or `chore`.
 
 ## Traps
 
