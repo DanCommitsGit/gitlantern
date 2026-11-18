@@ -58,7 +58,10 @@ describe('commit history', () => {
 
     expect(page.hasMore).toBe(false)
     expect(page.record?.typedCommand).toBe('git log')
-    expect(page.commits).toEqual([
+    // Git prints a UTC offset as `Z` or `+00:00` depending on its version.
+    const authorTimestamps = page.commits.map((commit) => new Date(commit.authorDate).getTime())
+    expect(authorTimestamps).toEqual([Date.UTC(2026, 0, 1), Date.UTC(2026, 0, 1)])
+    expect(page.commits).toMatchObject([
       {
         hash: second,
         parentHashes: [first],
@@ -66,8 +69,7 @@ describe('commit history', () => {
         subject: 'Change a',
         body: 'Because of b.',
         authorName: 'Test Author',
-        authorEmail: 'author@example.com',
-        authorDate: '2026-01-01T00:00:00+00:00'
+        authorEmail: 'author@example.com'
       },
       {
         hash: first,
@@ -76,8 +78,7 @@ describe('commit history', () => {
         subject: 'Add a.txt',
         body: '',
         authorName: 'Test Author',
-        authorEmail: 'author@example.com',
-        authorDate: '2026-01-01T00:00:00+00:00'
+        authorEmail: 'author@example.com'
       }
     ])
   })
