@@ -16,7 +16,11 @@ const SETTING_REPAIRS: StoredDataRepairs<Settings> = {
 }
 
 // Kept apart from config.json, which holds the trust decisions.
-export function createSettingsStore(folder?: string): SettingsStore {
+// `onUnavailable` runs when the file can't be opened and the defaults are used instead.
+export function createSettingsStore(
+  folder?: string,
+  onUnavailable: () => void = () => {}
+): SettingsStore {
   try {
     return createRepairedStore<Settings>(
       { name: 'settings', cwd: folder, defaults: DEFAULT_SETTINGS },
@@ -24,6 +28,7 @@ export function createSettingsStore(folder?: string): SettingsStore {
     )
   } catch (error) {
     logError('Could not open settings.json, so the defaults are used', error)
+    onUnavailable()
     return {
       get: (key) => DEFAULT_SETTINGS[key],
       set: () => {

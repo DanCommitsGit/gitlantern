@@ -28,9 +28,9 @@ app.whenReady().then(() => {
 
   denyAllPermissions()
   setApplicationMenu()
-  const settingsStore = createSettingsStore()
-  const updater = createAppUpdater(settingsStore)
   const notices = createNotices((raised) => sendToAllWindows(IPC_CHANNELS.noticesChanged, raised))
+  const settingsStore = createSettingsStore(undefined, () => notices.raise('settings-not-opened'))
+  const updater = createAppUpdater(settingsStore)
   registerIpcHandlers(
     new RepositorySession(createAppDataStore(undefined, () => notices.raise('app-data-not-saved'))),
     settingsStore,

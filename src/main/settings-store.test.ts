@@ -82,10 +82,22 @@ describe('createSettingsStore', () => {
   it('uses the defaults and refuses changes when the file cannot be opened', async () => {
     await mkdir(settingsFile)
 
-    const store = createSettingsStore(folder)
+    const onUnavailable = vi.fn()
+
+    const store = createSettingsStore(folder, onUnavailable)
 
     expect(readSettings(store)).toEqual(DEFAULT_SETTINGS)
     expect(() => saveSetting(store, 'commandCard', true)).toThrow()
     expect(logError).toHaveBeenCalledOnce()
+    expect(onUnavailable).toHaveBeenCalledOnce()
+  })
+
+  it('does not report a file that opens', async () => {
+    await writeFile(settingsFile, JSON.stringify({ commandCard: true }))
+    const onUnavailable = vi.fn()
+
+    createSettingsStore(folder, onUnavailable)
+
+    expect(onUnavailable).not.toHaveBeenCalled()
   })
 })
