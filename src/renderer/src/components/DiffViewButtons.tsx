@@ -1,4 +1,5 @@
-import { DIFF_VIEW_LABELS, DIFF_VIEW_MODES, type DiffViewMode } from '../diff-view-mode'
+import { DIFF_VIEW_MODES, type DiffViewMode } from '../../../shared/settings'
+import { DIFF_VIEW_LABELS } from '../diff-view-mode'
 
 interface DiffViewButtonsProps {
   shownMode: DiffViewMode

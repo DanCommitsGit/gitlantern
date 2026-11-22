@@ -1,15 +1,15 @@
 import type { ComponentType } from 'react'
-import type { SettingKey } from '../../../shared/settings'
 import { BranchesSettings } from './BranchesSettings'
 import { ChangesSettings } from './ChangesSettings'
 import { HistorySettings } from './HistorySettings'
 import { HintsAndCommandsSettings } from './HintsAndCommandsSettings'
+import type { SettingsPageKey } from './setting-text'
 import { UpdatesSettings } from './UpdatesSettings'
 
 export interface SettingsSection {
   id: string
   name: string
-  settings: readonly SettingKey[]
+  settings: readonly SettingsPageKey[]
   Panel?: ComponentType
 }
 

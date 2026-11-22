@@ -1,5 +1,8 @@
 import type { SettingKey } from '../../../shared/settings'
 
+/** The settings with an entry on the settings page. The diff view mode is changed on the diff itself. */
+export type SettingsPageKey = Exclude<SettingKey, 'diffViewMode'>
+
 export interface SettingText {
   label: string
   description?: string
@@ -51,4 +54,4 @@ export const SETTING_TEXT = {
     label: 'Update automatically',
     description: 'Downloads new versions and installs them when you quit.'
   }
-} as const satisfies Record<SettingKey, SettingText>
+} as const satisfies Record<SettingsPageKey, SettingText>

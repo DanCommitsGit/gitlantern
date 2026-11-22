@@ -5,9 +5,11 @@ import {
   type BranchListStyle,
   type BranchOrder,
   DEFAULT_SETTINGS,
+  DIFF_VIEW_MODES,
   FILE_LIST_STYLES,
   LOG_STYLES,
   type CommitDetailPlace,
+  type DiffViewMode,
   type FileListStyle,
   type LogStyle,
   type SettingKey,
@@ -21,6 +23,7 @@ export interface SettingsStore {
 
 export const SETTING_CHECKS: { [Key in SettingKey]: (value: unknown) => value is Settings[Key] } = {
   commandCard: (value): value is boolean => typeof value === 'boolean',
+  diffViewMode: (value): value is DiffViewMode => DIFF_VIEW_MODES.includes(value as DiffViewMode),
   fileList: (value): value is FileListStyle => FILE_LIST_STYLES.includes(value as FileListStyle),
   logStyle: (value): value is LogStyle => LOG_STYLES.includes(value as LogStyle),
   commitDetailPlace: (value): value is CommitDetailPlace =>

@@ -35,7 +35,8 @@ describe('createSettingsStore', () => {
 
   it.each([
     ['commandCard', 'yes'],
-    ['fileList', 'grid']
+    ['fileList', 'grid'],
+    ['diffViewMode', 'columns']
   ])('resets a %s of the wrong type', async (key, value) => {
     await writeFile(settingsFile, JSON.stringify({ [key]: value }))
 

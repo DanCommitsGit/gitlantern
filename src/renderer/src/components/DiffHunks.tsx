@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import type { DiffHunk, DiffLine } from '../../../shared/repository-types'
+import type { DiffViewMode } from '../../../shared/settings'
 import { alignDiff, type AlignedHunk, type WordSegment } from '../diff-alignment'
 import {
   splitRows,
@@ -9,7 +10,6 @@ import {
   type MarkedLine,
   type WordLine
 } from '../diff-rows'
-import type { DiffViewMode } from '../diff-view-mode'
 
 const LINE_CLASSES: Record<DiffLine['kind'], string> = {
   context: '',

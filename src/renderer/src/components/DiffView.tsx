@@ -1,11 +1,8 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import type { FileDiff } from '../../../shared/repository-types'
-import {
-  loadDiffViewMode,
-  saveDiffViewMode,
-  SPLIT_MIN_WIDTH,
-  type DiffViewMode
-} from '../diff-view-mode'
+import type { DiffViewMode } from '../../../shared/settings'
+import { SPLIT_MIN_WIDTH } from '../diff-view-mode'
+import { useSettings } from '../settings/settings-context'
 import { useElementWidth } from '../use-element-width'
 import { DiffHunks } from './DiffHunks'
 import { DiffMessage } from './DiffMessage'
@@ -88,13 +85,13 @@ interface DiffViewProps {
 export function DiffView({ title, diff, onShowLarge, children }: DiffViewProps): React.JSX.Element {
   const paneRef = useRef<HTMLElement>(null)
   const paneWidth = useElementWidth(paneRef)
-  const [chosenMode, setChosenMode] = useState(loadDiffViewMode)
+  const { settings, saveSetting } = useSettings()
+  const chosenMode = settings.diffViewMode
   const splitFits = paneWidth >= SPLIT_MIN_WIDTH
   const shownMode = chosenMode === 'split' && !splitFits ? 'unified' : chosenMode
 
   function chooseMode(mode: DiffViewMode): void {
-    setChosenMode(mode)
-    saveDiffViewMode(mode)
+    saveSetting('diffViewMode', mode)
   }
 
   return (

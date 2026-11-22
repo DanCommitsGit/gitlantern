@@ -32,7 +32,8 @@ describe('settings', () => {
     ['a setting named after an object property', 'constructor', true],
     ['a key that is not a string', 1, true],
     ['a value of the wrong type', 'commandCard', 'yes'],
-    ['a choice that does not exist', 'fileList', 'tree']
+    ['a choice that does not exist', 'fileList', 'tree'],
+    ['a diff view that does not exist', 'diffViewMode', 'columns']
   ])('rejects %s', (_description, key, value) => {
     const store = createMemoryStore()
 

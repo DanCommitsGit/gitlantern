@@ -1,11 +1,11 @@
 import { useId } from 'react'
-import type { SettingKey, Settings } from '../../../shared/settings'
-import { SETTING_TEXT } from './setting-text'
+import type { Settings } from '../../../shared/settings'
+import { SETTING_TEXT, type SettingsPageKey } from './setting-text'
 import { useSettings } from './settings-context'
 
 type ChoiceSettingKey = {
-  [Key in SettingKey]: Settings[Key] extends string ? Key : never
-}[SettingKey]
+  [Key in SettingsPageKey]: Settings[Key] extends string ? Key : never
+}[SettingsPageKey]
 
 export function ChoiceSetting({ settingKey }: { settingKey: ChoiceSettingKey }): React.JSX.Element {
   const { settings, saveSetting } = useSettings()

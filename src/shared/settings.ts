@@ -18,8 +18,13 @@ export const BRANCH_ORDERS = ['current-first', 'name', 'newest-commit'] as const
 
 export type BranchOrder = (typeof BRANCH_ORDERS)[number]
 
+export const DIFF_VIEW_MODES = ['unified', 'split', 'words'] as const
+
+export type DiffViewMode = (typeof DIFF_VIEW_MODES)[number]
+
 export interface Settings {
   commandCard: boolean
+  diffViewMode: DiffViewMode
   fileList: FileListStyle
   logStyle: LogStyle
   commitDetailPlace: CommitDetailPlace
@@ -32,6 +37,7 @@ export type SettingKey = keyof Settings
 
 export const DEFAULT_SETTINGS: Settings = {
   commandCard: false,
+  diffViewMode: 'unified',
   fileList: 'two-lists',
   logStyle: 'graph',
   commitDetailPlace: 'under',
