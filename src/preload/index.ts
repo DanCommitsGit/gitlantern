@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
 import { IPC_CHANNELS, type GitlanternApi } from '../shared/gitlantern-api'
+import type { Notice } from '../shared/notices'
 import type { UpdateStatus } from '../shared/update-types'
 
 const api: GitlanternApi = {
@@ -41,6 +42,13 @@ const api: GitlanternApi = {
     const forward = (_event: IpcRendererEvent, status: UpdateStatus): void => listener(status)
     ipcRenderer.on(IPC_CHANNELS.updateStatusChanged, forward)
     return () => ipcRenderer.removeListener(IPC_CHANNELS.updateStatusChanged, forward)
+  },
+  readNotices: () => ipcRenderer.invoke(IPC_CHANNELS.readNotices),
+  dismissNotice: (notice) => ipcRenderer.invoke(IPC_CHANNELS.dismissNotice, notice),
+  onNotices: (listener) => {
+    const forward = (_event: IpcRendererEvent, notices: Notice[]): void => listener(notices)
+    ipcRenderer.on(IPC_CHANNELS.noticesChanged, forward)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.noticesChanged, forward)
   }
 }
 

@@ -1,6 +1,7 @@
-import { app, BrowserWindow, shell } from 'electron'
+import { app, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { IPC_CHANNELS } from '../shared/gitlantern-api'
+import { sendToAllWindows } from './broadcast'
 import { logError } from './log'
 import type { SettingsStore } from './settings'
 import { createUpdater, type Updater } from './updater'
@@ -19,11 +20,7 @@ export function createAppUpdater(settingsStore: SettingsStore): Updater {
     canCheck: app.isPackaged,
     isAutomatic: () => settingsStore.get('autoUpdate'),
     openDownloadPage: (version) => void shell.openExternal(`${RELEASES_URL}/tag/v${version}`),
-    onChange: (status) => {
-      for (const window of BrowserWindow.getAllWindows()) {
-        window.webContents.send(IPC_CHANNELS.updateStatusChanged, status)
-      }
-    },
+    onChange: (status) => sendToAllWindows(IPC_CHANNELS.updateStatusChanged, status),
     onError: (error) => logError('Update failed', error)
   })
 }

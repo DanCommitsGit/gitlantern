@@ -45,7 +45,7 @@ export function createMemoryAppDataStore(data: AppData = createAppDataDefaults()
   }
 }
 
-function moveToMemoryWhenFileFails(fileStore: AppDataStore): AppDataStore {
+function moveToMemoryWhenFileFails(fileStore: AppDataStore, onNotSaved: () => void): AppDataStore {
   const lastKnown: AppData = {
     recentRepositories: fileStore.get('recentRepositories'),
     trustedPrograms: fileStore.get('trustedPrograms'),
@@ -57,6 +57,7 @@ function moveToMemoryWhenFileFails(fileStore: AppDataStore): AppDataStore {
   function switchToMemory(error: unknown): AppDataStore {
     logError('config.json stopped working, so changes last until the app closes', error)
     memoryStore = createMemoryAppDataStore(lastKnown)
+    onNotSaved()
     return memoryStore
   }
 
@@ -83,7 +84,11 @@ function moveToMemoryWhenFileFails(fileStore: AppDataStore): AppDataStore {
   }
 }
 
-export function createAppDataStore(folder?: string): AppDataStore {
+/** `onNotSaved` runs once, when changes can no longer be saved to the file. */
+export function createAppDataStore(
+  folder?: string,
+  onNotSaved: () => void = () => {}
+): AppDataStore {
   try {
     const fileStore = createRepairedStore<AppData>(
       {
@@ -94,12 +99,13 @@ export function createAppDataStore(folder?: string): AppDataStore {
       },
       APP_DATA_REPAIRS
     )
-    return moveToMemoryWhenFileFails(fileStore)
+    return moveToMemoryWhenFileFails(fileStore, onNotSaved)
   } catch (error) {
     logError(
       'Could not open config.json, so trust decisions and recent repositories last until the app closes',
       error
     )
+    onNotSaved()
     return createMemoryAppDataStore()
   }
 }

@@ -66,10 +66,12 @@ describe('createAppDataStore', () => {
 
   it('keeps changes in memory once saving fails', async () => {
     await writeFile(configFile, JSON.stringify({ recentRepositories: ['C:\\work\\site'] }))
-    const store = createAppDataStore(folder)
+    const onNotSaved = vi.fn()
+    const store = createAppDataStore(folder, onNotSaved)
     await rm(configFile)
     await mkdir(configFile)
 
+    expect(onNotSaved).not.toHaveBeenCalled()
     store.set('gitLocation', 'C:\\Git\\cmd\\git.exe')
     store.set('trustedPrograms', { 'C:\\work\\site': 'fingerprint' })
 
@@ -77,26 +79,40 @@ describe('createAppDataStore', () => {
     expect(store.get('trustedPrograms')).toEqual({ 'C:\\work\\site': 'fingerprint' })
     expect(store.get('recentRepositories')).toEqual(['C:\\work\\site'])
     expect(logError).toHaveBeenCalledOnce()
+    expect(onNotSaved).toHaveBeenCalledOnce()
   })
 
   it('keeps the last values it read once reading fails', async () => {
     await writeFile(configFile, JSON.stringify({ recentRepositories: ['C:\\work\\site'] }))
-    const store = createAppDataStore(folder)
+    const onNotSaved = vi.fn()
+    const store = createAppDataStore(folder, onNotSaved)
     await rm(configFile)
     await mkdir(configFile)
 
     expect(store.get('recentRepositories')).toEqual(['C:\\work\\site'])
     expect(logError).toHaveBeenCalledOnce()
+    expect(onNotSaved).toHaveBeenCalledOnce()
   })
 
   it('keeps changes in memory when the file cannot be opened', async () => {
     await mkdir(configFile)
 
-    const store = createAppDataStore(folder)
+    const onNotSaved = vi.fn()
+    const store = createAppDataStore(folder, onNotSaved)
     store.set('gitLocation', 'C:\\Git\\cmd\\git.exe')
 
     expect(store.get('gitLocation')).toBe('C:\\Git\\cmd\\git.exe')
     expect(store.get('trustedPrograms')).toEqual({})
     expect(logError).toHaveBeenCalledOnce()
+    expect(onNotSaved).toHaveBeenCalledOnce()
+  })
+
+  it('does not report a file that works', async () => {
+    const onNotSaved = vi.fn()
+    const store = createAppDataStore(folder, onNotSaved)
+
+    store.set('gitLocation', 'C:\\Git\\cmd\\git.exe')
+
+    expect(onNotSaved).not.toHaveBeenCalled()
   })
 })

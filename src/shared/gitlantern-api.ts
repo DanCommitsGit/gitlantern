@@ -1,5 +1,6 @@
 import type { CommandRecord } from './command-record'
 import type { CommitLogPage, LogScope } from './history-types'
+import type { Notice } from './notices'
 import type { Branch, FileChange, FileDiff, RepositoryStatus } from './repository-types'
 import type { SettingKey, Settings } from './settings'
 import type { UpdateStatus } from './update-types'
@@ -71,6 +72,10 @@ export interface GitlanternApi {
   installUpdate(): Promise<void>
   /** Returns a function that stops the listening. */
   onUpdateStatus(listener: (status: UpdateStatus) => void): () => void
+  readNotices(): Promise<Notice[]>
+  dismissNotice(notice: Notice): Promise<void>
+  /** Returns a function that stops the listening. */
+  onNotices(listener: (notices: Notice[]) => void): () => void
 }
 
 export const IPC_CHANNELS = {
@@ -103,5 +108,8 @@ export const IPC_CHANNELS = {
   checkForUpdates: 'updates:check',
   downloadUpdate: 'updates:download',
   installUpdate: 'updates:install',
-  updateStatusChanged: 'updates:status-changed'
+  updateStatusChanged: 'updates:status-changed',
+  readNotices: 'notices:read',
+  dismissNotice: 'notices:dismiss',
+  noticesChanged: 'notices:changed'
 } as const

@@ -3,8 +3,11 @@ import serve from 'electron-serve'
 import { setApplicationMenu } from './app-menu'
 import { createAppUpdater } from './app-updater'
 import { createAppDataStore } from './app-data-store'
+import { sendToAllWindows } from './broadcast'
+import { IPC_CHANNELS } from '../shared/gitlantern-api'
 import { registerIpcHandlers } from './ipc-handlers'
 import { createMainWindow } from './main-window'
+import { createNotices } from './notices'
 import { RepositorySession } from './repository-session'
 import { createSettingsStore } from './settings-store'
 import { denyAllPermissions, restrictWebContents } from './window-security'
@@ -27,10 +30,12 @@ app.whenReady().then(() => {
   setApplicationMenu()
   const settingsStore = createSettingsStore()
   const updater = createAppUpdater(settingsStore)
+  const notices = createNotices((raised) => sendToAllWindows(IPC_CHANNELS.noticesChanged, raised))
   registerIpcHandlers(
-    new RepositorySession(createAppDataStore()),
+    new RepositorySession(createAppDataStore(undefined, () => notices.raise('app-data-not-saved'))),
     settingsStore,
     updater,
+    notices,
     rendererUrl
   )
 

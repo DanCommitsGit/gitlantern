@@ -133,4 +133,9 @@
     background-color: var(--color-danger-tint);
     color: var(--color-danger);
   }
+
+  .banner-warning {
+    background-color: var(--color-attn-tint);
+    color: var(--color-attn);
+  }
 }

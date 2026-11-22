@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import type { CommandRecord } from '../../shared/command-record'
 import type { GitCheck, OpenedRepository, OpenResult } from '../../shared/gitlantern-api'
 import { GitProblemScreen } from './components/GitProblemScreen'
+import { NoticeBanner } from './components/NoticeBanner'
 import { RepositoryWindow } from './components/RepositoryWindow'
 import { TitleBar } from './components/TitleBar'
 import { TrustDialog } from './components/TrustDialog'
@@ -62,6 +63,7 @@ function App(): React.JSX.Element {
   return (
     <div className="window">
       <TitleBar />
+      <NoticeBanner />
       {gitCheck?.state === 'ok' && (
         <WelcomeScreen
           gitVersion={gitCheck.version}

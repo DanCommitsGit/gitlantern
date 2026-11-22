@@ -1,4 +1,5 @@
 import { LOG_SCOPES, type LogScope } from '../shared/history-types'
+import { NOTICES, type Notice } from '../shared/notices'
 import type { FileChange, FileStatus } from '../shared/repository-types'
 
 const FILE_STATUSES = new Set<FileStatus>(['M', 'A', 'D', 'R', 'C', 'T', 'U', '?'])
@@ -31,6 +32,11 @@ export function requireCommitHash(value: unknown): string {
 export function requireLogScope(value: unknown): LogScope {
   if (!LOG_SCOPES.includes(value as LogScope)) throw new TypeError('Unknown log scope')
   return value as LogScope
+}
+
+export function requireNotice(value: unknown): Notice {
+  if (!NOTICES.includes(value as Notice)) throw new TypeError('Unknown notice')
+  return value as Notice
 }
 
 export function requireStrings(value: unknown): string[] {

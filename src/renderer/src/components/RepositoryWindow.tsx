@@ -7,6 +7,7 @@ import { useRepositoryState } from '../use-repository-state'
 import { ChangesView } from './ChangesView'
 import { CommandStrip } from './CommandStrip'
 import { HistoryView } from './HistoryView'
+import { NoticeBanner } from './NoticeBanner'
 import { RepositorySidebar } from './RepositorySidebar'
 import { TitleBar } from './TitleBar'
 
@@ -73,6 +74,7 @@ export function RepositoryWindow({
             ))}
           </nav>
         </TitleBar>
+        <NoticeBanner />
         {state.errorMessage !== null && (
           <div className="banner banner-danger rounded-none">{state.errorMessage}</div>
         )}

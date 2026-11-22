@@ -6,6 +6,7 @@ import {
   requireFileChange,
   requireLogScope,
   requireNonEmptyStrings,
+  requireNotice,
   requireString
 } from './ipc-validation'
 
@@ -17,6 +18,7 @@ describe('IPC validation', () => {
     expect(requireCount(0)).toBe(0)
     expect(requireCommitHash('a'.repeat(40))).toBe('a'.repeat(40))
     expect(requireLogScope('first-parent')).toBe('first-parent')
+    expect(requireNotice('app-data-not-saved')).toBe('app-data-not-saved')
     expect(requireFileChange({ path: 'a', status: 'R', originalPath: 'b' })).toEqual({
       path: 'a',
       status: 'R',
@@ -41,6 +43,7 @@ describe('IPC validation', () => {
     ['a short hash', () => requireCommitHash('034eac8')],
     ['an option as a hash', () => requireCommitHash('--output=x')],
     ['an unknown log scope', () => requireLogScope('everything')],
+    ['an unknown notice', () => requireNotice('theme')],
     ['null as a change', () => requireFileChange(null)],
     ['an unknown status', () => requireFileChange({ path: 'a', status: 'X' })],
     ['a change without a path', () => requireFileChange({ status: 'M' })],

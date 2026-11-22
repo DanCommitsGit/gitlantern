@@ -8,10 +8,12 @@ import {
   requireFileChange,
   requireLogScope,
   requireNonEmptyStrings,
+  requireNotice,
   requireString,
   requireStrings
 } from './ipc-validation'
 import { logError, showLogFile } from './log'
+import type { Notices } from './notices'
 import type { RepositorySession } from './repository-session'
 import { readSettings, saveSetting, type SettingsStore } from './settings'
 import type { Updater } from './updater'
@@ -21,6 +23,7 @@ export function registerIpcHandlers(
   session: RepositorySession,
   settingsStore: SettingsStore,
   updater: Updater,
+  notices: Notices,
   rendererUrl: string
 ): void {
   function handle(channel: string, handler: (...values: unknown[]) => unknown): void {
@@ -100,4 +103,6 @@ export function registerIpcHandlers(
   handle(IPC_CHANNELS.checkForUpdates, () => updater.check())
   handle(IPC_CHANNELS.downloadUpdate, () => updater.download())
   handle(IPC_CHANNELS.installUpdate, () => updater.install())
+  handle(IPC_CHANNELS.readNotices, () => notices.list())
+  handle(IPC_CHANNELS.dismissNotice, (notice) => notices.dismiss(requireNotice(notice)))
 }
