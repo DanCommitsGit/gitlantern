@@ -54,7 +54,7 @@ export function RepositoryWindow({
   }
 
   return (
-    <SetCommandPreviewContext.Provider value={setPreview}>
+    <SetCommandPreviewContext value={setPreview}>
       <div className="window">
         <TitleBar>
           <button className="button button-quiet" type="button" onClick={onClose}>
@@ -111,6 +111,6 @@ export function RepositoryWindow({
         )}
         <CommandStrip preview={preview} records={records} />
       </div>
-    </SetCommandPreviewContext.Provider>
+    </SetCommandPreviewContext>
   )
 }

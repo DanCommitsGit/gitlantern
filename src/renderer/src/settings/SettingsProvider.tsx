@@ -40,5 +40,5 @@ export function SettingsProvider({ children }: { children: ReactNode }): React.J
   )
 
   if (value === null) return null
-  return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>
+  return <SettingsContext value={value}>{children}</SettingsContext>
 }
