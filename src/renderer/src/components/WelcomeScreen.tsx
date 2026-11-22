@@ -7,6 +7,7 @@ interface WelcomeScreenProps {
   problem: Extract<OpenResult, { kind: 'not-a-repository' | 'failed' }> | null
   onOpenFolder(folder: string): void
   onCreateInFolder(folder: string): void
+  onFailure(error: unknown): void
 }
 
 export function WelcomeScreen({
@@ -14,17 +15,24 @@ export function WelcomeScreen({
   gitPath,
   problem,
   onOpenFolder,
-  onCreateInFolder
+  onCreateInFolder,
+  onFailure
 }: WelcomeScreenProps): React.JSX.Element {
   const [recentRepositories, setRecentRepositories] = useState<RecentRepository[]>([])
 
   useEffect(() => {
-    void window.api.recentRepositories().then(setRecentRepositories)
+    void window.api.recentRepositories().then(setRecentRepositories, (error: unknown) => {
+      console.error('Could not read the recent repositories', error)
+    })
   }, [])
 
   async function chooseFolderThen(onChosen: (folder: string) => void): Promise<void> {
-    const folder = await window.api.chooseFolder()
-    if (folder !== null) onChosen(folder)
+    try {
+      const folder = await window.api.chooseFolder()
+      if (folder !== null) onChosen(folder)
+    } catch (error) {
+      onFailure(error)
+    }
   }
 
   return (

@@ -18,6 +18,7 @@ export interface RepositoryState {
   errorMessage: string | null
   select(selection: FileSelection): void
   showLargeDiff(): void
+  reportError(error: unknown): void
   runCommand(command: () => Promise<CommandRecord>): Promise<CommandRecord | null>
 }
 
@@ -97,6 +98,7 @@ export function useRepositoryState(onRecord: (record: CommandRecord) => void): R
     errorMessage: readError,
     select: setSelection,
     showLargeDiff: () => setLargeDiffPath(selected?.change.path ?? null),
+    reportError: (error) => setReadError(errorMessage(error)),
     runCommand
   }
 }

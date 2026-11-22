@@ -44,9 +44,13 @@ export function RepositoryWindow({
   const { status } = state
 
   async function saveIdentity(name: string, email: string): Promise<void> {
-    const saved = await window.api.saveIdentity(name, email)
-    saved.records.forEach(onRecord)
-    setIdentity(saved.identity)
+    try {
+      const saved = await window.api.saveIdentity(name, email)
+      saved.records.forEach(onRecord)
+      setIdentity(saved.identity)
+    } catch (error) {
+      state.reportError(error)
+    }
   }
 
   return (
