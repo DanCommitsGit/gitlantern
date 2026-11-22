@@ -9,6 +9,8 @@
   body,
   #root {
     height: 100%;
+    /* Dialogs and tooltips render in portals after #root, so no z-index inside it can stack above them. */
+    isolation: isolate;
   }
 
   body {
