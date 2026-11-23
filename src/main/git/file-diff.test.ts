@@ -283,6 +283,21 @@ describe('readFileDiff', () => {
       expect(await reachesEnd(tenLines.replace('two', 'TWO'), true)).toBe(false)
     })
 
+    // Windows file names cannot contain a colon.
+    it.skipIf(process.platform === 'win32')(
+      'reads the staged version of a file named like a stage number and path',
+      async () => {
+        commitFile('2:a.txt', tenLines)
+        repository.writeFile('2:a.txt', tenLines.replace('ten', 'TEN'))
+        repository.git('add', '--', '2:a.txt')
+
+        expect(await diff({ path: '2:a.txt', status: 'M' }, true)).toMatchObject({
+          kind: 'text',
+          reachesEndOfFile: true
+        })
+      }
+    )
+
     it('is true for a new or deleted file', async () => {
       repository.writeFile('new.txt', 'a\nb\n')
       const created = await diff({ path: 'new.txt', status: '?' }, false)

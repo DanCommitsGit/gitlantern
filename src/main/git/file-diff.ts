@@ -155,7 +155,7 @@ export async function readFileDiff(
   return toFileDiff(result.stdout, showLarge, async () => {
     if (change.status === 'D') return DELETED_FILE
     return staged
-      ? readBlob(repository, `:${change.path}`)
+      ? readBlob(repository, `:0:${change.path}`)
       : readWorkingFile(repository, change.path)
   })
 }
