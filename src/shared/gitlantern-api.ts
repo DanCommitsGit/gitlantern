@@ -1,4 +1,5 @@
 import type { CommandRecord } from './command-record'
+import type { PullMode } from './git-actions'
 import type { CommitLogPage, LogScope } from './history-types'
 import type { Notice } from './notices'
 import type { Branch, FileChange, FileDiff, RepositoryStatus } from './repository-types'
@@ -60,6 +61,10 @@ export interface GitlanternApi {
     unstageFiles(paths: string[]): Promise<CommandRecord>
     unstageAll(): Promise<CommandRecord>
     commit(summary: string, description: string): Promise<CommandRecord>
+    fetch(): Promise<CommandRecord>
+    pull(mode: PullMode): Promise<CommandRecord>
+    /** Pushes the current branch, setting its upstream when it has none. */
+    push(): Promise<CommandRecord>
     saveIdentity(name: string, email: string): Promise<{ identity: Identity; records: CommandRecord[] }>
     copyText(text: string): Promise<void>
     readSettings(): Promise<Settings>
@@ -99,6 +104,9 @@ export const IPC_CHANNELS = {
     unstageFiles: 'repository:unstage-files',
     unstageAll: 'repository:unstage-all',
     commit: 'repository:commit',
+    fetch: 'repository:fetch',
+    pull: 'repository:pull',
+    push: 'repository:push',
     saveIdentity: 'git:save-identity',
     copyText: 'clipboard:copy-text',
     readSettings: 'settings:read',

@@ -3,7 +3,7 @@ import type { FileChange, RepositoryStatus } from '../../shared/repository-types
 import { displayedChangeOf, listChangedFiles, stagedStateOf } from './changed-files'
 
 function status(unstaged: FileChange[], staged: FileChange[]): RepositoryStatus {
-    return { branchName: 'main', hasCommits: true, unstaged, staged }
+    return { branchName: 'main', hasCommits: true, upstream: null, remotes: [], unstaged, staged }
 }
 
 describe('listChangedFiles', () => {

@@ -10,6 +10,9 @@ export interface RepositoryStatus {
     // null when not on a branch.
     branchName: string | null
     hasCommits: boolean
+    // The remote branch the current branch follows, such as "origin/main"; null when it follows none.
+    upstream: string | null
+    remotes: string[]
     unstaged: FileChange[]
     staged: FileChange[]
 }

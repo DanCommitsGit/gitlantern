@@ -6,6 +6,8 @@ export interface GitAction {
     stdin?: string
     // True when what runs is different enough from what you'd type to show both.
     differsFromTyped?: boolean
+    // True when git talks to a remote, where it could stop to ask for a password.
+    contactsRemote?: boolean
 }
 
 const LITERAL_PATHS = '--literal-pathspecs'
@@ -59,6 +61,45 @@ export function commitAction(summary: string, description: string): GitAction {
         stdin: trimmedDescription === '' ? `${summary}\n` : `${summary}\n\n${trimmedDescription}\n`,
         differsFromTyped: true
     }
+}
+
+export function fetchAction(): GitAction {
+    return {
+        typedArguments: ['fetch', '--all'],
+        gitArguments: ['fetch', '--all'],
+        contactsRemote: true
+    }
+}
+
+export const PULL_MODES = ['fast-forward-only', 'merge', 'rebase'] as const
+
+export type PullMode = (typeof PULL_MODES)[number]
+
+const PULL_OPTIONS: Record<PullMode, string> = {
+    'fast-forward-only': '--ff-only',
+    merge: '--no-rebase',
+    rebase: '--rebase'
+}
+
+export function pullAction(mode: PullMode): GitAction {
+    const gitArguments = ['pull', PULL_OPTIONS[mode]]
+    return { typedArguments: gitArguments, gitArguments, contactsRemote: true }
+}
+
+export interface PublishTarget {
+    remote: string
+    branchName: string
+}
+
+// Without a target, the branch already has an upstream to push to.
+export function pushAction(publishTarget: PublishTarget | null): GitAction {
+    return publishTarget === null
+        ? { typedArguments: ['push'], gitArguments: ['push'], contactsRemote: true }
+        : {
+              typedArguments: ['push', '-u', publishTarget.remote, publishTarget.branchName],
+              gitArguments: ['push', '-u', '--', publishTarget.remote, publishTarget.branchName],
+              contactsRemote: true
+          }
 }
 
 export function initAction(): GitAction {

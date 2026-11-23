@@ -40,6 +40,8 @@ describe('readRepositoryStatus', () => {
         await expect(status()).resolves.toEqual({
             branchName: 'main',
             hasCommits: false,
+            upstream: null,
+            remotes: [],
             unstaged: [],
             staged: []
         })
@@ -51,9 +53,18 @@ describe('readRepositoryStatus', () => {
         await expect(status()).resolves.toEqual({
             branchName: 'main',
             hasCommits: true,
+            upstream: null,
+            remotes: [],
             unstaged: [],
             staged: []
         })
+    })
+
+    it('lists the remotes', async () => {
+        repository.git('remote', 'add', 'origin', 'https://example.com/a.git')
+        repository.git('remote', 'add', 'backup', 'https://example.com/b.git')
+
+        expect((await status()).remotes).toEqual(['backup', 'origin'])
     })
 
     it('reports null when not on a branch', async () => {

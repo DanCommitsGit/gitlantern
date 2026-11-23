@@ -16,6 +16,7 @@ import {
     requireLogScope,
     requireNonEmptyStrings,
     requireNotice,
+    requirePullMode,
     requireString,
     requireStrings
 } from './ipc-validation'
@@ -101,6 +102,9 @@ export function registerIpcHandlers(
     handle(IPC_CHANNELS.commit, (summary, description) =>
         session.commit(requireString(summary), requireString(description))
     )
+    handle(IPC_CHANNELS.fetch, () => session.fetch())
+    handle(IPC_CHANNELS.pull, (mode) => session.pull(requirePullMode(mode)))
+    handle(IPC_CHANNELS.push, () => session.push())
     handle(IPC_CHANNELS.saveIdentity, (name, email) =>
         session.saveIdentity(requireString(name), requireString(email))
     )

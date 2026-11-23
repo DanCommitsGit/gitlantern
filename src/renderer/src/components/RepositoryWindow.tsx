@@ -9,6 +9,7 @@ import { CommandStrip } from './CommandStrip'
 import { HistoryView } from './HistoryView'
 import { NoticeBanner } from './NoticeBanner'
 import { RepositorySidebar } from './RepositorySidebar'
+import { SyncButtons } from './SyncButtons'
 import { TitleBar } from './TitleBar'
 
 const VIEWS = ['changes', 'history'] as const
@@ -37,6 +38,7 @@ export function RepositoryWindow({
 }: RepositoryWindowProps): React.JSX.Element {
     const [preview, setPreview] = useState<CommandPreview | null>(null)
     const [identity, setIdentity] = useState<Identity>(repository.identity)
+    const [syncFailure, setSyncFailure] = useState<string | null>(null)
     const state = useRepositoryState(onRecord)
     const [view, setView] = useState<View>('changes')
     // History reads the log only once it has been opened.
@@ -56,7 +58,18 @@ export function RepositoryWindow({
     return (
         <SetCommandPreviewContext value={setPreview}>
             <div className="window">
-                <TitleBar>
+                <TitleBar
+                    actions={
+                        status && (
+                            <SyncButtons
+                                status={status}
+                                branches={state.branches}
+                                runCommand={state.runCommand}
+                                onFailure={setSyncFailure}
+                            />
+                        )
+                    }
+                >
                     <button className="button button-quiet" type="button" onClick={onClose}>
                         {repository.name}
                         <ChevronDown className="size-4 flex-none" />
@@ -81,6 +94,9 @@ export function RepositoryWindow({
                 <NoticeBanner />
                 {state.errorMessage !== null && (
                     <div className="banner banner-danger rounded-none">{state.errorMessage}</div>
+                )}
+                {syncFailure !== null && (
+                    <div className="banner banner-danger rounded-none">{syncFailure}</div>
                 )}
                 {status && (
                     <div className="flex min-h-0 flex-1">

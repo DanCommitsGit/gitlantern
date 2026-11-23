@@ -23,6 +23,15 @@ export function testGitPath(): string {
     return gitPath
 }
 
+// An empty bare repository to use as a remote; call remove() when done.
+export function createBareRemote(): { path: string; remove(): void } {
+    const path = realpathSync.native(mkdtempSync(join(tmpdir(), 'gitlantern-remote-')))
+    execFileSync(testGitPath(), ['-C', path, 'init', '-q', '--bare', '-b', 'main'], {
+        stdio: 'ignore'
+    })
+    return { path, remove: () => rmSync(path, { recursive: true, force: true, maxRetries: 5 }) }
+}
+
 export interface TestRepository {
     path: string
     git(...gitArguments: string[]): string

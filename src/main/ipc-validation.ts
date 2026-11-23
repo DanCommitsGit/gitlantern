@@ -1,3 +1,4 @@
+import { PULL_MODES, type PullMode } from '../shared/git-actions'
 import { LOG_SCOPES, type LogScope } from '../shared/history-types'
 import { NOTICES, type Notice } from '../shared/notices'
 import type { FileChange, FileStatus } from '../shared/repository-types'
@@ -32,6 +33,11 @@ export function requireCommitHash(value: unknown): string {
 export function requireLogScope(value: unknown): LogScope {
     if (!LOG_SCOPES.includes(value as LogScope)) throw new TypeError('Unknown log scope')
     return value as LogScope
+}
+
+export function requirePullMode(value: unknown): PullMode {
+    if (!PULL_MODES.includes(value as PullMode)) throw new TypeError('Unknown pull mode')
+    return value as PullMode
 }
 
 export function requireNotice(value: unknown): Notice {

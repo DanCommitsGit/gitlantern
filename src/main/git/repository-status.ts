@@ -12,6 +12,8 @@ export function parseStatus(statusOutput: string): RepositoryStatus {
     const status: RepositoryStatus = {
         branchName: null,
         hasCommits: true,
+        upstream: null,
+        remotes: [],
         unstaged: [],
         staged: []
     }
@@ -32,6 +34,8 @@ export function parseStatus(statusOutput: string): RepositoryStatus {
         } else if (entry.startsWith('# branch.head ')) {
             const branchName = entry.slice('# branch.head '.length)
             status.branchName = branchName === '(detached)' ? null : branchName
+        } else if (entry.startsWith('# branch.upstream ')) {
+            status.upstream = entry.slice('# branch.upstream '.length)
         } else if (entry.startsWith('1 ')) {
             addChange(codes, { path: pathAfterFields(entry, FIELDS_BEFORE_PATH.ordinary) })
         } else if (entry.startsWith('2 ')) {
@@ -70,5 +74,14 @@ export async function readRepositoryStatus(repository: {
     })
     if (result.exitCode !== 0) throw new Error(result.stderr.toString().trim())
 
-    return parseStatus(result.stdout.toString())
+    const remotesResult = await runGit({ ...repository, gitArguments: ['remote'] })
+    if (remotesResult.exitCode !== 0) throw new Error(remotesResult.stderr.toString().trim())
+
+    return {
+        ...parseStatus(result.stdout.toString()),
+        remotes: remotesResult.stdout
+            .toString()
+            .split('\n')
+            .filter((remote) => remote !== '')
+    }
 }

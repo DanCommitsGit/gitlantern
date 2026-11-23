@@ -2,13 +2,18 @@ import { createHash } from 'node:crypto'
 import { basename, normalize } from 'node:path'
 import {
     commitAction,
+    fetchAction,
     initAction,
+    pullAction,
+    pushAction,
     saveIdentityActions,
     stageAllAction,
     stageFilesAction,
     unstageAllAction,
-    unstageFilesAction
+    unstageFilesAction,
+    type PullMode
 } from '../shared/git-actions'
+import { publishTargetOf } from '../shared/publish-target'
 import type { CommandRecord } from '../shared/command-record'
 import type { GitCheck, Identity, OpenResult } from '../shared/gitlantern-api'
 import type { CommitLogPage, LogScope } from '../shared/history-types'
@@ -203,6 +208,20 @@ export class RepositorySession {
 
     async commit(summary: string, description: string): Promise<CommandRecord> {
         return runAction(this.requireRepository(), commitAction(summary, description))
+    }
+
+    async fetch(): Promise<CommandRecord> {
+        return runAction(this.requireRepository(), fetchAction())
+    }
+
+    async pull(mode: PullMode): Promise<CommandRecord> {
+        return runAction(this.requireRepository(), pullAction(mode))
+    }
+
+    // Pushes with -u to publishTargetOf's remote when the branch has no upstream; otherwise a plain push.
+    async push(): Promise<CommandRecord> {
+        const publishTarget = publishTargetOf(await this.readStatus())
+        return runAction(this.requireRepository(), pushAction(publishTarget))
     }
 
     async saveIdentity(

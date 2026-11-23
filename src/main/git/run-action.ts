@@ -2,7 +2,7 @@ import { formatCommand, type GitAction } from '../../shared/git-actions'
 import type { CommandRecord } from '../../shared/command-record'
 import { runGit } from './run-git'
 
-// Hooks can run for a while during a commit.
+// Hooks during a commit, and slow remotes during fetch, pull and push, can run for a while.
 const ACTION_TIMEOUT_MILLISECONDS = 10 * 60 * 1000
 
 export async function runAction(
@@ -13,7 +13,9 @@ export async function runAction(
         ...repository,
         gitArguments: action.gitArguments,
         stdin: action.stdin,
-        timeoutMilliseconds: ACTION_TIMEOUT_MILLISECONDS
+        timeoutMilliseconds: ACTION_TIMEOUT_MILLISECONDS,
+        // With no terminal to type into, git fails instead of waiting for a password.
+        environment: action.contactsRemote ? { ...process.env, GIT_TERMINAL_PROMPT: '0' } : undefined
     })
 
     return {

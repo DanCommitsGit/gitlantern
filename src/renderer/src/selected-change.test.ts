@@ -6,7 +6,7 @@ const a = { path: 'a.txt', status: 'M' as const }
 const b = { path: 'b.txt', status: 'M' as const }
 
 function status(unstaged: (typeof a)[], staged: (typeof a)[]): RepositoryStatus {
-    return { branchName: 'main', hasCommits: true, unstaged, staged }
+    return { branchName: 'main', hasCommits: true, upstream: null, remotes: [], unstaged, staged }
 }
 
 describe('resolveSelectedChange', () => {
