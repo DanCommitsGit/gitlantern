@@ -1,4 +1,11 @@
-import { BrowserWindow, clipboard, dialog, ipcMain, type IpcMainInvokeEvent } from 'electron'
+import {
+  BrowserWindow,
+  clipboard,
+  dialog,
+  ipcMain,
+  type IpcMainInvokeEvent,
+  type OpenDialogOptions
+} from 'electron'
 import { basename } from 'node:path'
 import { IPC_CHANNELS } from '../shared/gitlantern-api'
 import {
@@ -42,9 +49,8 @@ export function registerIpcHandlers(
     })
   }
 
-  async function chooseFolder(): Promise<string | null> {
+  async function choosePath(options: OpenDialogOptions): Promise<string | null> {
     const window = BrowserWindow.getFocusedWindow()
-    const options = { properties: ['openDirectory' as const, 'createDirectory' as const] }
     const { canceled, filePaths } = window
       ? await dialog.showOpenDialog(window, options)
       : await dialog.showOpenDialog(options)
@@ -53,13 +59,15 @@ export function registerIpcHandlers(
 
   handle(IPC_CHANNELS.checkGit, () => session.checkGit())
   handle(IPC_CHANNELS.chooseGitLocation, async () => {
-    const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openFile'] })
-    return canceled ? session.checkGit() : session.useGitLocation(filePaths[0])
+    const gitPath = await choosePath({ properties: ['openFile'] })
+    return gitPath === null ? session.checkGit() : session.useGitLocation(gitPath)
   })
   handle(IPC_CHANNELS.recentRepositories, () =>
     session.recentRepositories().map((path) => ({ path, name: basename(path) }))
   )
-  handle(IPC_CHANNELS.chooseFolder, chooseFolder)
+  handle(IPC_CHANNELS.chooseFolder, () =>
+    choosePath({ properties: ['openDirectory', 'createDirectory'] })
+  )
   handle(IPC_CHANNELS.openRepository, (folder) => session.open(requireString(folder)))
   handle(IPC_CHANNELS.trustPendingRepository, () => session.trustPending())
   handle(IPC_CHANNELS.createRepository, (folder) => session.create(requireString(folder)))
