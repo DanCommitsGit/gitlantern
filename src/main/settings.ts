@@ -8,12 +8,14 @@ import {
   DIFF_VIEW_MODES,
   FILE_LIST_STYLES,
   LOG_STYLES,
+  STARTUP_PLACES,
   type CommitDetailPlace,
   type DiffViewMode,
   type FileListStyle,
   type LogStyle,
   type SettingKey,
-  type Settings
+  type Settings,
+  type StartupPlace
 } from '../shared/settings'
 
 export interface SettingsStore {
@@ -22,6 +24,7 @@ export interface SettingsStore {
 }
 
 export const SETTING_CHECKS: { [Key in SettingKey]: (value: unknown) => value is Settings[Key] } = {
+  startupPlace: (value): value is StartupPlace => STARTUP_PLACES.includes(value as StartupPlace),
   commandCard: (value): value is boolean => typeof value === 'boolean',
   diffViewMode: (value): value is DiffViewMode => DIFF_VIEW_MODES.includes(value as DiffViewMode),
   fileList: (value): value is FileListStyle => FILE_LIST_STYLES.includes(value as FileListStyle),

@@ -51,6 +51,7 @@
 ## First launch
 
 - A welcome screen offers Open, Create and recent repos, with no setup wizard. Clone joins them when sync exists.
+- The app opens the repository that was open when it last quit. It shows the welcome screen when none was open, the repository can't be opened, or it needs trust. The Startup settings section can switch this to always showing the welcome screen.
 
 ## Settings
 

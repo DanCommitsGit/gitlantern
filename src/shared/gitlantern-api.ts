@@ -43,6 +43,8 @@ export interface GitlanternApi {
   recentRepositories(): Promise<RecentRepository[]>
   chooseFolder(): Promise<string | null>
   openRepository(folder: string): Promise<OpenResult>
+  /** Null when the app should start on the welcome screen. */
+  openStartupRepository(): Promise<OpenResult | null>
   trustPendingRepository(): Promise<OpenResult>
   createRepository(folder: string): Promise<{ result: OpenResult; record: CommandRecord | null }>
   closeRepository(): Promise<void>
@@ -84,6 +86,7 @@ export const IPC_CHANNELS = {
   recentRepositories: 'repository:recent',
   chooseFolder: 'repository:choose-folder',
   openRepository: 'repository:open',
+  openStartupRepository: 'repository:open-startup',
   trustPendingRepository: 'repository:trust-pending',
   createRepository: 'repository:create',
   closeRepository: 'repository:close',

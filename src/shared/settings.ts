@@ -22,7 +22,12 @@ export const DIFF_VIEW_MODES = ['unified', 'split', 'words'] as const
 
 export type DiffViewMode = (typeof DIFF_VIEW_MODES)[number]
 
+export const STARTUP_PLACES = ['last-repository', 'welcome'] as const
+
+export type StartupPlace = (typeof STARTUP_PLACES)[number]
+
 export interface Settings {
+  startupPlace: StartupPlace
   commandCard: boolean
   diffViewMode: DiffViewMode
   fileList: FileListStyle
@@ -36,6 +41,7 @@ export interface Settings {
 export type SettingKey = keyof Settings
 
 export const DEFAULT_SETTINGS: Settings = {
+  startupPlace: 'last-repository',
   commandCard: false,
   diffViewMode: 'unified',
   fileList: 'two-lists',

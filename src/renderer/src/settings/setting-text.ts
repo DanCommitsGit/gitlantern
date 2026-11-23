@@ -10,6 +10,13 @@ export interface SettingText {
 }
 
 export const SETTING_TEXT = {
+  startupPlace: {
+    label: 'On startup',
+    choices: [
+      { value: 'last-repository', label: 'Open the last repository' },
+      { value: 'welcome', label: 'Show the welcome screen' }
+    ]
+  },
   commandCard: {
     label: 'Command card at each button',
     description: 'Shows the command and what it does when you point at a button.'

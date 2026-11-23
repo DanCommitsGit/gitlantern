@@ -69,6 +69,9 @@ export function registerIpcHandlers(
     choosePath({ properties: ['openDirectory', 'createDirectory'] })
   )
   handle(IPC_CHANNELS.openRepository, (folder) => session.open(requireString(folder)))
+  handle(IPC_CHANNELS.openStartupRepository, () =>
+    settingsStore.get('startupPlace') === 'last-repository' ? session.openLastRepository() : null
+  )
   handle(IPC_CHANNELS.trustPendingRepository, () => session.trustPending())
   handle(IPC_CHANNELS.createRepository, (folder) => session.create(requireString(folder)))
   handle(IPC_CHANNELS.closeRepository, () => session.close())

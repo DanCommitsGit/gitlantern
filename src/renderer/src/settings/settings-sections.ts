@@ -4,6 +4,7 @@ import { ChangesSettings } from './ChangesSettings'
 import { HistorySettings } from './HistorySettings'
 import { HintsAndCommandsSettings } from './HintsAndCommandsSettings'
 import type { SettingsPageKey } from './setting-text'
+import { StartupSettings } from './StartupSettings'
 import { UpdatesSettings } from './UpdatesSettings'
 
 export interface SettingsSection {
@@ -14,6 +15,7 @@ export interface SettingsSection {
 }
 
 export const SETTINGS_SECTIONS = [
+  { id: 'startup', name: 'Startup', settings: ['startupPlace'], Panel: StartupSettings },
   {
     id: 'hints-and-commands',
     name: 'Hints and commands',

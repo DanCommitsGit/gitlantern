@@ -13,6 +13,7 @@ const APP_DATA_REPAIRS: StoredDataRepairs<AppData> = {
         ) as Record<string, string>)
       : undefined,
   gitLocation: (value) => (typeof value === 'string' || value === null ? value : undefined),
+  lastOpenRepository: (value) => (typeof value === 'string' || value === null ? value : undefined),
   collapsedBranchGroups: (value) =>
     isPlainObject(value)
       ? (Object.fromEntries(
@@ -32,6 +33,7 @@ function createAppDataDefaults(): { [Key in keyof AppData]: AppData[Key] } {
     recentRepositories: [],
     trustedPrograms: {},
     gitLocation: null,
+    lastOpenRepository: null,
     collapsedBranchGroups: {}
   }
 }
@@ -50,6 +52,7 @@ function moveToMemoryWhenFileFails(fileStore: AppDataStore, onNotSaved: () => vo
     recentRepositories: fileStore.get('recentRepositories'),
     trustedPrograms: fileStore.get('trustedPrograms'),
     gitLocation: fileStore.get('gitLocation'),
+    lastOpenRepository: fileStore.get('lastOpenRepository'),
     collapsedBranchGroups: fileStore.get('collapsedBranchGroups')
   }
   let memoryStore: AppDataStore | null = null

@@ -35,19 +35,16 @@ function App(): React.JSX.Element {
     )
   }, [])
 
-  useEffect(() => {
-    applyGitCheck(window.api.checkGit())
-  }, [applyGitCheck])
-
-  function applyOpenResult(result: OpenResult): void {
+  const applyOpenResult = useCallback((result: OpenResult): void => {
     setTrustRequest(result.kind === 'needs-trust' ? result : null)
     setOpenProblem(result.kind === 'not-a-repository' || result.kind === 'failed' ? result : null)
     setRepository(result.kind === 'opened' ? result.repository : null)
-  }
+  }, [])
 
-  function showOpenFailure(error: unknown): void {
-    applyOpenResult({ kind: 'failed', message: errorMessage(error) })
-  }
+  const showOpenFailure = useCallback(
+    (error: unknown): void => applyOpenResult({ kind: 'failed', message: errorMessage(error) }),
+    [applyOpenResult]
+  )
 
   async function open(request: Promise<OpenResult>): Promise<void> {
     try {
@@ -56,6 +53,28 @@ function App(): React.JSX.Element {
       showOpenFailure(error)
     }
   }
+
+  useEffect(() => {
+    // The welcome screen waits for the startup repository, so it doesn't flash before it.
+    async function start(): Promise<void> {
+      try {
+        const check = await window.api.checkGit()
+        if (check.state === 'ok') {
+          try {
+            const startupResult = await window.api.openStartupRepository()
+            if (startupResult !== null) applyOpenResult(startupResult)
+          } catch (error) {
+            showOpenFailure(error)
+          }
+        }
+        setGitCheck(check)
+        setGitCheckFailure(null)
+      } catch (error) {
+        setGitCheckFailure(errorMessage(error))
+      }
+    }
+    void start()
+  }, [applyOpenResult, showOpenFailure])
 
   async function createInFolder(folder: string): Promise<void> {
     try {

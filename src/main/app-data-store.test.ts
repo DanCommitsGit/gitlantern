@@ -52,6 +52,7 @@ describe('createAppDataStore', () => {
         recentRepositories: ['C:\\work\\site', 42],
         trustedPrograms: { 'C:\\work\\site': 'fingerprint', 'C:\\work\\other': false },
         gitLocation: 7,
+        lastOpenRepository: 7,
         collapsedBranchGroups: { 'C:\\work\\site': ['feature', 3], 'C:\\work\\other': 'fix' }
       })
     )
@@ -61,6 +62,7 @@ describe('createAppDataStore', () => {
     expect(store.get('recentRepositories')).toEqual(['C:\\work\\site'])
     expect(store.get('trustedPrograms')).toEqual({ 'C:\\work\\site': 'fingerprint' })
     expect(store.get('gitLocation')).toBeNull()
+    expect(store.get('lastOpenRepository')).toBeNull()
     expect(store.get('collapsedBranchGroups')).toEqual({ 'C:\\work\\site': ['feature'] })
   })
 

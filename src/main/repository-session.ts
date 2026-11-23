@@ -31,6 +31,8 @@ export interface AppData {
   // Repository path to a fingerprint of the programs the user trusted.
   trustedPrograms: Record<string, string>
   gitLocation: string | null
+  // The repository that was open when the app last quit, or null when none was.
+  lastOpenRepository: string | null
   // Repository path to the branch groups collapsed in the repository sidebar.
   collapsedBranchGroups: Record<string, string[]>
 }
@@ -112,6 +114,12 @@ export class RepositorySession {
     return this.finishOpening(repositoryPath)
   }
 
+  /** Opens the repository that was open when the app last quit, or returns null when none was. */
+  async openLastRepository(): Promise<OpenResult | null> {
+    const lastOpenRepository = this.store.get('lastOpenRepository')
+    return lastOpenRepository === null ? null : this.open(lastOpenRepository)
+  }
+
   async trustPending(): Promise<OpenResult> {
     if (this.pendingTrust === null) throw new Error('No repository is waiting to be trusted')
 
@@ -140,6 +148,7 @@ export class RepositorySession {
   close(): void {
     this.repositoryPath = null
     this.pendingTrust = null
+    this.store.set('lastOpenRepository', null)
   }
 
   async readStatus(): Promise<RepositoryStatus> {
@@ -214,6 +223,7 @@ export class RepositorySession {
 
   private async finishOpening(repositoryPath: string): Promise<OpenResult> {
     this.repositoryPath = repositoryPath
+    this.store.set('lastOpenRepository', repositoryPath)
     const recentPaths = this.store
       .get('recentRepositories')
       .filter((path) => path !== repositoryPath)

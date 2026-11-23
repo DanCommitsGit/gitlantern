@@ -58,6 +58,34 @@ describe('RepositorySession', () => {
     expect(store.get('recentRepositories')).toEqual([normalize(repository.path)])
   })
 
+  it('reopens the repository that was open at quit, but not one that was closed', async () => {
+    await session.checkGit()
+    expect(await session.openLastRepository()).toBeNull()
+
+    await session.open(repository.path)
+    const restartedSession = new RepositorySession(store)
+    await restartedSession.checkGit()
+
+    expect(await restartedSession.openLastRepository()).toMatchObject({
+      kind: 'opened',
+      repository: { path: normalize(repository.path) }
+    })
+
+    restartedSession.close()
+
+    expect(await restartedSession.openLastRepository()).toBeNull()
+  })
+
+  it('forgets the last repository when it cannot be opened again', async () => {
+    await session.checkGit()
+    await session.open(repository.path)
+    repository.remove()
+
+    await session.openLastRepository().catch(() => undefined)
+
+    expect(await session.openLastRepository()).toBeNull()
+  })
+
   it('remembers collapsed branch groups for each repository', async () => {
     await session.checkGit()
     await session.open(repository.path)

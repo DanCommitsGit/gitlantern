@@ -8,6 +8,7 @@ function sectionNames(query: string): string[] {
 describe('searchSettingsSections', () => {
   it('lists every section for an empty query', () => {
     expect(sectionNames('  ')).toEqual([
+      'Startup',
       'Hints and commands',
       'Changes',
       'History',
