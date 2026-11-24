@@ -1,87 +1,87 @@
 @layer components {
-  .window {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-  }
+    .window {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+    }
 
-  .title-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: none;
-    /* One pixel taller than the window buttons at any zoom, so the bottom border shows under them. */
-    min-height: max(44px, calc(env(titlebar-area-height, 0px) + 1px));
-    padding-left: 12px;
-    /* Leaves room for the system's window buttons. */
-    padding-right: calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw) + 12px);
-    border-bottom: 1px solid var(--color-line);
-    background-color: var(--color-sunken);
-    app-region: drag;
-  }
+    .title-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: none;
+        /* One pixel taller than the window buttons at any zoom, so the bottom border shows under them. */
+        min-height: max(44px, calc(env(titlebar-area-height, 0px) + 1px));
+        padding-left: 12px;
+        /* Leaves room for the system's window buttons. */
+        padding-right: calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw) + 12px);
+        border-bottom: 1px solid var(--color-line);
+        background-color: var(--color-sunken);
+        app-region: drag;
+    }
 
-  [data-platform='darwin'] .title-bar {
-    padding-left: 84px;
-    padding-right: 12px;
-  }
+    [data-platform='darwin'] .title-bar {
+        padding-left: 84px;
+        padding-right: 12px;
+    }
 
-  .title-bar button {
-    app-region: no-drag;
-  }
+    .title-bar button {
+        app-region: no-drag;
+    }
 
-  .pane {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-    background-color: var(--color-canvas);
-  }
+    .pane {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        min-height: 0;
+        overflow: hidden;
+        background-color: var(--color-canvas);
+    }
 
-  .pane + .pane {
-    border-left: 1px solid var(--color-line);
-  }
+    .pane + .pane {
+        border-left: 1px solid var(--color-line);
+    }
 
-  .pane-head {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: none;
-    min-height: 34px;
-    padding: 0 12px;
-    font-size: var(--text-label);
-    font-weight: var(--text-label--font-weight);
-    color: var(--color-ink-2);
-    border-bottom: 1px solid var(--color-line);
-  }
+    .pane-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: none;
+        min-height: 34px;
+        padding: 0 12px;
+        font-size: var(--text-label);
+        font-weight: var(--text-label--font-weight);
+        color: var(--color-ink-2);
+        border-bottom: 1px solid var(--color-line);
+    }
 
-  .pane-head .button:focus-visible {
-    outline-offset: -2px;
-  }
+    .pane-head .button:focus-visible {
+        outline-offset: -2px;
+    }
 
-  .panel {
-    background-color: var(--color-canvas);
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-  }
+    .panel {
+        background-color: var(--color-canvas);
+        border: 1px solid var(--color-line);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+    }
 
-  .message-pane {
-    display: flex;
-    flex: 1 1 0;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    overflow: auto;
-  }
+    .message-pane {
+        display: flex;
+        flex: 1 1 0;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        overflow: auto;
+    }
 
-  .message-card {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-    max-width: 480px;
-    padding: 16px;
-  }
+    .message-card {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        max-width: 480px;
+        padding: 16px;
+    }
 }

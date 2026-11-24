@@ -27,27 +27,27 @@ export const STARTUP_PLACES = ['last-repository', 'welcome'] as const
 export type StartupPlace = (typeof STARTUP_PLACES)[number]
 
 export interface Settings {
-  startupPlace: StartupPlace
-  commandCard: boolean
-  diffViewMode: DiffViewMode
-  fileList: FileListStyle
-  logStyle: LogStyle
-  commitDetailPlace: CommitDetailPlace
-  branchList: BranchListStyle
-  branchOrder: BranchOrder
-  autoUpdate: boolean
+    startupPlace: StartupPlace
+    commandCard: boolean
+    diffViewMode: DiffViewMode
+    fileList: FileListStyle
+    logStyle: LogStyle
+    commitDetailPlace: CommitDetailPlace
+    branchList: BranchListStyle
+    branchOrder: BranchOrder
+    autoUpdate: boolean
 }
 
 export type SettingKey = keyof Settings
 
 export const DEFAULT_SETTINGS: Settings = {
-  startupPlace: 'last-repository',
-  commandCard: false,
-  diffViewMode: 'unified',
-  fileList: 'two-lists',
-  logStyle: 'graph',
-  commitDetailPlace: 'under',
-  branchList: 'one-list',
-  branchOrder: 'current-first',
-  autoUpdate: true
+    startupPlace: 'last-repository',
+    commandCard: false,
+    diffViewMode: 'unified',
+    fileList: 'two-lists',
+    logStyle: 'graph',
+    commitDetailPlace: 'under',
+    branchList: 'one-list',
+    branchOrder: 'current-first',
+    autoUpdate: true
 }

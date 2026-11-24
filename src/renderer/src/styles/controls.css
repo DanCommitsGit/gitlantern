@@ -1,141 +1,141 @@
 @layer components {
-  .button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    min-height: 28px;
-    padding: 0 10px;
-    border: 1px solid var(--color-line-strong);
-    border-radius: var(--radius-md);
-    background-color: var(--color-raised);
-    color: var(--color-ink);
-    font-weight: 500;
-    white-space: nowrap;
-    text-decoration: none;
-    cursor: pointer;
-  }
-
-  @media (hover: hover) {
-    .button:hover {
-      background-color: var(--color-hover);
+    .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 28px;
+        padding: 0 10px;
+        border: 1px solid var(--color-line-strong);
+        border-radius: var(--radius-md);
+        background-color: var(--color-raised);
+        color: var(--color-ink);
+        font-weight: 500;
+        white-space: nowrap;
+        text-decoration: none;
+        cursor: pointer;
     }
-  }
 
-  .button-primary {
-    background-color: var(--color-primary);
-    color: var(--color-on-primary);
-    border-color: transparent;
-  }
-
-  @media (hover: hover) {
-    .button-primary:hover {
-      background-color: var(--color-primary);
-      opacity: 0.88;
+    @media (hover: hover) {
+        .button:hover {
+            background-color: var(--color-hover);
+        }
     }
-  }
 
-  .button-quiet {
-    background-color: transparent;
-    border-color: transparent;
-  }
+    .button-primary {
+        background-color: var(--color-primary);
+        color: var(--color-on-primary);
+        border-color: transparent;
+    }
 
-  .button-icon {
-    width: 24px;
-    min-height: 24px;
-    padding: 0;
-  }
+    @media (hover: hover) {
+        .button-primary:hover {
+            background-color: var(--color-primary);
+            opacity: 0.88;
+        }
+    }
 
-  .button[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+    .button-quiet {
+        background-color: transparent;
+        border-color: transparent;
+    }
 
-  .input {
-    width: 100%;
-    min-height: 30px;
-    padding: 4px 8px;
-    border: 1px solid var(--color-line-strong);
-    border-radius: var(--radius-md);
-    background-color: var(--color-canvas);
-    color: var(--color-ink);
-  }
+    .button-icon {
+        width: 24px;
+        min-height: 24px;
+        padding: 0;
+    }
 
-  .input:focus {
-    outline: 2px solid var(--color-ink);
-    outline-offset: 0;
-    border-color: transparent;
-  }
+    .button[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 
-  .segmented {
-    display: inline-flex;
-    flex: none;
-    border: 1px solid var(--color-line-strong);
-    border-radius: var(--radius-md);
-  }
+    .input {
+        width: 100%;
+        min-height: 30px;
+        padding: 4px 8px;
+        border: 1px solid var(--color-line-strong);
+        border-radius: var(--radius-md);
+        background-color: var(--color-canvas);
+        color: var(--color-ink);
+    }
 
-  .segmented button {
-    min-height: 26px;
-    padding: 0 10px;
-    background-color: var(--color-raised);
-    color: var(--color-ink-2);
-    font-weight: 500;
-    white-space: nowrap;
-    cursor: pointer;
-  }
+    .input:focus {
+        outline: 2px solid var(--color-ink);
+        outline-offset: 0;
+        border-color: transparent;
+    }
 
-  .segmented button + button {
-    border-left: 1px solid var(--color-line-strong);
-  }
+    .segmented {
+        display: inline-flex;
+        flex: none;
+        border: 1px solid var(--color-line-strong);
+        border-radius: var(--radius-md);
+    }
 
-  .segmented button:first-child {
-    border-radius: calc(var(--radius-md) - 1px) 0 0 calc(var(--radius-md) - 1px);
-  }
+    .segmented button {
+        min-height: 26px;
+        padding: 0 10px;
+        background-color: var(--color-raised);
+        color: var(--color-ink-2);
+        font-weight: 500;
+        white-space: nowrap;
+        cursor: pointer;
+    }
 
-  .segmented button:last-child {
-    border-radius: 0 calc(var(--radius-md) - 1px) calc(var(--radius-md) - 1px) 0;
-  }
+    .segmented button + button {
+        border-left: 1px solid var(--color-line-strong);
+    }
 
-  .segmented button:focus-visible {
-    outline-offset: -2px;
-  }
+    .segmented button:first-child {
+        border-radius: calc(var(--radius-md) - 1px) 0 0 calc(var(--radius-md) - 1px);
+    }
 
-  .segmented button[aria-pressed='true'] {
-    background-color: var(--color-selected);
-    color: var(--color-ink);
-  }
+    .segmented button:last-child {
+        border-radius: 0 calc(var(--radius-md) - 1px) calc(var(--radius-md) - 1px) 0;
+    }
 
-  .segmented button:disabled {
-    color: var(--color-ink-3);
-    cursor: not-allowed;
-  }
+    .segmented button:focus-visible {
+        outline-offset: -2px;
+    }
 
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    min-height: 20px;
-    padding: 0 7px;
-    border-radius: var(--radius-xl);
-    font-size: var(--text-small);
-    font-weight: 500;
-    white-space: nowrap;
-  }
+    .segmented button[aria-pressed='true'] {
+        background-color: var(--color-selected);
+        color: var(--color-ink);
+    }
 
-  .banner {
-    padding: 10px 12px;
-    border-radius: var(--radius-md);
-    font-size: var(--text-small);
-    overflow-wrap: anywhere;
-    white-space: pre-wrap;
-  }
+    .segmented button:disabled {
+        color: var(--color-ink-3);
+        cursor: not-allowed;
+    }
 
-  .banner-danger {
-    background-color: var(--color-danger-tint);
-    color: var(--color-danger);
-  }
+    .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 20px;
+        padding: 0 7px;
+        border-radius: var(--radius-xl);
+        font-size: var(--text-small);
+        font-weight: 500;
+        white-space: nowrap;
+    }
 
-  .banner-warning {
-    background-color: var(--color-attn-tint);
-    color: var(--color-attn);
-  }
+    .banner {
+        padding: 10px 12px;
+        border-radius: var(--radius-md);
+        font-size: var(--text-small);
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+    }
+
+    .banner-danger {
+        background-color: var(--color-danger-tint);
+        color: var(--color-danger);
+    }
+
+    .banner-warning {
+        background-color: var(--color-attn-tint);
+        color: var(--color-attn);
+    }
 }

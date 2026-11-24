@@ -11,65 +11,65 @@ import { FileLists } from './FileLists'
 import { IdentityForm } from './IdentityForm'
 
 interface ChangesViewProps {
-  status: RepositoryStatus
-  state: RepositoryState
-  identity: Identity
-  onSaveIdentity(name: string, email: string): void
+    status: RepositoryStatus
+    state: RepositoryState
+    identity: Identity
+    onSaveIdentity(name: string, email: string): void
 }
 
 export function ChangesView({
-  status,
-  state,
-  identity,
-  onSaveIdentity
+    status,
+    state,
+    identity,
+    onSaveIdentity
 }: ChangesViewProps): React.JSX.Element {
-  const FileList = useSettings().settings.fileList === 'checkboxes' ? FileChecklist : FileLists
-  const { selected } = state
+    const FileList = useSettings().settings.fileList === 'checkboxes' ? FileChecklist : FileLists
+    const { selected } = state
 
-  return (
-    <>
-      <section className="pane w-80 flex-none">
-        <FileList
-          status={status}
-          selected={selected}
-          onSelect={state.select}
-          runCommand={(command) => void state.runCommand(command)}
-        />
-        {identity.name === null || identity.email === null ? (
-          <IdentityForm identity={identity} onSave={onSaveIdentity} />
-        ) : (
-          <CommitForm
-            branchName={status.branchName}
-            stagedCount={status.staged.length}
-            identity={identity}
-            runCommand={state.runCommand}
-          />
-        )}
-      </section>
-      <DiffView
-        title={
-          selected &&
-          `${pathLabelOf(selected.change)}${selected.staged ? ', staged' : ', unstaged'}`
-        }
-        diff={state.diff}
-        onShowLarge={state.showLargeDiff}
-      >
-        {status.hasCommits ? (
-          <DiffMessage
-            title="Nothing to commit"
-            message="Your files match the last commit. Edit something and it will show up here."
-          >
-            <div>
-              <span className="pill bg-ok-tint text-ok">Working tree clean</span>
-            </div>
-          </DiffMessage>
-        ) : (
-          <DiffMessage
-            title="No commits yet"
-            message="This repository is empty. Add a file, stage it and make your first commit."
-          />
-        )}
-      </DiffView>
-    </>
-  )
+    return (
+        <>
+            <section className="pane w-80 flex-none">
+                <FileList
+                    status={status}
+                    selected={selected}
+                    onSelect={state.select}
+                    runCommand={(command) => void state.runCommand(command)}
+                />
+                {identity.name === null || identity.email === null ? (
+                    <IdentityForm identity={identity} onSave={onSaveIdentity} />
+                ) : (
+                    <CommitForm
+                        branchName={status.branchName}
+                        stagedCount={status.staged.length}
+                        identity={identity}
+                        runCommand={state.runCommand}
+                    />
+                )}
+            </section>
+            <DiffView
+                title={
+                    selected &&
+                    `${pathLabelOf(selected.change)}${selected.staged ? ', staged' : ', unstaged'}`
+                }
+                diff={state.diff}
+                onShowLarge={state.showLargeDiff}
+            >
+                {status.hasCommits ? (
+                    <DiffMessage
+                        title="Nothing to commit"
+                        message="Your files match the last commit. Edit something and it will show up here."
+                    >
+                        <div>
+                            <span className="pill bg-ok-tint text-ok">Working tree clean</span>
+                        </div>
+                    </DiffMessage>
+                ) : (
+                    <DiffMessage
+                        title="No commits yet"
+                        message="This repository is empty. Add a file, stage it and make your first commit."
+                    />
+                )}
+            </DiffView>
+        </>
+    )
 }

@@ -1,33 +1,33 @@
 @layer base {
-  :root {
-    color-scheme: light dark;
-    /* Preflight sets 4; diffs keep the browser's 8. */
-    tab-size: 8;
-  }
+    :root {
+        color-scheme: light dark;
+        /* Preflight sets 4; diffs keep the browser's 8. */
+        tab-size: 8;
+    }
 
-  html,
-  body,
-  #root {
-    height: 100%;
-    /* Dialogs and tooltips render in portals after #root, so no z-index inside it can stack above them. */
-    isolation: isolate;
-  }
+    html,
+    body,
+    #root {
+        height: 100%;
+        /* Dialogs and tooltips render in portals after #root, so no z-index inside it can stack above them. */
+        isolation: isolate;
+    }
 
-  body {
-    overflow: hidden;
-    font-size: 13px;
-    line-height: 1.45;
-    background-color: var(--color-canvas);
-    color: var(--color-ink);
-  }
+    body {
+        overflow: hidden;
+        font-size: 13px;
+        line-height: 1.45;
+        background-color: var(--color-canvas);
+        color: var(--color-ink);
+    }
 
-  /* Chromium's default, which preflight replaces. */
-  ::placeholder {
-    color: #757575;
-  }
+    /* Chromium's default, which preflight replaces. */
+    ::placeholder {
+        color: #757575;
+    }
 
-  :focus-visible {
-    outline: 2px solid var(--color-ink);
-    outline-offset: 2px;
-  }
+    :focus-visible {
+        outline: 2px solid var(--color-ink);
+        outline-offset: 2px;
+    }
 }

@@ -1,7 +1,7 @@
 import type { GitlanternApi } from '../shared/gitlantern-api'
 
 declare global {
-  interface Window {
-    api: GitlanternApi
-  }
+    interface Window {
+        api: GitlanternApi
+    }
 }

@@ -1,75 +1,75 @@
 import type { GitCheck } from '../../../shared/gitlantern-api'
 
 const INSTALL_COMMANDS: Record<string, string> = {
-  win32: 'winget install --id Git.Git -e --source winget',
-  darwin: 'brew install git',
-  linux: 'sudo apt install git'
+    win32: 'winget install --id Git.Git -e --source winget',
+    darwin: 'brew install git',
+    linux: 'sudo apt install git'
 }
 
 const UPGRADE_COMMANDS: Record<string, string> = {
-  win32: 'winget upgrade --id Git.Git -e --source winget',
-  darwin: 'brew upgrade git',
-  linux: 'sudo apt install --only-upgrade git'
+    win32: 'winget upgrade --id Git.Git -e --source winget',
+    darwin: 'brew upgrade git',
+    linux: 'sudo apt install --only-upgrade git'
 }
 
 interface GitProblemScreenProps {
-  check: Exclude<GitCheck, { state: 'ok' }>
-  onCheckAgain(): void
-  onChooseLocation(): void
+    check: Exclude<GitCheck, { state: 'ok' }>
+    onCheckAgain(): void
+    onChooseLocation(): void
 }
 
 export function GitProblemScreen({
-  check,
-  onCheckAgain,
-  onChooseLocation
+    check,
+    onCheckAgain,
+    onChooseLocation
 }: GitProblemScreenProps): React.JSX.Element {
-  const isMissing = check.state === 'missing'
-  const command = (isMissing ? INSTALL_COMMANDS : UPGRADE_COMMANDS)[window.api.platform]
+    const isMissing = check.state === 'missing'
+    const command = (isMissing ? INSTALL_COMMANDS : UPGRADE_COMMANDS)[window.api.platform]
 
-  return (
-    <div className="message-pane">
-      <section className="panel message-card">
-        <h1 className="text-head">{isMissing ? "Git isn't installed" : 'This git is too old'}</h1>
-        <p>
-          {isMissing
-            ? "GitLantern runs the git on your computer, and it couldn't find one."
-            : `You have git ${check.version}. GitLantern needs 2.38 or newer.`}
-        </p>
-        {command && <div className="command-box">{command}</div>}
-        <div className="flex items-center gap-2">
-          {command && (
-            <button
-              className="button button-primary"
-              type="button"
-              onClick={() => void window.api.copyText(command)}
-            >
-              Copy command
-            </button>
-          )}
-          {isMissing && (
-            <a
-              className="button"
-              href="https://git-scm.com/downloads"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Download from git-scm.com
-            </a>
-          )}
-          <button className="button" type="button" onClick={onCheckAgain}>
-            Check again
-          </button>
+    return (
+        <div className="message-pane">
+            <section className="panel message-card">
+                <h1 className="text-head">{isMissing ? "Git isn't installed" : 'This git is too old'}</h1>
+                <p>
+                    {isMissing
+                        ? "GitLantern runs the git on your computer, and it couldn't find one."
+                        : `You have git ${check.version}. GitLantern needs 2.38 or newer.`}
+                </p>
+                {command && <div className="command-box">{command}</div>}
+                <div className="flex items-center gap-2">
+                    {command && (
+                        <button
+                            className="button button-primary"
+                            type="button"
+                            onClick={() => void window.api.copyText(command)}
+                        >
+                            Copy command
+                        </button>
+                    )}
+                    {isMissing && (
+                        <a
+                            className="button"
+                            href="https://git-scm.com/downloads"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            Download from git-scm.com
+                        </a>
+                    )}
+                    <button className="button" type="button" onClick={onCheckAgain}>
+                        Check again
+                    </button>
+                </div>
+                {isMissing && (
+                    <button
+                        className="button button-quiet self-start pl-0"
+                        type="button"
+                        onClick={onChooseLocation}
+                    >
+                        Already installed? Choose its location
+                    </button>
+                )}
+            </section>
         </div>
-        {isMissing && (
-          <button
-            className="button button-quiet self-start pl-0"
-            type="button"
-            onClick={onChooseLocation}
-          >
-            Already installed? Choose its location
-          </button>
-        )}
-      </section>
-    </div>
-  )
+    )
 }

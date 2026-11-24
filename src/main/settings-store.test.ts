@@ -14,90 +14,90 @@ let folder: string
 let settingsFile: string
 
 beforeEach(async () => {
-  folder = await realpath(await mkdtemp(join(tmpdir(), 'gitlantern-settings-')))
-  settingsFile = join(folder, 'settings.json')
+    folder = await realpath(await mkdtemp(join(tmpdir(), 'gitlantern-settings-')))
+    settingsFile = join(folder, 'settings.json')
 })
 
 afterEach(async () => {
-  vi.mocked(logError).mockClear()
-  await rm(folder, { recursive: true, force: true, maxRetries: 5 })
+    vi.mocked(logError).mockClear()
+    await rm(folder, { recursive: true, force: true, maxRetries: 5 })
 })
 
 describe('createSettingsStore', () => {
-  it('reads a saved file', async () => {
-    await writeFile(settingsFile, JSON.stringify({ commandCard: true }))
+    it('reads a saved file', async () => {
+        await writeFile(settingsFile, JSON.stringify({ commandCard: true }))
 
-    expect(readSettings(createSettingsStore(folder))).toEqual({
-      ...DEFAULT_SETTINGS,
-      commandCard: true
+        expect(readSettings(createSettingsStore(folder))).toEqual({
+            ...DEFAULT_SETTINGS,
+            commandCard: true
+        })
     })
-  })
 
-  it.each([
-    ['commandCard', 'yes'],
-    ['fileList', 'grid'],
-    ['diffViewMode', 'columns']
-  ])('resets a %s of the wrong type', async (key, value) => {
-    await writeFile(settingsFile, JSON.stringify({ [key]: value }))
+    it.each([
+        ['commandCard', 'yes'],
+        ['fileList', 'grid'],
+        ['diffViewMode', 'columns']
+    ])('resets a %s of the wrong type', async (key, value) => {
+        await writeFile(settingsFile, JSON.stringify({ [key]: value }))
 
-    expect(readSettings(createSettingsStore(folder))).toEqual(DEFAULT_SETTINGS)
-    expect(JSON.parse(await readFile(settingsFile, 'utf8'))).toEqual(DEFAULT_SETTINGS)
-  })
-
-  it('keeps a key it does not know', async () => {
-    await writeFile(settingsFile, JSON.stringify({ commandCard: true, newerSetting: 'on' }))
-
-    expect(readSettings(createSettingsStore(folder))).toEqual({
-      ...DEFAULT_SETTINGS,
-      commandCard: true
+        expect(readSettings(createSettingsStore(folder))).toEqual(DEFAULT_SETTINGS)
+        expect(JSON.parse(await readFile(settingsFile, 'utf8'))).toEqual(DEFAULT_SETTINGS)
     })
-    expect(JSON.parse(await readFile(settingsFile, 'utf8'))).toEqual({
-      ...DEFAULT_SETTINGS,
-      commandCard: true,
-      newerSetting: 'on'
+
+    it('keeps a key it does not know', async () => {
+        await writeFile(settingsFile, JSON.stringify({ commandCard: true, newerSetting: 'on' }))
+
+        expect(readSettings(createSettingsStore(folder))).toEqual({
+            ...DEFAULT_SETTINGS,
+            commandCard: true
+        })
+        expect(JSON.parse(await readFile(settingsFile, 'utf8'))).toEqual({
+            ...DEFAULT_SETTINGS,
+            commandCard: true,
+            newerSetting: 'on'
+        })
     })
-  })
 
-  it.each([
-    ['not JSON', '{ commandCard: tru'],
-    ['too large', JSON.stringify({ commandCard: true, pasted: 'x'.repeat(MAX_STORED_DATA_LENGTH) })]
-  ])('backs up a file that is %s, then resets it', async (_description, contents) => {
-    await writeFile(settingsFile, contents)
+    it.each([
+        ['not JSON', '{ commandCard: tru'],
+        ['too large', JSON.stringify({ commandCard: true, pasted: 'x'.repeat(MAX_STORED_DATA_LENGTH) })]
+    ])('backs up a file that is %s, then resets it', async (_description, contents) => {
+        await writeFile(settingsFile, contents)
 
-    expect(readSettings(createSettingsStore(folder))).toEqual(DEFAULT_SETTINGS)
-    expect(JSON.parse(await readFile(settingsFile, 'utf8'))).toEqual(DEFAULT_SETTINGS)
-    expect(await readFile(`${settingsFile}.bak`, 'utf8')).toBe(contents)
-    expect(logError).toHaveBeenCalledOnce()
-  })
+        expect(readSettings(createSettingsStore(folder))).toEqual(DEFAULT_SETTINGS)
+        expect(JSON.parse(await readFile(settingsFile, 'utf8'))).toEqual(DEFAULT_SETTINGS)
+        expect(await readFile(`${settingsFile}.bak`, 'utf8')).toBe(contents)
+        expect(logError).toHaveBeenCalledOnce()
+    })
 
-  it('backs up a file that breaks while the app is running', async () => {
-    await writeFile(settingsFile, JSON.stringify({ commandCard: true }))
-    const store = createSettingsStore(folder)
-    await writeFile(settingsFile, '{ commandCard: tru')
+    it('backs up a file that breaks while the app is running', async () => {
+        await writeFile(settingsFile, JSON.stringify({ commandCard: true }))
+        const store = createSettingsStore(folder)
+        await writeFile(settingsFile, '{ commandCard: tru')
 
-    expect(readSettings(store)).toEqual(DEFAULT_SETTINGS)
-    expect(await readFile(`${settingsFile}.bak`, 'utf8')).toBe('{ commandCard: tru')
-  })
+        expect(readSettings(store)).toEqual(DEFAULT_SETTINGS)
+        expect(await readFile(`${settingsFile}.bak`, 'utf8')).toBe('{ commandCard: tru')
+    })
 
-  it('uses the defaults and refuses changes when the file cannot be opened', async () => {
-    await mkdir(settingsFile)
+    it('uses the defaults and refuses changes when the file cannot be opened', async () => {
+        await mkdir(settingsFile)
 
-    const onUnavailable = vi.fn()
+        const onUnavailable = vi.fn()
 
-    const store = createSettingsStore(folder, onUnavailable)
+        const store = createSettingsStore(folder, onUnavailable)
 
-    expect(readSettings(store)).toEqual(DEFAULT_SETTINGS)
-    expect(() => saveSetting(store, 'commandCard', true)).toThrow()
-    expect(logError).toHaveBeenCalledOnce()
-    expect(onUnavailable).toHaveBeenCalledOnce()
-  })
+        expect(readSettings(store)).toEqual(DEFAULT_SETTINGS)
+        expect(() => saveSetting(store, 'commandCard', true)).toThrow()
+        expect(logError).toHaveBeenCalledOnce()
+        expect(onUnavailable).toHaveBeenCalledOnce()
+    })
 
-  it('does not report a file that opens', async () => {
-    await writeFile(settingsFile, JSON.stringify({ commandCard: true }))
-    const onUnavailable = vi.fn()
+    it('does not report a file that opens', async () => {
+        await writeFile(settingsFile, JSON.stringify({ commandCard: true }))
+        const onUnavailable = vi.fn()
 
-    createSettingsStore(folder, onUnavailable)
+        createSettingsStore(folder, onUnavailable)
 
-    expect(onUnavailable).not.toHaveBeenCalled()
-  })
+        expect(onUnavailable).not.toHaveBeenCalled()
+    })
 })

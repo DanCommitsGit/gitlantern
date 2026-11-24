@@ -16,39 +16,39 @@ import { denyAllPermissions, restrictWebContents } from './window-security'
 const SERVED_RENDERER_URL = 'app://-'
 
 const rendererUrl =
-  !app.isPackaged && process.env['ELECTRON_RENDERER_URL']
-    ? process.env['ELECTRON_RENDERER_URL']
-    : SERVED_RENDERER_URL
+    !app.isPackaged && process.env['ELECTRON_RENDERER_URL']
+        ? process.env['ELECTRON_RENDERER_URL']
+        : SERVED_RENDERER_URL
 
 serve({ directory: 'out/renderer' })
 restrictWebContents(rendererUrl)
 
 app.whenReady().then(() => {
-  app.setAppUserModelId('io.github.dancommitsgit.gitlantern')
+    app.setAppUserModelId('io.github.dancommitsgit.gitlantern')
 
-  denyAllPermissions()
-  setApplicationMenu()
-  const notices = createNotices((raised) => sendToAllWindows(IPC_CHANNELS.noticesChanged, raised))
-  const settingsStore = createSettingsStore(undefined, () => notices.raise('settings-not-opened'))
-  const updater = createAppUpdater(settingsStore)
-  registerIpcHandlers(
-    new RepositorySession(createAppDataStore(undefined, () => notices.raise('app-data-not-saved'))),
-    settingsStore,
-    updater,
-    notices,
-    rendererUrl
-  )
+    denyAllPermissions()
+    setApplicationMenu()
+    const notices = createNotices((raised) => sendToAllWindows(IPC_CHANNELS.noticesChanged, raised))
+    const settingsStore = createSettingsStore(undefined, () => notices.raise('settings-not-opened'))
+    const updater = createAppUpdater(settingsStore)
+    registerIpcHandlers(
+        new RepositorySession(createAppDataStore(undefined, () => notices.raise('app-data-not-saved'))),
+        settingsStore,
+        updater,
+        notices,
+        rendererUrl
+    )
 
-  createMainWindow(rendererUrl)
-  void updater.check()
+    createMainWindow(rendererUrl)
+    void updater.check()
 
-  app.on('activate', function () {
-    if (BrowserWindow.getAllWindows().length === 0) createMainWindow(rendererUrl)
-  })
+    app.on('activate', function () {
+        if (BrowserWindow.getAllWindows().length === 0) createMainWindow(rendererUrl)
+    })
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
 })

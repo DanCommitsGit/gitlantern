@@ -6,46 +6,46 @@ import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
 import eslintPluginReactRefresh from 'eslint-plugin-react-refresh'
 
 export default defineConfig(
-  { ignores: ['**/node_modules', '**/dist', '**/out', '.claude/worktrees'] },
-  tseslint.configs.recommended,
-  eslintPluginReact.configs.flat.recommended,
-  eslintPluginReact.configs.flat['jsx-runtime'],
-  {
-    settings: {
-      react: {
-        version: 'detect'
-      }
-    }
-  },
-  {
-    files: ['**/*.{ts,tsx}'],
-    plugins: {
-      'react-hooks': eslintPluginReactHooks,
-      'react-refresh': eslintPluginReactRefresh
-    },
-    rules: {
-      ...eslintPluginReactHooks.configs.recommended.rules,
-      ...eslintPluginReactRefresh.configs.vite.rules,
-      'no-restricted-imports': [
-        'error',
-        {
-          paths: [
-            {
-              name: 'electron-log',
-              message:
-                'Use electron-log/node. The other entries register IPC listeners that skip the origin check.'
+    { ignores: ['**/node_modules', '**/dist', '**/out', '.claude/worktrees'] },
+    tseslint.configs.recommended,
+    eslintPluginReact.configs.flat.recommended,
+    eslintPluginReact.configs.flat['jsx-runtime'],
+    {
+        settings: {
+            react: {
+                version: 'detect'
             }
-          ],
-          patterns: [
-            {
-              group: ['electron-log/*', '!electron-log/node'],
-              message:
-                'Use electron-log/node. The other entries register IPC listeners that skip the origin check.'
-            }
-          ]
         }
-      ]
-    }
-  },
-  eslintConfigPrettier
+    },
+    {
+        files: ['**/*.{ts,tsx}'],
+        plugins: {
+            'react-hooks': eslintPluginReactHooks,
+            'react-refresh': eslintPluginReactRefresh
+        },
+        rules: {
+            ...eslintPluginReactHooks.configs.recommended.rules,
+            ...eslintPluginReactRefresh.configs.vite.rules,
+            'no-restricted-imports': [
+                'error',
+                {
+                    paths: [
+                        {
+                            name: 'electron-log',
+                            message:
+                                'Use electron-log/node. The other entries register IPC listeners that skip the origin check.'
+                        }
+                    ],
+                    patterns: [
+                        {
+                            group: ['electron-log/*', '!electron-log/node'],
+                            message:
+                                'Use electron-log/node. The other entries register IPC listeners that skip the origin check.'
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    eslintConfigPrettier
 )

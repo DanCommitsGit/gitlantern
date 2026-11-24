@@ -1,34 +1,34 @@
 /* Gold marks only the command layer and HEAD. */
 @layer components {
-  .command {
-    font-family: var(--font-mono);
-    font-size: var(--text-code);
-    color: var(--color-lamp);
-  }
+    .command {
+        font-family: var(--font-mono);
+        font-size: var(--text-code);
+        color: var(--color-lamp);
+    }
 
-  .command-past {
-    font-family: var(--font-mono);
-    font-size: var(--text-code);
-    color: var(--color-ink);
-  }
+    .command-past {
+        font-family: var(--font-mono);
+        font-size: var(--text-code);
+        color: var(--color-ink);
+    }
 
-  .command-box {
-    padding: 8px 10px;
-    border: 1px solid var(--color-lamp-line);
-    border-radius: var(--radius-md);
-    background-color: var(--color-lamp-tint);
-    color: var(--color-lamp);
-    font: 500 var(--text-code) / 1.5 var(--font-mono);
-    overflow-wrap: anywhere;
-  }
+    .command-box {
+        padding: 8px 10px;
+        border: 1px solid var(--color-lamp-line);
+        border-radius: var(--radius-md);
+        background-color: var(--color-lamp-tint);
+        color: var(--color-lamp);
+        font: 500 var(--text-code) / 1.5 var(--font-mono);
+        overflow-wrap: anywhere;
+    }
 
-  .output {
-    padding: 8px 10px;
-    border-radius: var(--radius-md);
-    background-color: var(--color-sunken);
-    color: var(--color-ink-2);
-    font: 400 var(--text-small) / 1.5 var(--font-mono);
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-  }
+    .output {
+        padding: 8px 10px;
+        border-radius: var(--radius-md);
+        background-color: var(--color-sunken);
+        color: var(--color-ink-2);
+        font: 400 var(--text-small) / 1.5 var(--font-mono);
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
 }

@@ -12,9 +12,9 @@ import { SettingsProvider } from './settings/SettingsProvider'
 document.documentElement.dataset['platform'] = window.api.platform
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <SettingsProvider>
-      <App />
-    </SettingsProvider>
-  </StrictMode>
+    <StrictMode>
+        <SettingsProvider>
+            <App />
+        </SettingsProvider>
+    </StrictMode>
 )

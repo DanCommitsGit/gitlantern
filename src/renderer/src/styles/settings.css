@@ -1,13 +1,13 @@
 @layer components {
-  .setting-check {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    cursor: pointer;
-  }
+    .setting-check {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        cursor: pointer;
+    }
 
-  .setting-check input {
-    margin-top: 2px;
-    accent-color: var(--color-ink);
-  }
+    .setting-check input {
+        margin-top: 2px;
+        accent-color: var(--color-ink);
+    }
 }

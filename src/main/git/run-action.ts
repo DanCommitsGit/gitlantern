@@ -6,23 +6,23 @@ import { runGit } from './run-git'
 const ACTION_TIMEOUT_MILLISECONDS = 10 * 60 * 1000
 
 export async function runAction(
-  repository: { gitPath: string; repositoryPath: string },
-  action: GitAction
+    repository: { gitPath: string; repositoryPath: string },
+    action: GitAction
 ): Promise<CommandRecord> {
-  const result = await runGit({
-    ...repository,
-    gitArguments: action.gitArguments,
-    stdin: action.stdin,
-    timeoutMilliseconds: ACTION_TIMEOUT_MILLISECONDS
-  })
+    const result = await runGit({
+        ...repository,
+        gitArguments: action.gitArguments,
+        stdin: action.stdin,
+        timeoutMilliseconds: ACTION_TIMEOUT_MILLISECONDS
+    })
 
-  return {
-    typedCommand: formatCommand(action.typedArguments),
-    ranCommand: formatCommand(action.gitArguments),
-    exactCommand: formatCommand(result.fullArguments),
-    differsFromTyped: action.differsFromTyped === true,
-    exitCode: result.exitCode,
-    output: `${result.stdout.toString()}${result.stderr.toString()}`.trim(),
-    finishedAt: Date.now()
-  }
+    return {
+        typedCommand: formatCommand(action.typedArguments),
+        ranCommand: formatCommand(action.gitArguments),
+        exactCommand: formatCommand(result.fullArguments),
+        differsFromTyped: action.differsFromTyped === true,
+        exitCode: result.exitCode,
+        output: `${result.stdout.toString()}${result.stderr.toString()}`.trim(),
+        finishedAt: Date.now()
+    }
 }

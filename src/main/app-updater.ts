@@ -9,18 +9,18 @@ import { createUpdater, type Updater } from './updater'
 const RELEASES_URL = 'https://github.com/DanCommitsGit/gitlantern/releases'
 
 export function createAppUpdater(settingsStore: SettingsStore): Updater {
-  // Failures reach the log through the 'error' event.
-  autoUpdater.logger = null
+    // Failures reach the log through the 'error' event.
+    autoUpdater.logger = null
 
-  return createUpdater(autoUpdater, {
-    currentVersion: app.getVersion(),
-    // The macOS build has no Developer ID signature, which installing an update there needs.
-    // The portable build is a single exe that the installer-based update would not replace.
-    canInstall: process.platform !== 'darwin' && !process.env.PORTABLE_EXECUTABLE_FILE,
-    canCheck: app.isPackaged,
-    isAutomatic: () => settingsStore.get('autoUpdate'),
-    openDownloadPage: (version) => void shell.openExternal(`${RELEASES_URL}/tag/v${version}`),
-    onChange: (status) => sendToAllWindows(IPC_CHANNELS.updateStatusChanged, status),
-    onError: (error) => logError('Update failed', error)
-  })
+    return createUpdater(autoUpdater, {
+        currentVersion: app.getVersion(),
+        // The macOS build has no Developer ID signature, which installing an update there needs.
+        // The portable build is a single exe that the installer-based update would not replace.
+        canInstall: process.platform !== 'darwin' && !process.env.PORTABLE_EXECUTABLE_FILE,
+        canCheck: app.isPackaged,
+        isAutomatic: () => settingsStore.get('autoUpdate'),
+        openDownloadPage: (version) => void shell.openExternal(`${RELEASES_URL}/tag/v${version}`),
+        onChange: (status) => sendToAllWindows(IPC_CHANNELS.updateStatusChanged, status),
+        onError: (error) => logError('Update failed', error)
+    })
 }
