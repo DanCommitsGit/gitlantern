@@ -50,7 +50,8 @@
 
 ## First launch
 
-- A welcome screen offers Open, Create and recent repos, with no setup wizard. Clone joins them when sync exists.
+- A welcome screen offers Open, Create, Clone and recent repos, with no setup wizard.
+- Clone opens a dialog with a URL field and a parent folder to clone into. It shows the full path of the new folder and the `git clone` command. The dialog can't be closed while git runs. A failure stays in the dialog with git's message and the fields as they were. On success the repository opens and the command goes into the command history.
 - The app opens the repository that was open when it last quit. It shows the welcome screen when none was open, the repository can't be opened, or it needs trust. The Startup settings section can switch this to always showing the welcome screen.
 
 ## Settings

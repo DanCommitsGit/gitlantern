@@ -76,6 +76,9 @@ export function registerIpcHandlers(
     )
     handle(IPC_CHANNELS.trustPendingRepository, () => session.trustPending())
     handle(IPC_CHANNELS.createRepository, (folder) => session.create(requireString(folder)))
+    handle(IPC_CHANNELS.cloneRepository, (url, parentFolder) =>
+        session.clone(requireNonEmptyString(url), requireNonEmptyString(parentFolder))
+    )
     handle(IPC_CHANNELS.closeRepository, () => session.close())
     handle(IPC_CHANNELS.readStatus, () => session.readStatus())
     handle(IPC_CHANNELS.readBranches, () => session.readBranches())

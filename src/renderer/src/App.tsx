@@ -126,6 +126,10 @@ function App(): React.JSX.Element {
                     problem={openProblem}
                     onOpenFolder={(folder) => void open(window.api.openRepository(folder))}
                     onCreateInFolder={(folder) => void createInFolder(folder)}
+                    onCloned={(result, record) => {
+                        addRecord(record)
+                        applyOpenResult(result)
+                    }}
                     onFailure={showOpenFailure}
                 />
             )}

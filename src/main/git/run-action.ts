@@ -6,7 +6,7 @@ import { runGit } from './run-git'
 const ACTION_TIMEOUT_MILLISECONDS = 10 * 60 * 1000
 
 export async function runAction(
-    repository: { gitPath: string; repositoryPath: string },
+    repository: { gitPath: string; repositoryPath?: string },
     action: GitAction
 ): Promise<CommandRecord> {
     const result = await runGit({

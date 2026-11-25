@@ -102,6 +102,14 @@ export function pushAction(publishTarget: PublishTarget | null): GitAction {
           }
 }
 
+export function cloneAction(url: string, destination: string): GitAction {
+    return {
+        typedArguments: ['clone', url, destination],
+        gitArguments: ['clone', '--', url, destination],
+        contactsRemote: true
+    }
+}
+
 export function initAction(): GitAction {
     return { typedArguments: ['init'], gitArguments: ['init'] }
 }

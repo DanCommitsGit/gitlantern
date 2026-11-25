@@ -1,6 +1,8 @@
 import { createHash } from 'node:crypto'
-import { basename, normalize } from 'node:path'
+import { basename, isAbsolute, normalize, sep } from 'node:path'
+import { cloneDestination } from '../shared/clone-destination'
 import {
+    cloneAction,
     commitAction,
     fetchAction,
     initAction,
@@ -15,7 +17,7 @@ import {
 } from '../shared/git-actions'
 import { publishTargetOf } from '../shared/publish-target'
 import type { CommandRecord } from '../shared/command-record'
-import type { GitCheck, Identity, OpenResult } from '../shared/gitlantern-api'
+import type { CloneResult, GitCheck, Identity, OpenResult } from '../shared/gitlantern-api'
 import type { CommitLogPage, LogScope } from '../shared/history-types'
 import type { Branch, FileChange, FileDiff, RepositoryStatus } from '../shared/repository-types'
 import { readBranches } from './git/branches'
@@ -148,6 +150,21 @@ export class RepositorySession {
         return record.exitCode === 0
             ? { result: await this.open(folder), record }
             : { result: { kind: 'failed', message: record.output }, record }
+    }
+
+    async clone(url: string, parentFolder: string): Promise<CloneResult> {
+        if (!isAbsolute(parentFolder)) throw new Error('Expected a full folder path')
+        const destination = cloneDestination(url, parentFolder, sep)
+        if (destination === null) throw new Error('The URL has no repository name')
+
+        const record = await runAction({ gitPath: this.requireGitPath() }, cloneAction(url, destination))
+        if (record.exitCode !== 0) return { kind: 'failed', message: record.output }
+        // The command ran, so it is returned for the history even when the new repository can't be opened.
+        const result = await this.open(destination).catch((error: unknown): OpenResult => ({
+            kind: 'failed',
+            message: error instanceof Error ? error.message : String(error)
+        }))
+        return { kind: 'cloned', result, record }
     }
 
     close(): void {

@@ -32,6 +32,9 @@ export type OpenResult =
     | { kind: 'needs-trust'; path: string; programs: RepositoryProgramSummary[] }
     | { kind: 'failed'; message: string }
 
+export type CloneResult =
+    { kind: 'cloned'; result: OpenResult; record: CommandRecord } | { kind: 'failed'; message: string }
+
 export interface RecentRepository {
     path: string
     name: string
@@ -48,6 +51,8 @@ export interface GitlanternApi {
     openStartupRepository(): Promise<OpenResult | null>
     trustPendingRepository(): Promise<OpenResult>
     createRepository(folder: string): Promise<{ result: OpenResult; record: CommandRecord | null }>
+    /** Clones into a new folder named after the URL inside `parentFolder`, and opens it. */
+    cloneRepository(url: string, parentFolder: string): Promise<CloneResult>
     closeRepository(): Promise<void>
     readStatus(): Promise<RepositoryStatus>
     readBranches(): Promise<Branch[]>
@@ -99,6 +104,7 @@ export const IPC_CHANNELS = {
     openStartupRepository: 'repository:open-startup',
     trustPendingRepository: 'repository:trust-pending',
     createRepository: 'repository:create',
+    cloneRepository: 'repository:clone',
     closeRepository: 'repository:close',
     readStatus: 'repository:status',
     readBranches: 'repository:branches',

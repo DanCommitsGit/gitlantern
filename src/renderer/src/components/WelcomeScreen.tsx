@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
+import type { CommandRecord } from '../../../shared/command-record'
 import type { OpenResult, RecentRepository } from '../../../shared/gitlantern-api'
+import { CloneDialog } from './CloneDialog'
+import { WelcomeAction } from './WelcomeAction'
 
 interface WelcomeScreenProps {
     gitVersion: string
@@ -7,6 +10,7 @@ interface WelcomeScreenProps {
     problem: Extract<OpenResult, { kind: 'not-a-repository' | 'failed' }> | null
     onOpenFolder(folder: string): void
     onCreateInFolder(folder: string): void
+    onCloned(result: OpenResult, record: CommandRecord): void
     onFailure(error: unknown): void
 }
 
@@ -16,9 +20,11 @@ export function WelcomeScreen({
     problem,
     onOpenFolder,
     onCreateInFolder,
+    onCloned,
     onFailure
 }: WelcomeScreenProps): React.JSX.Element {
     const [recentRepositories, setRecentRepositories] = useState<RecentRepository[]>([])
+    const [isCloneDialogOpen, setIsCloneDialogOpen] = useState(false)
 
     useEffect(() => {
         void window.api.recentRepositories().then(setRecentRepositories, (error: unknown) => {
@@ -69,24 +75,24 @@ export function WelcomeScreen({
                 )}
                 {problem?.kind === 'failed' && <div className="banner banner-danger">{problem.message}</div>}
 
-                <div className="grid grid-cols-2 gap-3">
-                    <button
-                        className="panel flex cursor-pointer flex-col gap-1 p-4 text-left hover:bg-hover"
-                        type="button"
+                <div className="grid grid-cols-3 gap-3">
+                    <WelcomeAction
+                        title="Open"
+                        description="A repository on this computer"
                         onClick={() => void chooseFolderThen(onOpenFolder)}
-                    >
-                        <span className="text-head">Open</span>
-                        <span className="text-small text-ink-2">A repository on this computer</span>
-                    </button>
-                    <button
-                        className="panel flex cursor-pointer flex-col gap-1 p-4 text-left hover:bg-hover"
-                        type="button"
+                    />
+                    <WelcomeAction
+                        title="Create"
+                        description="Start a new one in a folder"
+                        command="git init"
                         onClick={() => void chooseFolderThen(onCreateInFolder)}
-                    >
-                        <span className="text-head">Create</span>
-                        <span className="text-small text-ink-2">Start a new one in a folder</span>
-                        <span className="command">git init</span>
-                    </button>
+                    />
+                    <WelcomeAction
+                        title="Clone"
+                        description="A repository from a URL"
+                        command="git clone"
+                        onClick={() => setIsCloneDialogOpen(true)}
+                    />
                 </div>
 
                 {recentRepositories.length > 0 && (
@@ -115,6 +121,15 @@ export function WelcomeScreen({
                     Using git {gitVersion} from {gitPath}
                 </p>
             </div>
+            {isCloneDialogOpen && (
+                <CloneDialog
+                    onCloned={(result, record) => {
+                        setIsCloneDialogOpen(false)
+                        onCloned(result, record)
+                    }}
+                    onClose={() => setIsCloneDialogOpen(false)}
+                />
+            )}
         </div>
     )
 }

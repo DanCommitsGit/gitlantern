@@ -13,6 +13,8 @@ const api: GitlanternApi = {
     openStartupRepository: () => ipcRenderer.invoke(IPC_CHANNELS.openStartupRepository),
     trustPendingRepository: () => ipcRenderer.invoke(IPC_CHANNELS.trustPendingRepository),
     createRepository: (folder) => ipcRenderer.invoke(IPC_CHANNELS.createRepository, folder),
+    cloneRepository: (url, parentFolder) =>
+        ipcRenderer.invoke(IPC_CHANNELS.cloneRepository, url, parentFolder),
     closeRepository: () => ipcRenderer.invoke(IPC_CHANNELS.closeRepository),
     readStatus: () => ipcRenderer.invoke(IPC_CHANNELS.readStatus),
     readBranches: () => ipcRenderer.invoke(IPC_CHANNELS.readBranches),
