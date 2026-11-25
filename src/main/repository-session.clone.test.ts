@@ -44,12 +44,12 @@ describe('RepositorySession.clone', () => {
     })
 
     it('clones into a folder named after the URL and opens it', async () => {
-        const result = await session.clone(remote.path, parentFolder)
+        const result = await session.clone(remote.path, parentFolder, () => undefined)
 
         expect(result).toMatchObject({
             kind: 'cloned',
             result: { kind: 'opened', repository: { path: normalize(clonedFolder) } },
-            record: { exitCode: 0, typedCommand: expect.stringMatching(/^git clone /) }
+            record: { exitCode: 0 }
         })
         expect(existsSync(join(clonedFolder, 'first.txt'))).toBe(true)
     })
@@ -57,7 +57,7 @@ describe('RepositorySession.clone', () => {
     it('keeps the clone and its command when the new repository cannot be opened', async () => {
         vi.spyOn(session, 'open').mockRejectedValueOnce(new Error('no access'))
 
-        const result = await session.clone(remote.path, parentFolder)
+        const result = await session.clone(remote.path, parentFolder, () => undefined)
 
         expect(result).toMatchObject({
             kind: 'cloned',
@@ -67,10 +67,25 @@ describe('RepositorySession.clone', () => {
         expect(existsSync(join(clonedFolder, 'first.txt'))).toBe(true)
     })
 
+    it('reports git progress lines and records the command that ran', async () => {
+        const lines: string[] = []
+
+        const result = await session.clone(remote.path, parentFolder, (line) => lines.push(line))
+
+        // Git's wording is translated, but the folder it names is not.
+        expect(lines.join('\n')).toContain(clonedFolder)
+        expect(result).toMatchObject({
+            record: {
+                typedCommand: expect.stringMatching(/^git clone /),
+                ranCommand: expect.stringContaining('--progress')
+            }
+        })
+    })
+
     it('reports a failure and leaves no folder behind', async () => {
         const missingRemote = join(parentFolder, 'no-such-remote.git')
 
-        const result = await session.clone(missingRemote, parentFolder)
+        const result = await session.clone(missingRemote, parentFolder, () => undefined)
 
         expect(result).toMatchObject({ kind: 'failed' })
         expect(existsSync(join(parentFolder, 'no-such-remote'))).toBe(false)
@@ -80,17 +95,21 @@ describe('RepositorySession.clone', () => {
         const existingFolder = join(parentFolder, 'no-such-remote')
         mkdirSync(existingFolder)
 
-        const result = await session.clone(join(parentFolder, 'no-such-remote.git'), parentFolder)
+        const result = await session.clone(
+            join(parentFolder, 'no-such-remote.git'),
+            parentFolder,
+            () => undefined
+        )
 
         expect(result.kind).toBe('failed')
         expect(existsSync(existingFolder)).toBe(true)
     })
 
     it('refuses a URL with no repository name', async () => {
-        await expect(session.clone('..', parentFolder)).rejects.toThrow()
+        await expect(session.clone('..', parentFolder, () => undefined)).rejects.toThrow()
     })
 
     it('refuses a folder that is not a full path', async () => {
-        await expect(session.clone(remote.path, 'relative')).rejects.toThrow()
+        await expect(session.clone(remote.path, 'relative', () => undefined)).rejects.toThrow()
     })
 })

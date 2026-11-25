@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process'
+import { StringDecoder } from 'node:string_decoder'
 import { promisify } from 'node:util'
 
 const execFileAsync = promisify(execFile)
@@ -14,6 +15,8 @@ export interface GitCommand {
     timeoutMilliseconds?: number
     signal?: AbortSignal
     environment?: NodeJS.ProcessEnv
+    /** Called with each piece of stderr as it arrives, before the command finishes. */
+    onStderr?: (chunk: string) => void
 }
 
 export interface GitResult {
@@ -45,6 +48,12 @@ export async function runGit(command: GitCommand): Promise<GitResult> {
         env: command.environment
     })
     pendingResult.child.stdin?.end(command.stdin)
+    const { onStderr } = command
+    if (onStderr !== undefined) {
+        // A chunk can end partway through a character.
+        const decoder = new StringDecoder('utf8')
+        pendingResult.child.stderr?.on('data', (chunk: Buffer) => onStderr(decoder.write(chunk)))
+    }
 
     try {
         const { stdout, stderr } = await pendingResult

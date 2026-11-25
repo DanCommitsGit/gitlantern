@@ -152,12 +152,14 @@ export class RepositorySession {
             : { result: { kind: 'failed', message: record.output }, record }
     }
 
-    async clone(url: string, parentFolder: string): Promise<CloneResult> {
+    async clone(url: string, parentFolder: string, onProgress: (line: string) => void): Promise<CloneResult> {
         if (!isAbsolute(parentFolder)) throw new Error('Expected a full folder path')
         const destination = cloneDestination(url, parentFolder, sep)
         if (destination === null) throw new Error('The URL has no repository name')
 
-        const record = await runAction({ gitPath: this.requireGitPath() }, cloneAction(url, destination))
+        const record = await runAction({ gitPath: this.requireGitPath() }, cloneAction(url, destination), {
+            onProgress
+        })
         if (record.exitCode !== 0) return { kind: 'failed', message: record.output }
         // The command ran, so it is returned for the history even when the new repository can't be opened.
         const result = await this.open(destination).catch((error: unknown): OpenResult => ({

@@ -53,6 +53,8 @@ export interface GitlanternApi {
     createRepository(folder: string): Promise<{ result: OpenResult; record: CommandRecord | null }>
     /** Clones into a new folder named after the URL inside `parentFolder`, and opens it. */
     cloneRepository(url: string, parentFolder: string): Promise<CloneResult>
+    /** Calls `listener` with the newest line of git's progress output while a clone runs. Returns a function that removes the listener. */
+    onCloneProgress(listener: (line: string) => void): () => void
     closeRepository(): Promise<void>
     readStatus(): Promise<RepositoryStatus>
     readBranches(): Promise<Branch[]>
@@ -105,6 +107,7 @@ export const IPC_CHANNELS = {
     trustPendingRepository: 'repository:trust-pending',
     createRepository: 'repository:create',
     cloneRepository: 'repository:clone',
+    cloneProgressChanged: 'repository:clone-progress-changed',
     closeRepository: 'repository:close',
     readStatus: 'repository:status',
     readBranches: 'repository:branches',

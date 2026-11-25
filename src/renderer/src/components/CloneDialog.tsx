@@ -1,5 +1,5 @@
 import { AlertDialog } from '@base-ui/react/alert-dialog'
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { cloneDestination } from '../../../shared/clone-destination'
 import type { CommandRecord } from '../../../shared/command-record'
 import { cloneAction, formatCommand } from '../../../shared/git-actions'
@@ -16,7 +16,10 @@ export function CloneDialog({ onCloned, onClose }: CloneDialogProps): React.JSX.
     const [url, setUrl] = useState('')
     const [parentFolder, setParentFolder] = useState<string | null>(null)
     const [isCloning, setIsCloning] = useState(false)
+    const [progress, setProgress] = useState('')
     const [failure, setFailure] = useState<string | null>(null)
+
+    useEffect(() => window.api.onCloneProgress(setProgress), [])
 
     const trimmedUrl = url.trim()
     const separator = window.api.platform === 'win32' ? '\\' : '/'
@@ -36,6 +39,7 @@ export function CloneDialog({ onCloned, onClose }: CloneDialogProps): React.JSX.
         if (destination === null || parentFolder === null || isCloning) return
 
         setFailure(null)
+        setProgress('')
         setIsCloning(true)
         try {
             const outcome = await window.api.cloneRepository(trimmedUrl, parentFolder)
@@ -105,6 +109,11 @@ export function CloneDialog({ onCloned, onClose }: CloneDialogProps): React.JSX.
                                 ? 'git clone'
                                 : formatCommand(cloneAction(trimmedUrl, destination).typedArguments)}
                         </span>
+                        {isCloning && progress !== '' && (
+                            <p className="font-mono text-small text-ink-2" role="status">
+                                {progress}
+                            </p>
+                        )}
                         {failure !== null && (
                             <div className="output" role="alert">
                                 {failure}

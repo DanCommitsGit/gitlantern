@@ -9,6 +9,7 @@ import {
 } from 'electron'
 import { basename } from 'node:path'
 import { IPC_CHANNELS } from '../shared/gitlantern-api'
+import { sendToAllWindows } from './broadcast'
 import {
     requireBoolean,
     requireCommitHash,
@@ -77,7 +78,9 @@ export function registerIpcHandlers(
     handle(IPC_CHANNELS.trustPendingRepository, () => session.trustPending())
     handle(IPC_CHANNELS.createRepository, (folder) => session.create(requireString(folder)))
     handle(IPC_CHANNELS.cloneRepository, (url, parentFolder) =>
-        session.clone(requireNonEmptyString(url), requireNonEmptyString(parentFolder))
+        session.clone(requireNonEmptyString(url), requireNonEmptyString(parentFolder), (line) =>
+            sendToAllWindows(IPC_CHANNELS.cloneProgressChanged, line)
+        )
     )
     handle(IPC_CHANNELS.closeRepository, () => session.close())
     handle(IPC_CHANNELS.readStatus, () => session.readStatus())

@@ -102,10 +102,11 @@ export function pushAction(publishTarget: PublishTarget | null): GitAction {
           }
 }
 
+// --progress makes git report progress when its output isn't a terminal.
 export function cloneAction(url: string, destination: string): GitAction {
     return {
         typedArguments: ['clone', url, destination],
-        gitArguments: ['clone', '--', url, destination],
+        gitArguments: ['clone', '--progress', '--', url, destination],
         contactsRemote: true
     }
 }
