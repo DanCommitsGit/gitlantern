@@ -1,5 +1,6 @@
 import { AlertDialog } from '@base-ui/react/alert-dialog'
 import type { RepositoryProgramSummary } from '../../../shared/gitlantern-api'
+import { DimWindowControls } from './DimWindowControls'
 
 interface TrustDialogProps {
     path: string
@@ -12,6 +13,7 @@ export function TrustDialog({ path, programs, onTrust, onCancel }: TrustDialogPr
     return (
         <AlertDialog.Root open onOpenChange={(open) => !open && onCancel()}>
             <AlertDialog.Portal>
+                <DimWindowControls />
                 <AlertDialog.Backdrop className="dialog-backdrop" />
                 <AlertDialog.Popup className="dialog">
                     <AlertDialog.Title className="text-title">

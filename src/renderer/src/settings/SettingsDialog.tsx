@@ -1,6 +1,7 @@
 import { Dialog } from '@base-ui/react/dialog'
 import { Settings2, X } from 'lucide-react'
 import { useRef, useState } from 'react'
+import { DimWindowControls } from '../components/DimWindowControls'
 import { UpdateButton } from '../components/UpdateButton'
 import { searchSettingsSections } from './search-settings'
 import { useSettings } from './settings-context'
@@ -53,6 +54,7 @@ export function SettingsDialog(): React.JSX.Element {
                 <Settings2 className="size-4 flex-none" />
             </Dialog.Trigger>
             <Dialog.Portal>
+                <DimWindowControls />
                 <Dialog.Backdrop className="dialog-backdrop" />
                 <Dialog.Popup className="dialog h-[min(520px,calc(100vh-96px))] w-[min(760px,calc(100vw-48px))] flex-row gap-0 overflow-hidden p-0">
                     <nav

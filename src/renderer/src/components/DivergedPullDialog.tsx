@@ -1,5 +1,6 @@
 import { AlertDialog } from '@base-ui/react/alert-dialog'
 import { formatCommand, pullAction, type PullMode } from '../../../shared/git-actions'
+import { DimWindowControls } from './DimWindowControls'
 
 const CHOICES: { mode: PullMode; label: string }[] = [
     { mode: 'merge', label: 'Merge' },
@@ -30,6 +31,7 @@ export function DivergedPullDialog({
     return (
         <AlertDialog.Root open onOpenChange={(open) => !open && onCancel()}>
             <AlertDialog.Portal>
+                <DimWindowControls />
                 <AlertDialog.Backdrop className="dialog-backdrop" />
                 <AlertDialog.Popup className="dialog">
                     <AlertDialog.Title className="text-title">Both sides have changes</AlertDialog.Title>

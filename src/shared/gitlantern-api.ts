@@ -67,6 +67,8 @@ export interface GitlanternApi {
     push(): Promise<CommandRecord>
     saveIdentity(name: string, email: string): Promise<{ identity: Identity; records: CommandRecord[] }>
     copyText(text: string): Promise<void>
+    /** Tints the window controls like the dialog scrim when `open` is true, and restores them when false. */
+    setDialogOpen(open: boolean): Promise<void>
     readSettings(): Promise<Settings>
     saveSetting<Key extends SettingKey>(key: Key, value: Settings[Key]): Promise<Settings>
     showLogs(): Promise<void>
@@ -115,6 +117,7 @@ export const IPC_CHANNELS = {
     push: 'repository:push',
     saveIdentity: 'git:save-identity',
     copyText: 'clipboard:copy-text',
+    setDialogOpen: 'window:set-dialog-open',
     readSettings: 'settings:read',
     saveSetting: 'settings:save',
     showLogs: 'logs:show',

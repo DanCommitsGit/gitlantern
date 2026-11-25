@@ -23,6 +23,7 @@ import {
     requireStrings
 } from './ipc-validation'
 import { logError, showLogFile } from './log'
+import { setDialogOpen } from './main-window'
 import type { Notifications } from './notifications'
 import type { RepositorySession } from './repository-session'
 import { readSettings, saveSetting, type SettingsStore } from './settings'
@@ -111,6 +112,7 @@ export function registerIpcHandlers(
         session.saveIdentity(requireString(name), requireString(email))
     )
     handle(IPC_CHANNELS.copyText, (text) => clipboard.writeText(requireString(text)))
+    handle(IPC_CHANNELS.setDialogOpen, (open) => setDialogOpen(requireBoolean(open)))
     handle(IPC_CHANNELS.readSettings, () => readSettings(settingsStore))
     handle(IPC_CHANNELS.saveSetting, (key, value) => {
         const savedSettings = saveSetting(settingsStore, key, value)

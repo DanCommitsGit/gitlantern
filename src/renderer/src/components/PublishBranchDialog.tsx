@@ -1,5 +1,6 @@
 import { AlertDialog } from '@base-ui/react/alert-dialog'
 import { formatCommand, pushAction, type PublishTarget } from '../../../shared/git-actions'
+import { DimWindowControls } from './DimWindowControls'
 
 interface PublishBranchDialogProps {
     target: PublishTarget
@@ -15,6 +16,7 @@ export function PublishBranchDialog({
     return (
         <AlertDialog.Root open onOpenChange={(open) => !open && onCancel()}>
             <AlertDialog.Portal>
+                <DimWindowControls />
                 <AlertDialog.Backdrop className="dialog-backdrop" />
                 <AlertDialog.Popup className="dialog">
                     <AlertDialog.Title className="text-title">
