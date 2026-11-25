@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.5.0](https://github.com/DanCommitsGit/gitlantern/compare/v0.4.0...v0.5.0) (2026-11-25)
+
+
+### Features
+
+* add a notifications button to the title bar that lists errors and warnings ([c8be8cf](https://github.com/DanCommitsGit/gitlantern/commit/c8be8cfb97c1a61e380e6ba9da0195ecbfbd9be8))
+* add Fetch, Pull and Push buttons to the title bar ([1bf2799](https://github.com/DanCommitsGit/gitlantern/commit/1bf2799d197c6b27af6bd5320734dbe8a471126c))
+* choose a light, dark or system theme in settings ([050a7e0](https://github.com/DanCommitsGit/gitlantern/commit/050a7e00154afdf61814f2afd17b85244fe07226))
+* close error and warning banners with an X ([25d3cc2](https://github.com/DanCommitsGit/gitlantern/commit/25d3cc2ff12a41194c1cfd8fd24ede74d854493c))
+* open the last repository on startup, with a setting to show the welcome screen instead ([2ff4953](https://github.com/DanCommitsGit/gitlantern/commit/2ff4953291c0e54f7cd83c04df8639e819415425))
+* show every local branch in the Branches list, not just the current one ([a07f918](https://github.com/DanCommitsGit/gitlantern/commit/a07f918abe0e2ef1b3d8820d2bb4a81464139441))
+* warn when recent repositories and trusted programs can't be saved ([a60b5fe](https://github.com/DanCommitsGit/gitlantern/commit/a60b5fe6cb4fbe1f1514ffb22c677aae660b147b))
+* warn when your settings can't be opened and the defaults are used ([8f3b2e8](https://github.com/DanCommitsGit/gitlantern/commit/8f3b2e8a4c89ed21ccc31527469dbbc6463d7c80))
+
+
+### Bug Fixes
+
+* dim the window controls when a dialog is open ([6ea0c9d](https://github.com/DanCommitsGit/gitlantern/commit/6ea0c9d638614720fdb069b5a7ef6cfb2e237970))
+* remove a notification when the problem it reports stops, and keep a dismissed banner hidden when it repeats ([a8fb142](https://github.com/DanCommitsGit/gitlantern/commit/a8fb14205e45751c381b096f75f6dcb3e61b727a))
+* remove the "Working tree clean" label that looked like a button ([e3389e7](https://github.com/DanCommitsGit/gitlantern/commit/e3389e70c2381bc43781ff9682b04de0b8a644b5))
+* show an error when a repository can't be opened instead of doing nothing ([37f3470](https://github.com/DanCommitsGit/gitlantern/commit/37f3470e3de396561c308c313c68e4f0a0f4fcbe))
+* show errors from reading the commit history and a commit's files in the notifications list ([ff3a7ee](https://github.com/DanCommitsGit/gitlantern/commit/ff3a7ee1f7e008224ff2259e04202dce9091ade7))
+* show the empty last line in staged changes to files named like 2:notes.txt ([96de720](https://github.com/DanCommitsGit/gitlantern/commit/96de72044e842f8e0da282d9158dd3e7b3c472f6))
+* show U for new files that aren't staged yet and ! for files with merge conflicts ([f131867](https://github.com/DanCommitsGit/gitlantern/commit/f131867377fb055aea92f643310740a7c4c8a0f9))
+* stop the app being clickable while choosing git's location ([4889e5f](https://github.com/DanCommitsGit/gitlantern/commit/4889e5f3337fb0a69a45ea64c4425ad85b601d49))
+
 ## [0.4.0](https://github.com/DanCommitsGit/gitlantern/compare/v0.3.0...v0.4.0) (2026-11-18)
 
 
