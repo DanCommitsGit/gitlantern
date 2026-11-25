@@ -15,6 +15,7 @@ const api: GitlanternApi = {
     createRepository: (folder) => ipcRenderer.invoke(IPC_CHANNELS.createRepository, folder),
     cloneRepository: (url, parentFolder) =>
         ipcRenderer.invoke(IPC_CHANNELS.cloneRepository, url, parentFolder),
+    cancelClone: () => ipcRenderer.invoke(IPC_CHANNELS.cancelClone),
     onCloneProgress: (listener) => {
         const forward = (_event: IpcRendererEvent, line: string): void => listener(line)
         ipcRenderer.on(IPC_CHANNELS.cloneProgressChanged, forward)

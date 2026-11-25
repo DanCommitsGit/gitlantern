@@ -1,8 +1,8 @@
 import { execFile } from 'node:child_process'
-import { copyFileSync, mkdirSync, writeFileSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
-import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { runGit } from './run-git'
 import {
     createTestRepository,
@@ -90,6 +90,41 @@ describe('runGit', () => {
             runGit({ gitPath: join(repository.path, 'missing-git'), gitArguments: ['--version'] })
         ).rejects.toThrow()
     })
+
+    it.runIf(process.platform === 'win32')('refuses to run a batch file as git', async () => {
+        const batchFile = join(repository.path, 'git.cmd')
+        writeFileSync(batchFile, '@echo git version 2.43.0\r\n')
+
+        await expect(runGit({ gitPath: batchFile, gitArguments: ['--version'] })).rejects.toThrow()
+    })
+
+    // On Windows the hook's sleep outlives git and keeps git's output open. It sleeps for longer than
+    // this test may take.
+    it.each(['cancelled', 'out of time'])(
+        'stops waiting for a command that is %s',
+        async (way) => {
+            const startedMarker = join(repository.path, 'started').replaceAll('\\', '/')
+            repository.writeExecutable(
+                '.git/hooks/pre-commit',
+                `#!/bin/sh\ntouch "${startedMarker}"\nsleep 20\n`
+            )
+            const abortController = new AbortController()
+            const running = runGit({
+                gitPath,
+                repositoryPath: repository.path,
+                gitArguments: ['commit', '--allow-empty', '-q', '-m', 'waits'],
+                signal: abortController.signal,
+                // Long enough for git to start the hook on a busy machine.
+                timeoutMilliseconds: way === 'out of time' ? 5000 : 0
+            })
+            const failure = expect(running).rejects.toThrow()
+            await vi.waitFor(() => expect(existsSync(startedMarker)).toBe(true), { timeout: 4000 })
+            if (way === 'cancelled') abortController.abort()
+
+            await failure
+        },
+        15_000
+    )
 
     it('sends stdin to git', async () => {
         const result = await runGit({

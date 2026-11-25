@@ -47,6 +47,10 @@ export function CloneDialog({ onCloned, onClose }: CloneDialogProps): React.JSX.
                 onCloned(outcome.result, outcome.record)
                 return
             }
+            if (outcome.kind === 'cancelled') {
+                onClose()
+                return
+            }
             setFailure(outcome.message)
         } catch (error) {
             setFailure(errorMessage(error))
@@ -54,12 +58,14 @@ export function CloneDialog({ onCloned, onClose }: CloneDialogProps): React.JSX.
         setIsCloning(false)
     }
 
-    function close(): void {
-        if (!isCloning) onClose()
+    // While cloning, this stops git. clone() then closes the dialog, or shows why it stays open.
+    function cancel(): void {
+        if (isCloning) void window.api.cancelClone()
+        else onClose()
     }
 
     return (
-        <AlertDialog.Root open onOpenChange={(open) => !open && close()}>
+        <AlertDialog.Root open onOpenChange={(open) => !open && cancel()}>
             <AlertDialog.Portal>
                 <DimWindowControls />
                 <AlertDialog.Backdrop className="dialog-backdrop" />
@@ -120,7 +126,7 @@ export function CloneDialog({ onCloned, onClose }: CloneDialogProps): React.JSX.
                             </div>
                         )}
                         <div className="flex items-center justify-end gap-2">
-                            <button className="button" type="button" disabled={isCloning} onClick={close}>
+                            <button className="button" type="button" onClick={cancel}>
                                 Cancel
                             </button>
                             <button

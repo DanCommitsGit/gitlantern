@@ -1,4 +1,6 @@
 import { createHash } from 'node:crypto'
+import { existsSync } from 'node:fs'
+import { rm } from 'node:fs/promises'
 import { basename, isAbsolute, normalize, sep } from 'node:path'
 import { cloneDestination } from '../shared/clone-destination'
 import {
@@ -57,6 +59,8 @@ export class RepositorySession {
     private gitPath: string | null = null
     private repositoryPath: string | null = null
     private pendingTrust: { path: string; programs: RepositoryProgram[] } | null = null
+    // finished resolves after git stops and any removal of the clone's folder has been tried.
+    private runningClone: { abortController: AbortController; finished: Promise<void> } | null = null
 
     constructor(private readonly store: AppDataStore) {}
 
@@ -153,20 +157,69 @@ export class RepositorySession {
     }
 
     async clone(url: string, parentFolder: string, onProgress: (line: string) => void): Promise<CloneResult> {
+        const gitPath = this.requireGitPath()
         if (!isAbsolute(parentFolder)) throw new Error('Expected a full folder path')
         const destination = cloneDestination(url, parentFolder, sep)
         if (destination === null) throw new Error('The URL has no repository name')
+        if (this.runningClone !== null) throw new Error('A clone is already running')
 
-        const record = await runAction({ gitPath: this.requireGitPath() }, cloneAction(url, destination), {
-            onProgress
-        })
-        if (record.exitCode !== 0) return { kind: 'failed', message: record.output }
+        // Only a folder this clone created is removed when it fails or is cancelled.
+        const existedBefore = existsSync(destination)
+        const abortController = new AbortController()
+        const { promise: finished, resolve: markFinished } = Promise.withResolvers<void>()
+        this.runningClone = { abortController, finished }
+
+        let record: CommandRecord | null = null
+        let notRemovedMessage: string | null = null
+        try {
+            record = await runAction({ gitPath }, cloneAction(url, destination), {
+                signal: abortController.signal,
+                onProgress,
+                // A large repository can take longer than any fixed limit, and the user can cancel.
+                timeoutMilliseconds: 0
+            })
+        } catch (error) {
+            if (!abortController.signal.aborted) throw error
+        } finally {
+            if (record?.exitCode !== 0 && !existedBefore) {
+                try {
+                    await rm(destination, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 })
+                } catch {
+                    notRemovedMessage = `The folder couldn't be removed: ${destination}`
+                }
+            }
+            this.runningClone = null
+            markFinished()
+        }
+
+        if (record === null) {
+            return notRemovedMessage === null
+                ? { kind: 'cancelled' }
+                : { kind: 'failed', message: notRemovedMessage }
+        }
+        if (record.exitCode !== 0) {
+            const message = [record.output, notRemovedMessage].filter((part) => part !== null).join('\n\n')
+            return { kind: 'failed', message }
+        }
         // The command ran, so it is returned for the history even when the new repository can't be opened.
         const result = await this.open(destination).catch((error: unknown): OpenResult => ({
             kind: 'failed',
             message: error instanceof Error ? error.message : String(error)
         }))
         return { kind: 'cloned', result, record }
+    }
+
+    cancelClone(): void {
+        this.runningClone?.abortController.abort()
+    }
+
+    /** Cancels the running clone and resolves once its cleanup is over. Returns null when no clone is running. */
+    stopClone(): Promise<void> | null {
+        if (this.runningClone === null) return null
+
+        const { finished } = this.runningClone
+        this.cancelClone()
+        return finished
     }
 
     close(): void {

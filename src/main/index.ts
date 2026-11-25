@@ -41,20 +41,23 @@ app.whenReady().then(() => {
     )
     nativeTheme.themeSource = settingsStore.get('theme')
     const updater = createAppUpdater(settingsStore)
-    registerIpcHandlers(
-        new RepositorySession(
-            createAppDataStore(undefined, () =>
-                notifications.raise('warning', APP_DATA_NOT_SAVED, {
-                    action: 'open-logs',
-                    source: NOTIFICATION_SOURCES.appData
-                })
-            )
-        ),
-        settingsStore,
-        updater,
-        notifications,
-        rendererUrl
+    const session = new RepositorySession(
+        createAppDataStore(undefined, () =>
+            notifications.raise('warning', APP_DATA_NOT_SAVED, {
+                action: 'open-logs',
+                source: NOTIFICATION_SOURCES.appData
+            })
+        )
     )
+    registerIpcHandlers(session, settingsStore, updater, notifications, rendererUrl)
+    // A clone that is still running when the app quits is cancelled first, so its folder is removed.
+    app.on('will-quit', (event) => {
+        const stopping = session.stopClone()
+        if (stopping === null) return
+
+        event.preventDefault()
+        void stopping.then(() => app.quit())
+    })
 
     createMainWindow(rendererUrl)
     void updater.check()

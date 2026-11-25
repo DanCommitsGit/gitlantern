@@ -82,6 +82,7 @@ export function registerIpcHandlers(
             sendToAllWindows(IPC_CHANNELS.cloneProgressChanged, line)
         )
     )
+    handle(IPC_CHANNELS.cancelClone, () => session.cancelClone())
     handle(IPC_CHANNELS.closeRepository, () => session.close())
     handle(IPC_CHANNELS.readStatus, () => session.readStatus())
     handle(IPC_CHANNELS.readBranches, () => session.readBranches())

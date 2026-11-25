@@ -7,8 +7,11 @@ import { runGit } from './run-git'
 const ACTION_TIMEOUT_MILLISECONDS = 10 * 60 * 1000
 
 export interface RunActionOptions {
+    signal?: AbortSignal
     /** Called with the newest line of git's progress output while the action runs. */
     onProgress?: (line: string) => void
+    /** How long git may run before it is stopped. Defaults to ACTION_TIMEOUT_MILLISECONDS; 0 means no limit. */
+    timeoutMilliseconds?: number
 }
 
 export async function runAction(
@@ -20,7 +23,8 @@ export async function runAction(
         ...repository,
         gitArguments: action.gitArguments,
         stdin: action.stdin,
-        timeoutMilliseconds: ACTION_TIMEOUT_MILLISECONDS,
+        timeoutMilliseconds: options.timeoutMilliseconds ?? ACTION_TIMEOUT_MILLISECONDS,
+        signal: options.signal,
         onStderr: options.onProgress === undefined ? undefined : createProgressLines(options.onProgress),
         // With no terminal to type into, git fails instead of waiting for a password.
         environment: action.contactsRemote ? { ...process.env, GIT_TERMINAL_PROMPT: '0' } : undefined

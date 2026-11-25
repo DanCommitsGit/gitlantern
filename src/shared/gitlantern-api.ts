@@ -33,7 +33,9 @@ export type OpenResult =
     | { kind: 'failed'; message: string }
 
 export type CloneResult =
-    { kind: 'cloned'; result: OpenResult; record: CommandRecord } | { kind: 'failed'; message: string }
+    | { kind: 'cloned'; result: OpenResult; record: CommandRecord }
+    | { kind: 'failed'; message: string }
+    | { kind: 'cancelled' }
 
 export interface RecentRepository {
     path: string
@@ -53,6 +55,8 @@ export interface GitlanternApi {
     createRepository(folder: string): Promise<{ result: OpenResult; record: CommandRecord | null }>
     /** Clones into a new folder named after the URL inside `parentFolder`, and opens it. */
     cloneRepository(url: string, parentFolder: string): Promise<CloneResult>
+    /** Stops the running clone and removes the folder it created. */
+    cancelClone(): Promise<void>
     /** Calls `listener` with the newest line of git's progress output while a clone runs. Returns a function that removes the listener. */
     onCloneProgress(listener: (line: string) => void): () => void
     closeRepository(): Promise<void>
@@ -107,6 +111,7 @@ export const IPC_CHANNELS = {
     trustPendingRepository: 'repository:trust-pending',
     createRepository: 'repository:create',
     cloneRepository: 'repository:clone',
+    cancelClone: 'repository:cancel-clone',
     cloneProgressChanged: 'repository:clone-progress-changed',
     closeRepository: 'repository:close',
     readStatus: 'repository:status',
