@@ -23,6 +23,9 @@ export const NOTIFICATION_SOURCES = {
     gitCheck: 'git-check',
     repositoryStatus: 'repository-status',
     fileDiff: 'file-diff',
+    commitLog: 'commit-log',
+    commitFiles: 'commit-files',
+    commitDiff: 'commit-diff',
     sync: 'sync'
 } as const
 

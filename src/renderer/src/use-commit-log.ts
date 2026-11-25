@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CommandRecord } from '../../shared/command-record'
 import type { Commit, LogScope } from '../../shared/history-types'
+import { NOTIFICATION_SOURCES } from '../../shared/notifications'
 import { errorMessage } from './error-message'
+import { raiseNotification, resolveNotifications } from './notifications/raise-notification'
 
 const SEARCH_DELAY_MILLISECONDS = 250
 
@@ -13,10 +15,13 @@ export interface CommitLog {
     // null until the first page arrives.
     commits: Commit[] | null
     hasMore: boolean
-    errorMessage: string | null
     setScope(scope: LogScope): void
     setSearch(search: string): void
     loadMore(): void
+}
+
+function reportReadError(error: unknown): void {
+    raiseNotification('error', errorMessage(error), NOTIFICATION_SOURCES.commitLog)
 }
 
 // Re-reads the first page each time the log is shown, so commits made since then appear.
@@ -26,7 +31,6 @@ export function useCommitLog(isShown: boolean, onRecord: (record: CommandRecord)
     const [appliedSearch, setAppliedSearch] = useState('')
     const [commits, setCommits] = useState<Commit[] | null>(null)
     const [hasMore, setHasMore] = useState(false)
-    const [readError, setReadError] = useState<string | null>(null)
     // Counts the reads started, so a read that finishes after a newer one began is dropped.
     const latestRead = useRef(0)
     const isLoadingMore = useRef(false)
@@ -48,12 +52,12 @@ export function useCommitLog(isShown: boolean, onRecord: (record: CommandRecord)
                 if (read !== latestRead.current) return
                 setCommits(page.commits)
                 setHasMore(page.hasMore)
-                setReadError(null)
+                resolveNotifications(NOTIFICATION_SOURCES.commitLog)
                 if (page.record && recordedQuery.current !== query) onRecord(page.record)
                 recordedQuery.current = query
             },
             (error) => {
-                if (read === latestRead.current) setReadError(errorMessage(error))
+                if (read === latestRead.current) reportReadError(error)
             }
         )
     }, [isShown, scope, appliedSearch, onRecord])
@@ -69,9 +73,10 @@ export function useCommitLog(isShown: boolean, onRecord: (record: CommandRecord)
                     if (read !== latestRead.current) return
                     setCommits([...commits, ...page.commits])
                     setHasMore(page.hasMore)
+                    resolveNotifications(NOTIFICATION_SOURCES.commitLog)
                 },
                 (error) => {
-                    if (read === latestRead.current) setReadError(errorMessage(error))
+                    if (read === latestRead.current) reportReadError(error)
                 }
             )
             .finally(() => {
@@ -85,7 +90,6 @@ export function useCommitLog(isShown: boolean, onRecord: (record: CommandRecord)
         appliedSearch,
         commits,
         hasMore,
-        errorMessage: readError,
         setScope,
         setSearch,
         loadMore

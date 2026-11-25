@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import type { FileChange, FileDiff } from '../../shared/repository-types'
+import { NOTIFICATION_SOURCES } from '../../shared/notifications'
 import { errorMessage } from './error-message'
+import { raiseNotification, resolveNotifications } from './notifications/raise-notification'
 
 export interface CommitFiles {
     // null until the commit's files arrive.
     files: FileChange[] | null
     selectedFile: FileChange | null
     diff: FileDiff | null
-    errorMessage: string | null
     selectFile(path: string): void
     showLargeDiff(): void
 }
@@ -28,7 +29,6 @@ export function useCommitFiles(commitHash: string | null): CommitFiles {
     const [selectedPath, setSelectedPath] = useState<string | null>(null)
     const [loadedDiff, setLoadedDiff] = useState<LoadedDiff | null>(null)
     const [largeDiffKey, setLargeDiffKey] = useState<string | null>(null)
-    const [readError, setReadError] = useState<string | null>(null)
 
     const files = loadedFiles?.commitHash === commitHash ? loadedFiles.files : null
     const selectedFile = files?.find((file) => file.path === selectedPath) ?? files?.[0] ?? null
@@ -41,10 +41,12 @@ export function useCommitFiles(commitHash: string | null): CommitFiles {
             (nextFiles) => {
                 if (!isCurrent) return
                 setLoadedFiles({ commitHash, files: nextFiles })
-                setReadError(null)
+                resolveNotifications(NOTIFICATION_SOURCES.commitFiles)
             },
             (error) => {
-                if (isCurrent) setReadError(errorMessage(error))
+                if (isCurrent) {
+                    raiseNotification('error', errorMessage(error), NOTIFICATION_SOURCES.commitFiles)
+                }
             }
         )
         return () => {
@@ -59,10 +61,14 @@ export function useCommitFiles(commitHash: string | null): CommitFiles {
         const showLarge = largeDiffKey === `${commitHash}:${selectedFile.path}`
         window.api.readCommitDiff(commitHash, selectedFile, showLarge).then(
             (diff) => {
-                if (isCurrent) setLoadedDiff({ commitHash, path: selectedFile.path, diff })
+                if (!isCurrent) return
+                setLoadedDiff({ commitHash, path: selectedFile.path, diff })
+                resolveNotifications(NOTIFICATION_SOURCES.commitDiff)
             },
             (error) => {
-                if (isCurrent) setReadError(errorMessage(error))
+                if (isCurrent) {
+                    raiseNotification('error', errorMessage(error), NOTIFICATION_SOURCES.commitDiff)
+                }
             }
         )
         return () => {
@@ -77,7 +83,6 @@ export function useCommitFiles(commitHash: string | null): CommitFiles {
         files,
         selectedFile,
         diff: isDiffCurrent ? loadedDiff.diff : null,
-        errorMessage: readError,
         selectFile: setSelectedPath,
         showLargeDiff: () =>
             setLargeDiffKey(selectedFile === null ? null : `${commitHash}:${selectedFile.path}`)

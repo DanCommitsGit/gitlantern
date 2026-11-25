@@ -92,9 +92,6 @@ export function CommitLog({
                     />
                 </label>
             </div>
-            {log.errorMessage !== null && (
-                <div className="banner banner-danger flex-none rounded-none">{log.errorMessage}</div>
-            )}
             {!isCompact && (
                 <div className="flex flex-none items-center gap-2 border-b border-line py-1.5 pr-3 pl-1 text-label text-ink-2">
                     <span

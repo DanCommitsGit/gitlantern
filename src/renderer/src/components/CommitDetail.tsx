@@ -19,9 +19,6 @@ export function CommitDetail({ commit, place }: CommitDetailProps): React.JSX.El
     const summaryAndFiles = (
         <>
             <CommitSummary commit={commit} />
-            {commitFiles.errorMessage !== null && (
-                <div className="banner banner-danger flex-none rounded-none">{commitFiles.errorMessage}</div>
-            )}
             <ul
                 className={
                     place === 'under'
