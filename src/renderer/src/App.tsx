@@ -4,11 +4,12 @@ import type { CommandRecord } from '../../shared/command-record'
 import type { GitCheck, OpenedRepository, OpenResult } from '../../shared/gitlantern-api'
 import { errorMessage } from './error-message'
 import { GitProblemScreen } from './components/GitProblemScreen'
-import { NoticeBanner } from './components/NoticeBanner'
+import { NotificationBanner } from './components/NotificationBanner'
 import { RepositoryWindow } from './components/RepositoryWindow'
 import { TitleBar } from './components/TitleBar'
 import { TrustDialog } from './components/TrustDialog'
 import { WelcomeScreen } from './components/WelcomeScreen'
+import { raiseNotification } from './notifications/raise-notification'
 
 type NeedsTrust = Extract<OpenResult, { kind: 'needs-trust' }>
 type OpenProblem = Extract<OpenResult, { kind: 'not-a-repository' | 'failed' }>
@@ -19,20 +20,13 @@ function App(): React.JSX.Element {
     const [trustRequest, setTrustRequest] = useState<NeedsTrust | null>(null)
     const [openProblem, setOpenProblem] = useState<OpenProblem | null>(null)
     const [records, setRecords] = useState<CommandRecord[]>([])
-    const [gitCheckFailure, setGitCheckFailure] = useState<string | null>(null)
 
     const addRecord = useCallback((record: CommandRecord) => {
         setRecords((previous) => [record, ...previous])
     }, [])
 
     const applyGitCheck = useCallback((request: Promise<GitCheck>) => {
-        void request.then(
-            (check) => {
-                setGitCheck(check)
-                setGitCheckFailure(null)
-            },
-            (error: unknown) => setGitCheckFailure(errorMessage(error))
-        )
+        void request.then(setGitCheck, (error: unknown) => raiseNotification('error', errorMessage(error)))
     }, [])
 
     const applyOpenResult = useCallback((result: OpenResult): void => {
@@ -68,9 +62,8 @@ function App(): React.JSX.Element {
                     }
                 }
                 setGitCheck(check)
-                setGitCheckFailure(null)
             } catch (error) {
-                setGitCheckFailure(errorMessage(error))
+                raiseNotification('error', errorMessage(error))
             }
         }
         void start()
@@ -110,10 +103,7 @@ function App(): React.JSX.Element {
     return (
         <div className="window">
             <TitleBar />
-            <NoticeBanner />
-            {gitCheckFailure !== null && (
-                <div className="banner banner-danger rounded-none">{gitCheckFailure}</div>
-            )}
+            <NotificationBanner />
             {gitCheck?.state === 'ok' && (
                 <WelcomeScreen
                     gitVersion={gitCheck.version}

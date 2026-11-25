@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { CommandRecord } from '../../../shared/command-record'
 import type { PullMode } from '../../../shared/git-actions'
 import type { Branch, RepositoryStatus } from '../../../shared/repository-types'
+import { raiseNotification } from '../notifications/raise-notification'
 import { fetchPreview, pullPreview, pushPreview } from '../sync-previews'
 import { syncStateOf } from '../sync-state'
 import { CommandButton } from './CommandButton'
@@ -38,16 +39,9 @@ interface SyncButtonsProps {
     status: RepositoryStatus
     branches: Branch[]
     runCommand(command: () => Promise<CommandRecord>): Promise<CommandRecord | null>
-    // Called with git's output when the command fails, and with null when it succeeds.
-    onFailure(message: string | null): void
 }
 
-export function SyncButtons({
-    status,
-    branches,
-    runCommand,
-    onFailure
-}: SyncButtonsProps): React.JSX.Element {
+export function SyncButtons({ status, branches, runCommand }: SyncButtonsProps): React.JSX.Element {
     const [isRunning, setIsRunning] = useState(false)
     const [openDialog, setOpenDialog] = useState<'publish' | 'diverged' | null>(null)
     const sync = syncStateOf(status, branches)
@@ -57,9 +51,9 @@ export function SyncButtons({
         setIsRunning(true)
         const record = await runCommand(command)
         setIsRunning(false)
-        onFailure(
-            record === null || record.exitCode === 0 ? null : record.output || `${record.typedCommand} failed`
-        )
+        if (record !== null && record.exitCode !== 0) {
+            raiseNotification('error', record.output || `${record.typedCommand} failed`)
+        }
     }
 
     function pull(): void {

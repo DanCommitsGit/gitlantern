@@ -15,13 +15,14 @@ import {
     requireFileChange,
     requireLogScope,
     requireNonEmptyStrings,
-    requireNotice,
+    requireNonEmptyString,
     requirePullMode,
+    requireSeverity,
     requireString,
     requireStrings
 } from './ipc-validation'
 import { logError, showLogFile } from './log'
-import type { Notices } from './notices'
+import type { Notifications } from './notifications'
 import type { RepositorySession } from './repository-session'
 import { readSettings, saveSetting, type SettingsStore } from './settings'
 import type { Updater } from './updater'
@@ -31,7 +32,7 @@ export function registerIpcHandlers(
     session: RepositorySession,
     settingsStore: SettingsStore,
     updater: Updater,
-    notices: Notices,
+    notifications: Notifications,
     rendererUrl: string
 ): void {
     function handle(channel: string, handler: (...values: unknown[]) => unknown): void {
@@ -116,6 +117,11 @@ export function registerIpcHandlers(
     handle(IPC_CHANNELS.checkForUpdates, () => updater.check())
     handle(IPC_CHANNELS.downloadUpdate, () => updater.download())
     handle(IPC_CHANNELS.installUpdate, () => updater.install())
-    handle(IPC_CHANNELS.readNotices, () => notices.list())
-    handle(IPC_CHANNELS.dismissNotice, (notice) => notices.dismiss(requireNotice(notice)))
+    handle(IPC_CHANNELS.readNotifications, () => notifications.list())
+    handle(IPC_CHANNELS.raiseNotification, (severity, message) =>
+        notifications.raise(requireSeverity(severity), requireNonEmptyString(message))
+    )
+    handle(IPC_CHANNELS.dismissNotification, (id) => notifications.dismiss(requireCount(id)))
+    handle(IPC_CHANNELS.dismissNotificationBanner, (id) => notifications.dismissBanner(requireCount(id)))
+    handle(IPC_CHANNELS.dismissAllNotifications, () => notifications.dismissAll())
 }

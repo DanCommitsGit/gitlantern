@@ -6,9 +6,8 @@ import { SetCommandPreviewContext, type CommandPreview } from '../command-previe
 import { useRepositoryState } from '../use-repository-state'
 import { ChangesView } from './ChangesView'
 import { CommandStrip } from './CommandStrip'
-import { ErrorBanner } from './ErrorBanner'
 import { HistoryView } from './HistoryView'
-import { NoticeBanner } from './NoticeBanner'
+import { NotificationBanner } from './NotificationBanner'
 import { RepositorySidebar } from './RepositorySidebar'
 import { SyncButtons } from './SyncButtons'
 import { TitleBar } from './TitleBar'
@@ -39,7 +38,6 @@ export function RepositoryWindow({
 }: RepositoryWindowProps): React.JSX.Element {
     const [preview, setPreview] = useState<CommandPreview | null>(null)
     const [identity, setIdentity] = useState<Identity>(repository.identity)
-    const [syncFailure, setSyncFailure] = useState<string | null>(null)
     const state = useRepositoryState(onRecord)
     const [view, setView] = useState<View>('changes')
     // History reads the log only once it has been opened.
@@ -66,7 +64,6 @@ export function RepositoryWindow({
                                 status={status}
                                 branches={state.branches}
                                 runCommand={state.runCommand}
-                                onFailure={setSyncFailure}
                             />
                         )
                     }
@@ -92,13 +89,7 @@ export function RepositoryWindow({
                         ))}
                     </nav>
                 </TitleBar>
-                <NoticeBanner />
-                {state.errorMessage !== null && (
-                    <ErrorBanner message={state.errorMessage} onDismiss={state.dismissError} />
-                )}
-                {syncFailure !== null && (
-                    <ErrorBanner message={syncFailure} onDismiss={() => setSyncFailure(null)} />
-                )}
+                <NotificationBanner />
                 {status && (
                     <div className="flex min-h-0 flex-1">
                         <RepositorySidebar

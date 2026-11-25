@@ -1,6 +1,6 @@
 import { PULL_MODES, type PullMode } from '../shared/git-actions'
 import { LOG_SCOPES, type LogScope } from '../shared/history-types'
-import { NOTICES, type Notice } from '../shared/notices'
+import { SEVERITIES, type Severity } from '../shared/notifications'
 import type { FileChange, FileStatus } from '../shared/repository-types'
 
 const FILE_STATUSES = new Set<FileStatus>(['M', 'A', 'D', 'R', 'C', 'T', 'U', '?'])
@@ -40,9 +40,14 @@ export function requirePullMode(value: unknown): PullMode {
     return value as PullMode
 }
 
-export function requireNotice(value: unknown): Notice {
-    if (!NOTICES.includes(value as Notice)) throw new TypeError('Unknown notice')
-    return value as Notice
+export function requireSeverity(value: unknown): Severity {
+    if (!SEVERITIES.includes(value as Severity)) throw new TypeError('Unknown severity')
+    return value as Severity
+}
+
+export function requireNonEmptyString(value: unknown): string {
+    if (typeof value !== 'string' || value === '') throw new TypeError('Expected a non-empty string')
+    return value
 }
 
 export function requireStrings(value: unknown): string[] {

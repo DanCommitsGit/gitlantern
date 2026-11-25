@@ -7,7 +7,8 @@ import { sendToAllWindows } from './broadcast'
 import { IPC_CHANNELS } from '../shared/gitlantern-api'
 import { registerIpcHandlers } from './ipc-handlers'
 import { createMainWindow } from './main-window'
-import { createNotices } from './notices'
+import { createNotifications } from './notifications'
+import { APP_DATA_NOT_SAVED, SETTINGS_NOT_OPENED } from './notification-messages'
 import { RepositorySession } from './repository-session'
 import { createSettingsStore } from './settings-store'
 import { denyAllPermissions, restrictWebContents } from './window-security'
@@ -28,14 +29,22 @@ app.whenReady().then(() => {
 
     denyAllPermissions()
     setApplicationMenu()
-    const notices = createNotices((raised) => sendToAllWindows(IPC_CHANNELS.noticesChanged, raised))
-    const settingsStore = createSettingsStore(undefined, () => notices.raise('settings-not-opened'))
+    const notifications = createNotifications((raised) =>
+        sendToAllWindows(IPC_CHANNELS.notificationsChanged, raised)
+    )
+    const settingsStore = createSettingsStore(undefined, () =>
+        notifications.raise('warning', SETTINGS_NOT_OPENED, 'open-logs')
+    )
     const updater = createAppUpdater(settingsStore)
     registerIpcHandlers(
-        new RepositorySession(createAppDataStore(undefined, () => notices.raise('app-data-not-saved'))),
+        new RepositorySession(
+            createAppDataStore(undefined, () =>
+                notifications.raise('warning', APP_DATA_NOT_SAVED, 'open-logs')
+            )
+        ),
         settingsStore,
         updater,
-        notices,
+        notifications,
         rendererUrl
     )
 

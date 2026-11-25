@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
 import { IPC_CHANNELS, type GitlanternApi } from '../shared/gitlantern-api'
-import type { Notice } from '../shared/notices'
+import type { Notification } from '../shared/notifications'
 import type { UpdateStatus } from '../shared/update-types'
 
 const api: GitlanternApi = {
@@ -46,12 +46,17 @@ const api: GitlanternApi = {
         ipcRenderer.on(IPC_CHANNELS.updateStatusChanged, forward)
         return () => ipcRenderer.removeListener(IPC_CHANNELS.updateStatusChanged, forward)
     },
-    readNotices: () => ipcRenderer.invoke(IPC_CHANNELS.readNotices),
-    dismissNotice: (notice) => ipcRenderer.invoke(IPC_CHANNELS.dismissNotice, notice),
-    onNotices: (listener) => {
-        const forward = (_event: IpcRendererEvent, notices: Notice[]): void => listener(notices)
-        ipcRenderer.on(IPC_CHANNELS.noticesChanged, forward)
-        return () => ipcRenderer.removeListener(IPC_CHANNELS.noticesChanged, forward)
+    readNotifications: () => ipcRenderer.invoke(IPC_CHANNELS.readNotifications),
+    raiseNotification: (severity, message) =>
+        ipcRenderer.invoke(IPC_CHANNELS.raiseNotification, severity, message),
+    dismissNotification: (id) => ipcRenderer.invoke(IPC_CHANNELS.dismissNotification, id),
+    dismissNotificationBanner: (id) => ipcRenderer.invoke(IPC_CHANNELS.dismissNotificationBanner, id),
+    dismissAllNotifications: () => ipcRenderer.invoke(IPC_CHANNELS.dismissAllNotifications),
+    onNotifications: (listener) => {
+        const forward = (_event: IpcRendererEvent, notifications: Notification[]): void =>
+            listener(notifications)
+        ipcRenderer.on(IPC_CHANNELS.notificationsChanged, forward)
+        return () => ipcRenderer.removeListener(IPC_CHANNELS.notificationsChanged, forward)
     }
 }
 

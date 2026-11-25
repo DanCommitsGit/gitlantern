@@ -1,7 +1,7 @@
 import type { CommandRecord } from './command-record'
 import type { PullMode } from './git-actions'
 import type { CommitLogPage, LogScope } from './history-types'
-import type { Notice } from './notices'
+import type { Notification, Severity } from './notifications'
 import type { Branch, FileChange, FileDiff, RepositoryStatus } from './repository-types'
 import type { SettingKey, Settings } from './settings'
 import type { UpdateStatus } from './update-types'
@@ -76,10 +76,15 @@ export interface GitlanternApi {
     installUpdate(): Promise<void>
     /** Returns a function that stops the listening. */
     onUpdateStatus(listener: (status: UpdateStatus) => void): () => void
-    readNotices(): Promise<Notice[]>
-    dismissNotice(notice: Notice): Promise<void>
+    /** Oldest first. */
+    readNotifications(): Promise<Notification[]>
+    raiseNotification(severity: Severity, message: string): Promise<void>
+    dismissNotification(id: number): Promise<void>
+    /** Hides the banner and keeps the notification in the list. */
+    dismissNotificationBanner(id: number): Promise<void>
+    dismissAllNotifications(): Promise<void>
     /** Returns a function that stops the listening. */
-    onNotices(listener: (notices: Notice[]) => void): () => void
+    onNotifications(listener: (notifications: Notification[]) => void): () => void
 }
 
 export const IPC_CHANNELS = {
@@ -117,7 +122,10 @@ export const IPC_CHANNELS = {
     downloadUpdate: 'updates:download',
     installUpdate: 'updates:install',
     updateStatusChanged: 'updates:status-changed',
-    readNotices: 'notices:read',
-    dismissNotice: 'notices:dismiss',
-    noticesChanged: 'notices:changed'
+    readNotifications: 'notifications:read',
+    raiseNotification: 'notifications:raise',
+    dismissNotification: 'notifications:dismiss',
+    dismissNotificationBanner: 'notifications:dismiss-banner',
+    dismissAllNotifications: 'notifications:dismiss-all',
+    notificationsChanged: 'notifications:changed'
 } as const

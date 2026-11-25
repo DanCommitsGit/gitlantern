@@ -8,6 +8,7 @@ import {
     type SelectedChange
 } from './selected-change'
 import { errorMessage } from './error-message'
+import { raiseNotification } from './notifications/raise-notification'
 import { useSettings } from './settings/settings-context'
 
 export interface RepositoryState {
@@ -15,12 +16,14 @@ export interface RepositoryState {
     branches: Branch[]
     selected: SelectedChange | null
     diff: FileDiff | null
-    errorMessage: string | null
     select(selection: FileSelection): void
     showLargeDiff(): void
     reportError(error: unknown): void
-    dismissError(): void
     runCommand(command: () => Promise<CommandRecord>): Promise<CommandRecord | null>
+}
+
+function reportError(error: unknown): void {
+    raiseNotification('error', errorMessage(error))
 }
 
 export function useRepositoryState(onRecord: (record: CommandRecord) => void): RepositoryState {
@@ -29,7 +32,6 @@ export function useRepositoryState(onRecord: (record: CommandRecord) => void): R
     const [selection, setSelection] = useState<FileSelection | null>(null)
     const [diff, setDiff] = useState<FileDiff | null>(null)
     const [largeDiffPath, setLargeDiffPath] = useState<string | null>(null)
-    const [readError, setReadError] = useState<string | null>(null)
     const { fileList } = useSettings().settings
 
     const refresh = useCallback(
@@ -38,9 +40,8 @@ export function useRepositoryState(onRecord: (record: CommandRecord) => void): R
                 ([nextStatus, nextBranches]) => {
                     setStatus(nextStatus)
                     setBranches(nextBranches)
-                    setReadError(null)
                 },
-                (error) => setReadError(errorMessage(error))
+                (error) => reportError(error)
             ),
         []
     )
@@ -68,7 +69,7 @@ export function useRepositoryState(onRecord: (record: CommandRecord) => void): R
                 if (isCurrent) setDiff(nextDiff)
             },
             (error) => {
-                if (isCurrent) setReadError(errorMessage(error))
+                if (isCurrent) reportError(error)
             }
         )
         return () => {
@@ -84,7 +85,7 @@ export function useRepositoryState(onRecord: (record: CommandRecord) => void): R
                 await refresh()
                 return record
             } catch (error) {
-                setReadError(errorMessage(error))
+                reportError(error)
                 return null
             }
         },
@@ -96,11 +97,9 @@ export function useRepositoryState(onRecord: (record: CommandRecord) => void): R
         branches,
         selected,
         diff: selected === null ? null : diff,
-        errorMessage: readError,
         select: setSelection,
         showLargeDiff: () => setLargeDiffPath(selected?.change.path ?? null),
-        reportError: (error) => setReadError(errorMessage(error)),
-        dismissError: () => setReadError(null),
+        reportError,
         runCommand
     }
 }
