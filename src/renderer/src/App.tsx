@@ -14,6 +14,10 @@ import { raiseNotification } from './notifications/raise-notification'
 type NeedsTrust = Extract<OpenResult, { kind: 'needs-trust' }>
 type OpenProblem = Extract<OpenResult, { kind: 'not-a-repository' | 'failed' }>
 
+// Runs once per window load. In development Strict Mode runs the effect below twice, and the second run
+// would show the welcome screen while the first is still opening the repository.
+let hasStarted = false
+
 function App(): React.JSX.Element {
     const [gitCheck, setGitCheck] = useState<GitCheck | null>(null)
     const [repository, setRepository] = useState<OpenedRepository | null>(null)
@@ -49,6 +53,9 @@ function App(): React.JSX.Element {
     }
 
     useEffect(() => {
+        if (hasStarted) return
+        hasStarted = true
+
         // The welcome screen waits for the startup repository, so it doesn't flash before it.
         async function start(): Promise<void> {
             try {
