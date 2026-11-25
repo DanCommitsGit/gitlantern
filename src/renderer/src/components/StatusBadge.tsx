@@ -11,12 +11,15 @@ const STATUS_CLASSES: Record<FileStatus, string> = {
     U: 'bg-attn-tint text-attn'
 }
 
+// Untracked ('?') is shown as U and unmerged ('U') as !.
+const STATUS_LETTERS: Partial<Record<FileStatus, string>> = { '?': 'U', U: '!' }
+
 export function StatusBadge({ status }: { status: FileStatus }): React.JSX.Element {
     return (
         <span
             className={`inline-flex size-4 flex-none items-center justify-center rounded-sm font-mono text-small leading-none font-semibold ${STATUS_CLASSES[status]}`}
         >
-            {status}
+            {STATUS_LETTERS[status] ?? status}
         </span>
     )
 }
