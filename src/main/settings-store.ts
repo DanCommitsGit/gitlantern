@@ -5,6 +5,7 @@ import { SETTING_CHECKS, type SettingsStore } from './settings'
 import type { StoredDataRepairs } from './stored-data'
 
 const SETTING_REPAIRS: StoredDataRepairs<Settings> = {
+    theme: (value) => (SETTING_CHECKS.theme(value) ? value : undefined),
     startupPlace: (value) => (SETTING_CHECKS.startupPlace(value) ? value : undefined),
     commandCard: (value) => (SETTING_CHECKS.commandCard(value) ? value : undefined),
     diffViewMode: (value) => (SETTING_CHECKS.diffViewMode(value) ? value : undefined),

@@ -66,7 +66,7 @@
 
 ## Look
 
-- The app follows the system's light or dark theme.
+- The app follows the system's light or dark theme unless the theme setting in the Appearance section is set to light or dark.
 - Gold marks only the command layer and HEAD. The focus ring is ink, not gold.
 - Text is IBM Plex Sans and code is IBM Plex Mono, both bundled with the app.
 

@@ -3,6 +3,7 @@ import {
     clipboard,
     dialog,
     ipcMain,
+    nativeTheme,
     type IpcMainInvokeEvent,
     type OpenDialogOptions
 } from 'electron'
@@ -111,7 +112,11 @@ export function registerIpcHandlers(
     )
     handle(IPC_CHANNELS.copyText, (text) => clipboard.writeText(requireString(text)))
     handle(IPC_CHANNELS.readSettings, () => readSettings(settingsStore))
-    handle(IPC_CHANNELS.saveSetting, (key, value) => saveSetting(settingsStore, key, value))
+    handle(IPC_CHANNELS.saveSetting, (key, value) => {
+        const savedSettings = saveSetting(settingsStore, key, value)
+        nativeTheme.themeSource = savedSettings.theme
+        return savedSettings
+    })
     handle(IPC_CHANNELS.showLogs, showLogFile)
     handle(IPC_CHANNELS.readUpdateStatus, () => updater.status())
     handle(IPC_CHANNELS.checkForUpdates, () => updater.check())

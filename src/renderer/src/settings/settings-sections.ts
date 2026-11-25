@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import { AppearanceSettings } from './AppearanceSettings'
 import { BranchesSettings } from './BranchesSettings'
 import { ChangesSettings } from './ChangesSettings'
 import { HistorySettings } from './HistorySettings'
@@ -16,6 +17,7 @@ export interface SettingsSection {
 
 export const SETTINGS_SECTIONS = [
     { id: 'startup', name: 'Startup', settings: ['startupPlace'], Panel: StartupSettings },
+    { id: 'appearance', name: 'Appearance', settings: ['theme'], Panel: AppearanceSettings },
     {
         id: 'hints-and-commands',
         name: 'Hints and commands',

@@ -10,6 +10,14 @@ export interface SettingText {
 }
 
 export const SETTING_TEXT = {
+    theme: {
+        label: 'Theme',
+        choices: [
+            { value: 'system', label: 'Match the system' },
+            { value: 'light', label: 'Light' },
+            { value: 'dark', label: 'Dark' }
+        ]
+    },
     startupPlace: {
         label: 'On startup',
         choices: [

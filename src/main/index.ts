@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, nativeTheme } from 'electron'
 import serve from 'electron-serve'
 import { setApplicationMenu } from './app-menu'
 import { createAppUpdater } from './app-updater'
@@ -39,6 +39,7 @@ app.whenReady().then(() => {
             source: NOTIFICATION_SOURCES.settings
         })
     )
+    nativeTheme.themeSource = settingsStore.get('theme')
     const updater = createAppUpdater(settingsStore)
     registerIpcHandlers(
         new RepositorySession(

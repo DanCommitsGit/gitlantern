@@ -9,6 +9,7 @@ describe('searchSettingsSections', () => {
     it('lists every section for an empty query', () => {
         expect(sectionNames('  ')).toEqual([
             'Startup',
+            'Appearance',
             'Hints and commands',
             'Changes',
             'History',

@@ -26,7 +26,12 @@ export const STARTUP_PLACES = ['last-repository', 'welcome'] as const
 
 export type StartupPlace = (typeof STARTUP_PLACES)[number]
 
+export const THEMES = ['system', 'light', 'dark'] as const
+
+export type Theme = (typeof THEMES)[number]
+
 export interface Settings {
+    theme: Theme
     startupPlace: StartupPlace
     commandCard: boolean
     diffViewMode: DiffViewMode
@@ -41,6 +46,7 @@ export interface Settings {
 export type SettingKey = keyof Settings
 
 export const DEFAULT_SETTINGS: Settings = {
+    theme: 'system',
     startupPlace: 'last-repository',
     commandCard: false,
     diffViewMode: 'unified',
