@@ -58,11 +58,7 @@ export function ChangesView({
                     <DiffMessage
                         title="Nothing to commit"
                         message="Your files match the last commit. Edit something and it will show up here."
-                    >
-                        <div>
-                            <span className="pill bg-ok-tint text-ok">Working tree clean</span>
-                        </div>
-                    </DiffMessage>
+                    />
                 ) : (
                     <DiffMessage
                         title="No commits yet"
