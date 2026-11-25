@@ -1,5 +1,6 @@
 import type { Notice } from '../../../shared/notices'
 import { useNotices } from '../notices/use-notices'
+import { DismissButton } from './DismissButton'
 
 const NOTICE_TEXT: Record<Notice, string> = {
     'app-data-not-saved':
@@ -24,13 +25,7 @@ export function NoticeBanner(): React.JSX.Element | null {
                     <button className="button" type="button" onClick={() => void window.api.showLogs()}>
                         Open logs
                     </button>
-                    <button
-                        className="button"
-                        type="button"
-                        onClick={() => void window.api.dismissNotice(notice)}
-                    >
-                        Dismiss
-                    </button>
+                    <DismissButton onClick={() => void window.api.dismissNotice(notice)} />
                 </div>
             ))}
         </div>

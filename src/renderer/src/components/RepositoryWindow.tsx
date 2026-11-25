@@ -6,6 +6,7 @@ import { SetCommandPreviewContext, type CommandPreview } from '../command-previe
 import { useRepositoryState } from '../use-repository-state'
 import { ChangesView } from './ChangesView'
 import { CommandStrip } from './CommandStrip'
+import { ErrorBanner } from './ErrorBanner'
 import { HistoryView } from './HistoryView'
 import { NoticeBanner } from './NoticeBanner'
 import { RepositorySidebar } from './RepositorySidebar'
@@ -93,10 +94,10 @@ export function RepositoryWindow({
                 </TitleBar>
                 <NoticeBanner />
                 {state.errorMessage !== null && (
-                    <div className="banner banner-danger rounded-none">{state.errorMessage}</div>
+                    <ErrorBanner message={state.errorMessage} onDismiss={state.dismissError} />
                 )}
                 {syncFailure !== null && (
-                    <div className="banner banner-danger rounded-none">{syncFailure}</div>
+                    <ErrorBanner message={syncFailure} onDismiss={() => setSyncFailure(null)} />
                 )}
                 {status && (
                     <div className="flex min-h-0 flex-1">
