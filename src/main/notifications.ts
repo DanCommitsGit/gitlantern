@@ -3,8 +3,13 @@ import { MAX_NOTIFICATIONS, type Notification, type Severity } from '../shared/n
 export interface Notifications {
     /** Oldest first. */
     list(): Notification[]
-    /** Raising the same severity and message again replaces the earlier notification with a new one. */
-    raise(severity: Severity, message: string, action?: Notification['action']): void
+    /**
+     * With a source, replaces the earlier notification from that source, or does nothing if its severity and
+     * message are the same. Without a source, replaces an earlier one with the same severity and message.
+     */
+    raise(severity: Severity, message: string, options?: Pick<Notification, 'action' | 'source'>): void
+    /** Removes the notifications with this source. */
+    resolve(source: string): void
     dismiss(id: number): void
     /** Hides the banner and keeps the notification in the list. */
     dismissBanner(id: number): void
@@ -26,17 +31,29 @@ export function createNotifications(
 
     return {
         list: () => [...raised],
-        raise: (severity, message, action) => {
+        raise: (severity, message, { action, source } = {}) => {
+            const isRepeat = (other: Notification): boolean =>
+                other.severity === severity && other.message === message
+            const isReplaced = (other: Notification): boolean =>
+                source === undefined ? isRepeat(other) : other.source === source
+            if (source !== undefined && raised.some((other) => isReplaced(other) && isRepeat(other))) return
+
             const notification: Notification = {
                 id: nextId++,
                 severity,
                 message,
                 ...(action === undefined ? {} : { action }),
+                ...(source === undefined ? {} : { source }),
                 raisedAt: now(),
                 isBannerDismissed: false
             }
-            const others = raised.filter((other) => other.severity !== severity || other.message !== message)
-            replaceAll([...others, notification].slice(-MAX_NOTIFICATIONS))
+            replaceAll(
+                [...raised.filter((other) => !isReplaced(other)), notification].slice(-MAX_NOTIFICATIONS)
+            )
+        },
+        resolve: (source) => {
+            if (!raised.some((notification) => notification.source === source)) return
+            replaceAll(raised.filter((notification) => notification.source !== source))
         },
         dismiss: (id) => {
             if (!raised.some((notification) => notification.id === id)) return

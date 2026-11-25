@@ -78,7 +78,8 @@ export interface GitlanternApi {
     onUpdateStatus(listener: (status: UpdateStatus) => void): () => void
     /** Oldest first. */
     readNotifications(): Promise<Notification[]>
-    raiseNotification(severity: Severity, message: string): Promise<void>
+    raiseNotification(severity: Severity, message: string, source?: string): Promise<void>
+    resolveNotifications(source: string): Promise<void>
     dismissNotification(id: number): Promise<void>
     /** Hides the banner and keeps the notification in the list. */
     dismissNotificationBanner(id: number): Promise<void>
@@ -124,6 +125,7 @@ export const IPC_CHANNELS = {
     updateStatusChanged: 'updates:status-changed',
     readNotifications: 'notifications:read',
     raiseNotification: 'notifications:raise',
+    resolveNotifications: 'notifications:resolve',
     dismissNotification: 'notifications:dismiss',
     dismissNotificationBanner: 'notifications:dismiss-banner',
     dismissAllNotifications: 'notifications:dismiss-all',

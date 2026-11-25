@@ -9,7 +9,8 @@ import { RepositoryWindow } from './components/RepositoryWindow'
 import { TitleBar } from './components/TitleBar'
 import { TrustDialog } from './components/TrustDialog'
 import { WelcomeScreen } from './components/WelcomeScreen'
-import { raiseNotification } from './notifications/raise-notification'
+import { NOTIFICATION_SOURCES } from '../../shared/notifications'
+import { raiseNotification, resolveNotifications } from './notifications/raise-notification'
 
 type NeedsTrust = Extract<OpenResult, { kind: 'needs-trust' }>
 type OpenProblem = Extract<OpenResult, { kind: 'not-a-repository' | 'failed' }>
@@ -30,7 +31,13 @@ function App(): React.JSX.Element {
     }, [])
 
     const applyGitCheck = useCallback((request: Promise<GitCheck>) => {
-        void request.then(setGitCheck, (error: unknown) => raiseNotification('error', errorMessage(error)))
+        void request.then(
+            (check) => {
+                setGitCheck(check)
+                resolveNotifications(NOTIFICATION_SOURCES.gitCheck)
+            },
+            (error: unknown) => raiseNotification('error', errorMessage(error), NOTIFICATION_SOURCES.gitCheck)
+        )
     }, [])
 
     const applyOpenResult = useCallback((result: OpenResult): void => {
@@ -69,8 +76,9 @@ function App(): React.JSX.Element {
                     }
                 }
                 setGitCheck(check)
+                resolveNotifications(NOTIFICATION_SOURCES.gitCheck)
             } catch (error) {
-                raiseNotification('error', errorMessage(error))
+                raiseNotification('error', errorMessage(error), NOTIFICATION_SOURCES.gitCheck)
             }
         }
         void start()

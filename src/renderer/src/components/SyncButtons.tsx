@@ -2,7 +2,8 @@ import { useState } from 'react'
 import type { CommandRecord } from '../../../shared/command-record'
 import type { PullMode } from '../../../shared/git-actions'
 import type { Branch, RepositoryStatus } from '../../../shared/repository-types'
-import { raiseNotification } from '../notifications/raise-notification'
+import { NOTIFICATION_SOURCES } from '../../../shared/notifications'
+import { raiseNotification, resolveNotifications } from '../notifications/raise-notification'
 import { fetchPreview, pullPreview, pushPreview } from '../sync-previews'
 import { syncStateOf } from '../sync-state'
 import { CommandButton } from './CommandButton'
@@ -51,8 +52,15 @@ export function SyncButtons({ status, branches, runCommand }: SyncButtonsProps):
         setIsRunning(true)
         const record = await runCommand(command)
         setIsRunning(false)
-        if (record !== null && record.exitCode !== 0) {
-            raiseNotification('error', record.output || `${record.typedCommand} failed`)
+        if (record === null) return
+        if (record.exitCode === 0) {
+            resolveNotifications(NOTIFICATION_SOURCES.sync)
+        } else {
+            raiseNotification(
+                'error',
+                record.output || `${record.typedCommand} failed`,
+                NOTIFICATION_SOURCES.sync
+            )
         }
     }
 

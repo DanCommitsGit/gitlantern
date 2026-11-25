@@ -118,8 +118,13 @@ export function registerIpcHandlers(
     handle(IPC_CHANNELS.downloadUpdate, () => updater.download())
     handle(IPC_CHANNELS.installUpdate, () => updater.install())
     handle(IPC_CHANNELS.readNotifications, () => notifications.list())
-    handle(IPC_CHANNELS.raiseNotification, (severity, message) =>
-        notifications.raise(requireSeverity(severity), requireNonEmptyString(message))
+    handle(IPC_CHANNELS.raiseNotification, (severity, message, source) =>
+        notifications.raise(requireSeverity(severity), requireNonEmptyString(message), {
+            ...(source === undefined ? {} : { source: requireNonEmptyString(source) })
+        })
+    )
+    handle(IPC_CHANNELS.resolveNotifications, (source) =>
+        notifications.resolve(requireNonEmptyString(source))
     )
     handle(IPC_CHANNELS.dismissNotification, (id) => notifications.dismiss(requireCount(id)))
     handle(IPC_CHANNELS.dismissNotificationBanner, (id) => notifications.dismissBanner(requireCount(id)))

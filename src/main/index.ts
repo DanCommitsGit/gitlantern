@@ -7,6 +7,7 @@ import { sendToAllWindows } from './broadcast'
 import { IPC_CHANNELS } from '../shared/gitlantern-api'
 import { registerIpcHandlers } from './ipc-handlers'
 import { createMainWindow } from './main-window'
+import { NOTIFICATION_SOURCES } from '../shared/notifications'
 import { createNotifications } from './notifications'
 import { APP_DATA_NOT_SAVED, SETTINGS_NOT_OPENED } from './notification-messages'
 import { RepositorySession } from './repository-session'
@@ -33,13 +34,19 @@ app.whenReady().then(() => {
         sendToAllWindows(IPC_CHANNELS.notificationsChanged, raised)
     )
     const settingsStore = createSettingsStore(undefined, () =>
-        notifications.raise('warning', SETTINGS_NOT_OPENED, 'open-logs')
+        notifications.raise('warning', SETTINGS_NOT_OPENED, {
+            action: 'open-logs',
+            source: NOTIFICATION_SOURCES.settings
+        })
     )
     const updater = createAppUpdater(settingsStore)
     registerIpcHandlers(
         new RepositorySession(
             createAppDataStore(undefined, () =>
-                notifications.raise('warning', APP_DATA_NOT_SAVED, 'open-logs')
+                notifications.raise('warning', APP_DATA_NOT_SAVED, {
+                    action: 'open-logs',
+                    source: NOTIFICATION_SOURCES.appData
+                })
             )
         ),
         settingsStore,

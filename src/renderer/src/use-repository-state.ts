@@ -8,7 +8,8 @@ import {
     type SelectedChange
 } from './selected-change'
 import { errorMessage } from './error-message'
-import { raiseNotification } from './notifications/raise-notification'
+import { NOTIFICATION_SOURCES } from '../../shared/notifications'
+import { raiseNotification, resolveNotifications } from './notifications/raise-notification'
 import { useSettings } from './settings/settings-context'
 
 export interface RepositoryState {
@@ -22,8 +23,8 @@ export interface RepositoryState {
     runCommand(command: () => Promise<CommandRecord>): Promise<CommandRecord | null>
 }
 
-function reportError(error: unknown): void {
-    raiseNotification('error', errorMessage(error))
+function reportError(error: unknown, source?: string): void {
+    raiseNotification('error', errorMessage(error), source)
 }
 
 export function useRepositoryState(onRecord: (record: CommandRecord) => void): RepositoryState {
@@ -40,8 +41,9 @@ export function useRepositoryState(onRecord: (record: CommandRecord) => void): R
                 ([nextStatus, nextBranches]) => {
                     setStatus(nextStatus)
                     setBranches(nextBranches)
+                    resolveNotifications(NOTIFICATION_SOURCES.repositoryStatus)
                 },
-                (error) => reportError(error)
+                (error) => reportError(error, NOTIFICATION_SOURCES.repositoryStatus)
             ),
         []
     )
@@ -66,10 +68,12 @@ export function useRepositoryState(onRecord: (record: CommandRecord) => void): R
         const showLarge = largeDiffPath === selected.change.path
         window.api.readDiff(selected.change, selected.staged, showLarge).then(
             (nextDiff) => {
-                if (isCurrent) setDiff(nextDiff)
+                if (!isCurrent) return
+                setDiff(nextDiff)
+                resolveNotifications(NOTIFICATION_SOURCES.fileDiff)
             },
             (error) => {
-                if (isCurrent) reportError(error)
+                if (isCurrent) reportError(error, NOTIFICATION_SOURCES.fileDiff)
             }
         )
         return () => {

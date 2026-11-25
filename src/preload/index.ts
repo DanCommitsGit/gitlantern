@@ -47,8 +47,9 @@ const api: GitlanternApi = {
         return () => ipcRenderer.removeListener(IPC_CHANNELS.updateStatusChanged, forward)
     },
     readNotifications: () => ipcRenderer.invoke(IPC_CHANNELS.readNotifications),
-    raiseNotification: (severity, message) =>
-        ipcRenderer.invoke(IPC_CHANNELS.raiseNotification, severity, message),
+    raiseNotification: (severity, message, source) =>
+        ipcRenderer.invoke(IPC_CHANNELS.raiseNotification, severity, message, source),
+    resolveNotifications: (source) => ipcRenderer.invoke(IPC_CHANNELS.resolveNotifications, source),
     dismissNotification: (id) => ipcRenderer.invoke(IPC_CHANNELS.dismissNotification, id),
     dismissNotificationBanner: (id) => ipcRenderer.invoke(IPC_CHANNELS.dismissNotificationBanner, id),
     dismissAllNotifications: () => ipcRenderer.invoke(IPC_CHANNELS.dismissAllNotifications),

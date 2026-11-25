@@ -11,7 +11,7 @@ describe('createNotifications', () => {
         const onChange = vi.fn()
         const notifications = createNotifications(onChange, () => 1000)
 
-        notifications.raise('error', 'Push failed', 'open-logs')
+        notifications.raise('error', 'Push failed', { action: 'open-logs' })
 
         const expected = [
             {
@@ -105,5 +105,59 @@ describe('createNotifications', () => {
         notifications.dismissAll()
         expect(notifications.list()).toEqual([])
         expect(onChange).toHaveBeenLastCalledWith([])
+    })
+
+    describe('with a source', () => {
+        it('replaces the earlier notification from the same source, whatever its message', () => {
+            const notifications = createNotifications(vi.fn())
+            notifications.raise('error', 'First read failed', { source: 'status' })
+            notifications.raise('error', 'Other', { source: 'diff' })
+
+            notifications.raise('error', 'Second read failed', { source: 'status' })
+
+            expect(notifications.list().map(({ message }) => message)).toEqual([
+                'Other',
+                'Second read failed'
+            ])
+        })
+
+        it('leaves a repeated notification as it is, with its banner dismissed', () => {
+            const onChange = vi.fn()
+            const notifications = createNotifications(onChange)
+            notifications.raise('error', 'Read failed', { source: 'status' })
+            notifications.dismissBanner(1)
+            onChange.mockClear()
+
+            notifications.raise('error', 'Read failed', { source: 'status' })
+
+            expect(notifications.list()).toHaveLength(1)
+            expect(notifications.list()[0]).toMatchObject({ id: 1, isBannerDismissed: true })
+            expect(onChange).not.toHaveBeenCalled()
+        })
+
+        it('shows the banner again when the severity changes', () => {
+            const notifications = createNotifications(vi.fn())
+            notifications.raise('warning', 'Read failed', { source: 'status' })
+            notifications.dismissBanner(1)
+
+            notifications.raise('error', 'Read failed', { source: 'status' })
+
+            expect(notifications.list()).toMatchObject([{ severity: 'error', isBannerDismissed: false }])
+        })
+
+        it('removes the notifications from a resolved source and ignores a source with none', () => {
+            const onChange = vi.fn()
+            const notifications = createNotifications(onChange)
+            notifications.raise('error', 'Read failed', { source: 'status' })
+            notifications.raise('error', 'Push failed')
+            onChange.mockClear()
+
+            notifications.resolve('other')
+            expect(onChange).not.toHaveBeenCalled()
+
+            notifications.resolve('status')
+            expect(notifications.list().map(({ message }) => message)).toEqual(['Push failed'])
+            expect(onChange).toHaveBeenCalledOnce()
+        })
     })
 })
