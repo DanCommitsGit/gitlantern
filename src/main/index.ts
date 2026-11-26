@@ -5,6 +5,7 @@ import { createAppUpdater } from './app-updater'
 import { createAppDataStore } from './app-data-store'
 import { sendToAllWindows } from './broadcast'
 import { logCrashes } from './crash-logging'
+import { recoverFromCrashes } from './crash-recovery'
 import { IPC_CHANNELS } from '../shared/gitlantern-api'
 import { registerIpcHandlers } from './ipc-handlers'
 import { createMainWindow } from './main-window'
@@ -35,6 +36,7 @@ app.whenReady().then(() => {
     const notifications = createNotifications((raised) =>
         sendToAllWindows(IPC_CHANNELS.notificationsChanged, raised)
     )
+    recoverFromCrashes(notifications)
     const settingsStore = createSettingsStore(undefined, () =>
         notifications.raise('warning', SETTINGS_NOT_OPENED, {
             action: 'open-logs',

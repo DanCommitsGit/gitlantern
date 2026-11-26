@@ -7,6 +7,7 @@ import './styles/index.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { reportErrors } from './report-errors'
 import { SettingsProvider } from './settings/SettingsProvider'
 
@@ -15,8 +16,10 @@ document.documentElement.dataset['platform'] = window.api.platform
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <SettingsProvider>
-            <App />
-        </SettingsProvider>
+        <ErrorBoundary>
+            <SettingsProvider>
+                <App />
+            </SettingsProvider>
+        </ErrorBoundary>
     </StrictMode>
 )

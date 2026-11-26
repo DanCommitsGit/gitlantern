@@ -54,6 +54,11 @@
 - Clone opens a dialog with a URL field and a parent folder to clone into. It shows the full path of the new folder and the `git clone` command. While git runs, the dialog shows git's progress line and a Cancel button that stops git. Quitting the app cancels the clone too. A cancelled or failed clone removes the folder it created. A failure stays in the dialog with git's message and the fields as they were. Cancelling closes the dialog. If the folder can't be removed after a failure or Cancel, the dialog stays open and shows the folder's path. On success the repository opens and the command goes into the command history.
 - The app opens the repository that was open when it last quit. It shows the welcome screen when none was open, the repository can't be opened, or it needs trust. The Startup settings section can switch this to always showing the welcome screen.
 
+## Crashes
+
+- A render error replaces the window's content with a card that says "GitLantern ran into a problem", with Reload and Open logs buttons, under a title bar that shows only the app name.
+- A crashed window reloads by itself and shows a warning with an Open logs button. If it crashes again within a minute of reloading, a system dialog offers Reload and Quit.
+
 ## Settings
 
 - Settings open in a dialog from the icon at the right end of the title bar.

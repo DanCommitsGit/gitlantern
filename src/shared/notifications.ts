@@ -26,7 +26,8 @@ export const NOTIFICATION_SOURCES = {
     commitLog: 'commit-log',
     commitFiles: 'commit-files',
     commitDiff: 'commit-diff',
-    sync: 'sync'
+    sync: 'sync',
+    windowCrash: 'window-crash'
 } as const
 
 /** The most serious severity in the list, or null when it is empty. */
