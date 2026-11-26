@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- Layout of social-preview.png. social-preview/render.mts adds the glow and the lantern. -->
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>GitLantern social preview</title>
+        <link rel="stylesheet" href="../node_modules/@fontsource/ibm-plex-mono/latin-400.css" />
+        <link rel="stylesheet" href="../node_modules/@fontsource/ibm-plex-mono/latin-600.css" />
+        <link rel="stylesheet" href="../node_modules/@fontsource-variable/ibm-plex-sans/index.css" />
+        <style>
+            html,
+            body {
+                margin: 0;
+                overflow: hidden;
+            }
+
+            svg {
+                display: block;
+            }
+
+            .name {
+                font:
+                    400 132px 'IBM Plex Mono',
+                    monospace;
+                fill: #edede8;
+            }
+
+            .description {
+                font:
+                    500 44px 'IBM Plex Sans Variable',
+                    sans-serif;
+                fill: #bdbcb3;
+            }
+        </style>
+    </head>
+    <body>
+        <svg width="1280" height="640" viewBox="0 0 1280 640">
+            <rect width="1280" height="640" fill="#1c1c19" />
+            <image id="glow" width="1280" height="640" preserveAspectRatio="none" />
+            <g id="lantern"></g>
+            <text class="name" x="366" y="315">
+                Git
+                <!-- Placed right after "Git", whose three characters are 0.6em wide each. -->
+                <tspan x="603.6" font-weight="600">Lantern</tspan>
+            </text>
+            <text class="description" x="372" y="420">An open source desktop git client</text>
+        </svg>
+    </body>
+</html>
