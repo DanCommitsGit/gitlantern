@@ -83,6 +83,7 @@ export interface GitlanternApi {
     readSettings(): Promise<Settings>
     saveSetting<Key extends SettingKey>(key: Key, value: Settings[Key]): Promise<Settings>
     showLogs(): Promise<void>
+    logWindowError(description: string): Promise<void>
     readUpdateStatus(): Promise<UpdateStatus>
     checkForUpdates(): Promise<void>
     downloadUpdate(): Promise<void>
@@ -135,6 +136,7 @@ export const IPC_CHANNELS = {
     readSettings: 'settings:read',
     saveSetting: 'settings:save',
     showLogs: 'logs:show',
+    logWindowError: 'logs:window-error',
     readUpdateStatus: 'updates:status',
     checkForUpdates: 'updates:check',
     downloadUpdate: 'updates:download',

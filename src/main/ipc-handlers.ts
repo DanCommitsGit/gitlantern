@@ -127,6 +127,9 @@ export function registerIpcHandlers(
         return savedSettings
     })
     handle(IPC_CHANNELS.showLogs, showLogFile)
+    handle(IPC_CHANNELS.logWindowError, (description) =>
+        logError('Error in the window', requireNonEmptyString(description))
+    )
     handle(IPC_CHANNELS.readUpdateStatus, () => updater.status())
     handle(IPC_CHANNELS.checkForUpdates, () => updater.check())
     handle(IPC_CHANNELS.downloadUpdate, () => updater.download())

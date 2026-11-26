@@ -7,8 +7,10 @@ import './styles/index.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
+import { reportErrors } from './report-errors'
 import { SettingsProvider } from './settings/SettingsProvider'
 
+reportErrors()
 document.documentElement.dataset['platform'] = window.api.platform
 
 createRoot(document.getElementById('root')!).render(

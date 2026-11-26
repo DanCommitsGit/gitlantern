@@ -46,6 +46,7 @@ const api: GitlanternApi = {
     readSettings: () => ipcRenderer.invoke(IPC_CHANNELS.readSettings),
     saveSetting: (key, value) => ipcRenderer.invoke(IPC_CHANNELS.saveSetting, key, value),
     showLogs: () => ipcRenderer.invoke(IPC_CHANNELS.showLogs),
+    logWindowError: (description) => ipcRenderer.invoke(IPC_CHANNELS.logWindowError, description),
     readUpdateStatus: () => ipcRenderer.invoke(IPC_CHANNELS.readUpdateStatus),
     checkForUpdates: () => ipcRenderer.invoke(IPC_CHANNELS.checkForUpdates),
     downloadUpdate: () => ipcRenderer.invoke(IPC_CHANNELS.downloadUpdate),

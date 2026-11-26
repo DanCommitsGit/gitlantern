@@ -4,6 +4,7 @@ import { setApplicationMenu } from './app-menu'
 import { createAppUpdater } from './app-updater'
 import { createAppDataStore } from './app-data-store'
 import { sendToAllWindows } from './broadcast'
+import { logCrashes } from './crash-logging'
 import { IPC_CHANNELS } from '../shared/gitlantern-api'
 import { registerIpcHandlers } from './ipc-handlers'
 import { createMainWindow } from './main-window'
@@ -22,6 +23,7 @@ const rendererUrl =
         ? process.env['ELECTRON_RENDERER_URL']
         : SERVED_RENDERER_URL
 
+logCrashes()
 serve({ directory: 'out/renderer' })
 restrictWebContents(rendererUrl)
 
