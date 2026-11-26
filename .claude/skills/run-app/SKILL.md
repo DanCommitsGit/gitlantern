@@ -42,4 +42,5 @@ Each command is one argument, a name and what follows the first space. While a d
 
 - Changes and History both stay mounted, and the hidden one is still in the page. Role and label lookups skip hidden elements, but a CSS selector needs `:visible`, which `text` adds.
 - A repository with hooks, or with settings that run a program such as `core.sshCommand`, opens the trust dialog first. The driver says so after opening, and `click` can answer it.
+- Screenshots show the light theme even when the app's theme setting is Dark, because Playwright emulates a light color scheme by default.
 - Theme colors in `@theme` reach the CSS only when a utility uses them, so a color set through a `var()` in `style` can be missing at runtime while every check passes. Screenshots catch this.
