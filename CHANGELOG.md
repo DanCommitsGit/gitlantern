@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.6.0](https://github.com/DanCommitsGit/gitlantern/compare/v0.5.0...v0.6.0) (2026-11-26)
+
+
+### Features
+
+* add a Clone card to the welcome screen for cloning from a URL ([770d0bd](https://github.com/DanCommitsGit/gitlantern/commit/770d0bdffde0e06b067b0c71a9a6d84b33ba1494))
+* add git's progress to the Clone dialog ([fa83910](https://github.com/DanCommitsGit/gitlantern/commit/fa83910ebefcf78117d7eb3721f2d7a7e74e5e2e))
+* give the app a lantern icon, also shown in the title bar ([ffe8d98](https://github.com/DanCommitsGit/gitlantern/commit/ffe8d9826b4bfa281db9d0d872a86d059217e6a1))
+* make the Cancel button stop a running clone ([280acff](https://github.com/DanCommitsGit/gitlantern/commit/280acff8d7e58503537d924a4f5aa45020caf1b1))
+* show a Reload button when something goes wrong, and reload after a crash ([42f915e](https://github.com/DanCommitsGit/gitlantern/commit/42f915e5469f9574ecdd748104ae911542e1ff2c))
+
+
+### Bug Fixes
+
+* include crashes and unexpected errors in the logs ([27c1aa7](https://github.com/DanCommitsGit/gitlantern/commit/27c1aa70c175adc86ce05994251480fa523a4c37))
+* let screen readers read the explanations of git terms ([61f7d68](https://github.com/DanCommitsGit/gitlantern/commit/61f7d680c94a1fef00978581e4a5a69b43705b1e))
+
 ## [0.5.0](https://github.com/DanCommitsGit/gitlantern/compare/v0.4.0...v0.5.0) (2026-11-25)
 
 
