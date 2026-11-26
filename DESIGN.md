@@ -56,7 +56,7 @@
 
 ## Crashes
 
-- A render error replaces the window's content with a card that says "GitLantern ran into a problem", with Reload and Open logs buttons, under a title bar that shows only the app name.
+- A render error replaces the window's content with a card that says "GitLantern ran into a problem", with Reload and Open logs buttons, under a title bar that shows only the logo and the app name.
 - A crashed window reloads by itself and shows a warning with an Open logs button. If it crashes again within a minute of reloading, a system dialog offers Reload and Quit.
 
 ## Settings
@@ -73,8 +73,13 @@
 ## Look
 
 - The app follows the system's light or dark theme unless the theme setting in the Appearance section is set to light or dark.
-- Gold marks only the command layer and HEAD. The focus ring is ink, not gold.
 - Text is IBM Plex Sans and code is IBM Plex Mono, both bundled with the app.
+
+## Logo
+
+- The logo is a lantern with a green frame, gold glass and a git branch inside, drawn in `build/logo.svg`.
+- The app icon shows it on a near-black tile, with a near-black branch. On macOS the tile is 824 px wide on a 1024 px icon, with a clear margin.- The title bar shows it without the tile, left of the app name. The branch takes the title bar's background color. The frame and glass keep the same colors in light and dark.
+- The title bar and the welcome screen heading write "Git" in a lighter weight than "Lantern". The lantern doesn't replace a letter in the name.
 
 ## Options
 

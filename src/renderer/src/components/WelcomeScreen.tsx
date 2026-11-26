@@ -3,6 +3,7 @@ import type { CommandRecord } from '../../../shared/command-record'
 import type { OpenResult, RecentRepository } from '../../../shared/gitlantern-api'
 import { CloneDialog } from './CloneDialog'
 import { WelcomeAction } from './WelcomeAction'
+import { Wordmark } from './Wordmark'
 
 interface WelcomeScreenProps {
     gitVersion: string
@@ -45,7 +46,9 @@ export function WelcomeScreen({
         <div className="flex flex-1 overflow-auto bg-sunken">
             <div className="m-auto flex w-160 max-w-[calc(100%-48px)] flex-col gap-6 py-6">
                 <div className="flex flex-col gap-1">
-                    <h1 className="font-mono text-display">GitLantern</h1>
+                    <h1 className="font-mono text-display">
+                        <Wordmark />
+                    </h1>
                     <p className="text-ink-2">Git, with the commands in plain sight.</p>
                 </div>
 

@@ -38,6 +38,8 @@
     --color-lane-4: #c2500f;
     --color-shadow: rgb(28 28 25 / 0.16);
     --color-scrim: rgb(28 28 25 / 0.32);
+    --color-logo-frame: #5fcb8f;
+    --color-logo-glass: #f2b53a;
 
     --shadow-popover: 0 8px 28px var(--color-shadow);
 
